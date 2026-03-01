@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Postingan UP</title>
+    <link rel="icon" type="image/png" href="https://i.imgur.com/pDQOisi.png">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-dark: #000c14;
+            --sidebar-bg: #00121a;
+            --neon-aqua: #00fbff;
+            --glass-white: rgba(255, 255, 255, 0.03);
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            display: flex;
+            height: 100vh;
+            background-color: var(--bg-dark);
+            font-family: 'Rajdhani', sans-serif;
+            overflow: hidden;
+            color: white;
+        }
+
+        /* --- SIDEBAR --- */
+        .sidebar {
+            width: 280px;
+            background-color: var(--sidebar-bg);
+            border-right: 1px solid rgba(0, 251, 255, 0.15);
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+            box-shadow: 10px 0 30px rgba(0, 0, 0, 0.5);
+        }
+
+        /* --- PENGGANTI LOGO: TEXT DASHBOARD --- */
+        .header-title {
+            width: 100%;
+            padding: 30px 20px 10px 20px; /* Posisi paling atas */
+            text-align: center;
+        }
+
+        .dashboard-text {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--neon-aqua);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            line-height: 1.4;
+            text-shadow: 0 0 10px rgba(0, 251, 255, 0.5), 0 0 20px rgba(0, 251, 255, 0.2);
+            border-bottom: 2px solid rgba(0, 251, 255, 0.3);
+            padding-bottom: 10px;
+            display: inline-block;
+        }
+
+        /* --- MENU CONTAINER (Dinaikkan ke atas) --- */
+        .menu-container {
+            list-style: none;
+            padding: 0 15px;
+            margin-top: 15px;
+            overflow-y: auto; /* Tambahan agar menu bisa di-scroll jika terlalu banyak */
+            flex-grow: 1;
+        }
+
+        /* Scrollbar styling untuk sidebar */
+        .menu-container::-webkit-scrollbar {
+            width: 5px;
+        }
+        .menu-container::-webkit-scrollbar-thumb {
+            background: rgba(0, 251, 255, 0.2);
+            border-radius: 10px;
+        }
+
+        .menu-item {
+            margin-bottom: 12px;
+        }
+
+        .menu-link {
+            text-decoration: none;
+            color: #b0c4de;
+            display: flex;
+            align-items: center;
+            padding: 16px 18px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 15px;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+            background: var(--glass-white);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: var(--transition);
+            position: relative;
+        }
+
+        /* EFEK MENGAMBANG SAAT HOVER */
+        .menu-link:hover {
+            color: #fff;
+            background: rgba(0, 251, 255, 0.1);
+            border-color: var(--neon-aqua);
+            transform: translateY(-5px); 
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4), 
+                        0 0 15px rgba(0, 251, 255, 0.2);
+        }
+
+        /* Indikator Titik Neon di Kanan */
+        .menu-link::after {
+            content: '';
+            position: absolute;
+            right: 15px;
+            width: 8px;
+            height: 8px;
+            background: var(--neon-aqua);
+            border-radius: 50%;
+            opacity: 0;
+            transition: 0.3s;
+            box-shadow: 0 0 10px var(--neon-aqua), 0 0 20px var(--neon-aqua);
+        }
+
+        .menu-link:hover::after {
+            opacity: 1;
+        }
+
+        .menu-link span.icon {
+            margin-right: 12px;
+            font-size: 18px;
+        }
+
+        /* --- AREA KONTEN --- */
+        .content-area {
+            flex-grow: 1;
+            height: 100vh;
+            background: #000;
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+        }
+
+        .footer-tag {
+            padding: 15px;
+            text-align: center;
+            font-size: 10px;
+            color: #2a3a4a;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+    </style>
+</head>
+<body>
+
+    <nav class="sidebar">
+        <!-- JUDUL TEKS DI POSISI PALING ATAS -->
+        <div class="header-title">
+            <div class="dashboard-text">
+                DASHBOARD<br>POSTINGAN UP
+            </div>
+        </div>
+
+        <!-- MENU LANGSUNG MENGIKUTI DI BAWAHNYA -->
+        <ul class="menu-container">
+            <li class="menu-item">
+                <a href="prediksi.html" target="mainFrame" class="menu-link">
+                    <span class="icon">🔥</span> PREDIKSI UP
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="syair.html" target="mainFrame" class="menu-link">
+                    <span class="icon">📜</span> SYAIR
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="kemenangan.html" target="mainFrame" class="menu-link">
+                    <span class="icon">💰</span> POST KEMENANGAN
+                </a>
+            </li>
+            <!-- MENU BARU -->
+            <li class="menu-item">
+                <a href="report_vip.html" target="mainFrame" class="menu-link">
+                    <span class="icon">📊</span> REPORT VIP
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="sc_peminjaman.html" target="mainFrame" class="menu-link">
+                    <span class="icon">📑</span> SC PEMINJAMAN
+                </a>
+            </li>
+        </ul>
+
+        <div class="footer-tag">OFFICIAL MANAGEMENT</div>
+    </nav>
+
+    <main class="content-area">
+        <!-- Default page tetap prediksi.html -->
+        <iframe src="prediksi.html" name="mainFrame"></iframe>
+    </main>
+
+</body>
+</html>

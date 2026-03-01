@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bank Data Extractor Pro - Postingan UP</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #000c14;
+            --card-bg: #00121a;
+            --neon-aqua: #00fbff;
+            --border: rgba(0, 251, 255, 0.2);
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: white;
+            font-family: 'Rajdhani', sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            width: 95%;
+            max-width: 1200px;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 15px;
+            border: 1px solid var(--border);
+            box-shadow: 0 0 30px rgba(0,0,0,0.5);
+        }
+
+        h2 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--neon-aqua);
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 25px;
+            text-shadow: 0 0 10px rgba(0, 251, 255, 0.3);
+        }
+
+        textarea {
+            width: 100%;
+            background: rgba(0,0,0,0.4);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 15px;
+            color: #fff;
+            font-size: 14px;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+            font-family: 'Consolas', monospace;
+            resize: vertical;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: bold;
+            text-transform: uppercase;
+            transition: var(--transition);
+        }
+
+        .btn-extract { background: var(--neon-aqua); color: #000; }
+        .btn-clear { background: transparent; border: 1px solid #ff4b2b; color: #ff4b2b; }
+        
+        button:hover { opacity: 0.8; transform: translateY(-2px); }
+
+        /* GRID KOLOM HASIL */
+        .result-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
+
+        .result-col {
+            background: rgba(0,0,0,0.2);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .col-header {
+            background: rgba(0, 251, 255, 0.1);
+            padding: 12px 15px;
+            text-align: center;
+            font-weight: 700;
+            color: var(--neon-aqua);
+            border-bottom: 1px solid var(--border);
+            text-transform: uppercase;
+            font-size: 13px;
+            letter-spacing: 1px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        /* Tombol Copy per Kolom */
+        .copy-btn-col {
+            position: absolute;
+            right: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--border);
+            color: var(--neon-aqua);
+            padding: 4px 6px;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .copy-btn-col:hover {
+            background: var(--neon-aqua);
+            color: #000;
+        }
+
+        .item-list {
+            padding: 10px;
+            font-family: 'Consolas', monospace;
+            font-size: 13px;
+            flex-grow: 1;
+        }
+
+        .item-row {
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            padding: 8px 0;
+            color: #e0e0e0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* Notifikasi sukses copy */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--neon-aqua);
+            color: #000;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: bold;
+            display: none;
+            z-index: 1000;
+            box-shadow: 0 0 15px rgba(0, 251, 255, 0.5);
+        }
+
+        @media (max-width: 768px) {
+            .result-container { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Bank Data Extractor</h2>
+
+    <textarea id="inputText" placeholder="Tempel report transaksi di sini...&#10;Contoh:&#10;Nama Rekening : Mariyah&#10;Nominal : .49.999.000," rows="8"></textarea>
+
+    <div class="btn-group">
+        <button class="btn-extract" onclick="processData()">PROSES DATA</button>
+        <button class="btn-clear" onclick="clearAll()">BERSIHKAN</button>
+    </div>
+
+    <div class="result-container">
+        <!-- Jenis Bank -->
+        <div class="result-col">
+            <div class="col-header">
+                JENIS BANK
+                <button class="copy-btn-col" title="Copy Kolom" onclick="copyColumn('colBank')">📋</button>
+            </div>
+            <div id="colBank" class="item-list"></div>
+        </div>
+
+        <!-- Nama Rekening -->
+        <div class="result-col">
+            <div class="col-header">
+                NAMA REKENING
+                <button class="copy-btn-col" title="Copy Kolom" onclick="copyColumn('colName')">📋</button>
+            </div>
+            <div id="colName" class="item-list"></div>
+        </div>
+
+        <!-- No Rekening -->
+        <div class="result-col">
+            <div class="col-header">
+                NO REKENING
+                <button class="copy-btn-col" title="Copy Kolom" onclick="copyColumn('colNumber')">📋</button>
+            </div>
+            <div id="colNumber" class="item-list"></div>
+        </div>
+
+        <!-- Nominal -->
+        <div class="result-col">
+            <div class="col-header">
+                NOMINAL
+                <button class="copy-btn-col" title="Copy Kolom" onclick="copyColumn('colAmount')">📋</button>
+            </div>
+            <div id="colAmount" class="item-list"></div>
+        </div>
+    </div>
+</div>
+
+<div id="toast" class="toast">Berhasil Copy Kolom!</div>
+
+<script>
+    function processData() {
+        const input = document.getElementById('inputText').value;
+        if (!input.trim()) return;
+
+        // Reset Tampilan
+        const cols = ['colBank', 'colName', 'colNumber', 'colAmount'];
+        cols.forEach(id => document.getElementById(id).innerHTML = "");
+
+        // Memisahkan berdasarkan blok transaksi
+        const entries = input.split(/\n\s*\n/);
+
+        entries.forEach(entry => {
+            if (entry.trim() === "") return;
+
+            // 1. EKSTRAK BANK
+            const bankRegex = /(BCA|MANDIRI|BNI|BRI|CIMB|DANAMON|PERMATA|PANIN|OCBC|BSI|MAYBANK|DANA|OVO|GOPAY)/i;
+            const bankMatch = entry.match(bankRegex);
+            const bank = bankMatch ? bankMatch[0].toUpperCase() : "-";
+
+            // 2. EKSTRAK NO REKENING
+            const accNumMatch = entry.match(/(?:\D|^)(\d{8,16})(?:\D|$)/);
+            const accNumber = accNumMatch ? accNumMatch[1] : "-";
+
+            // 3. EKSTRAK NOMINAL
+            let amount = "-";
+            const nominalRegex = /(?:RP|NOMINAL|JUMLAH|TOTAL|IDR)\s*[:>\-]?\s*([\d.,]{4,})/i;
+            const nominalMatch = entry.match(nominalRegex);
+            
+            if (nominalMatch) {
+                amount = nominalMatch[1];
+            } else {
+                const fallbackNominal = entry.match(/(\d{1,3}(?:[\.,]\d{3})+)/);
+                if (fallbackNominal) amount = fallbackNominal[1];
+            }
+            // Bersihkan simbol non-angka di depan dan belakang
+            amount = amount.replace(/^[^0-9]+|[^0-9]+$/g, "");
+
+            // 4. EKSTRAK NAMA REKENING
+            let accName = "-";
+            const lines = entry.split('\n');
+            for (let line of lines) {
+                if (/(NAMA|A\/N|PENERIMA|ATAS\sNAMA|REK\sTUJUAN)/i.test(line)) {
+                    let partAfterKeyword = line.split(/[:>\-]/).pop().trim();
+                    partAfterKeyword = partAfterKeyword.replace(/REKENING/i, "").trim();
+                    if (partAfterKeyword.length > 2) {
+                        accName = partAfterKeyword.toUpperCase();
+                        break; 
+                    }
+                }
+            }
+            // Cadangan pencarian nama
+            if (accName === "-") {
+                for (let line of lines) {
+                    let cleanLine = line.trim();
+                    if (/^[A-Z\s]+$/i.test(cleanLine) && cleanLine.length > 3 && !bankRegex.test(cleanLine) && !/(NOMINAL|JUMLAH|TOTAL|SUKSES|DATE)/i.test(cleanLine)) {
+                        accName = cleanLine.toUpperCase();
+                        break;
+                    }
+                }
+            }
+
+            // Render ke UI
+            appendToCol('colBank', bank);
+            appendToCol('colName', accName);
+            appendToCol('colNumber', accNumber);
+            appendToCol('colAmount', amount);
+        });
+    }
+
+    function appendToCol(id, text) {
+        const container = document.getElementById(id);
+        const div = document.createElement('div');
+        div.className = 'item-row';
+        div.innerText = text;
+        container.appendChild(div);
+    }
+
+    // FUNGSI COPY PER KOLOM
+    function copyColumn(id) {
+        const container = document.getElementById(id);
+        const rows = container.getElementsByClassName('item-row');
+        
+        if (rows.length === 0) return;
+
+        let textToCopy = "";
+        for (let i = 0; i < rows.length; i++) {
+            textToCopy += rows[i].innerText + (i === rows.length - 1 ? "" : "\n");
+        }
+
+        // Copy ke Clipboard
+        const tempInput = document.createElement("textarea");
+        tempInput.value = textToCopy;
+        document.body.appendChild(tempInput);
+        tempInput.select();
+        document.execCommand("copy");
+        document.body.removeChild(tempInput);
+
+        // Notifikasi Toast
+        showToast();
+    }
+
+    function showToast() {
+        const toast = document.getElementById("toast");
+        toast.style.display = "block";
+        setTimeout(() => {
+            toast.style.display = "none";
+        }, 2000);
+    }
+
+    function clearAll() {
+        document.getElementById('inputText').value = "";
+        const cols = ['colBank', 'colName', 'colNumber', 'colAmount'];
+        cols.forEach(id => document.getElementById(id).innerHTML = "");
+    }
+</script>
+
+</body>
+</html>

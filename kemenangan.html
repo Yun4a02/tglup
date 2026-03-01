@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VICTORY GENERATOR - PRO EDITION</title>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Rajdhani:wght@600;700&family=Roboto:wght@400;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --neon-cyan: #00ffff;
+            --neon-green: #39ff14;
+        }
+
+        body { 
+            font-family: 'Rajdhani', sans-serif; 
+            background: #000c0c; 
+            color: white; 
+            padding: 20px; 
+            user-select: none; 
+        }
+
+        .font-cartoon { font-family: 'Luckiest Guy', cursive; letter-spacing: 2px; }
+
+        /* AREA DOWNLOAD */
+        #download-wrapper {
+            padding: 50px;
+            display: block;
+            width: fit-content;
+            margin: 0 auto;
+            background: #000;
+        }
+
+        #preview-area {
+            width: 1000px;
+            height: 650px;
+            background-color: #000;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid rgba(0, 255, 255, 0.3);
+            box-shadow: 0 0 50px rgba(0, 0, 0, 1);
+        }
+
+        /* LAYERING */
+        #bg-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 5; }
+        #frame-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; pointer-events: none; object-fit: fill; }
+        .draggable { position: absolute; cursor: move; z-index: 20; transform-origin: top left; }
+
+        /* TEXT STYLES */
+        .text-neon-cyan { 
+            color: var(--neon-cyan); 
+            -webkit-text-stroke: 1.5px black; 
+            text-shadow: 0 0 15px rgba(0, 255, 255, 0.7), 4px 4px 0px #004d4d; 
+        }
+        .text-neon-green { 
+            color: var(--neon-green); 
+            -webkit-text-stroke: 1.5px black; 
+            text-shadow: 0 0 15px rgba(57, 255, 20, 0.7), 4px 4px 0px #003300; 
+        }
+        .text-stroke-white {
+            color: white;
+            -webkit-text-stroke: 1.5px black;
+            text-shadow: 3px 3px 0px #333;
+        }
+
+        .receipt-container { 
+            border-radius: 12px; 
+            box-shadow: 0 15px 35px rgba(0,0,0,0.8); 
+            background: white; 
+            overflow: hidden; 
+        }
+
+        /* ADMIN PANEL */
+        .admin-panel {
+            background: linear-gradient(145deg, #051a1a, #000c0c);
+            border: 1px solid var(--neon-cyan); 
+            border-radius: 15px; 
+            padding: 25px;
+            max-width: 1100px; 
+            margin: 30px auto;
+            box-shadow: 0 10px 30px rgba(0, 255, 255, 0.1);
+        }
+
+        .input-custom {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 5px;
+            outline: none;
+            width: 100%;
+        }
+        .input-custom:focus { border-color: var(--neon-cyan); }
+
+        .btn-action {
+            background: #004d4d; 
+            color: white; 
+            padding: 12px; 
+            border-radius: 8px; 
+            font-weight: bold; 
+            cursor: pointer; 
+            text-align: center; 
+            border: 1px solid var(--neon-cyan);
+            transition: 0.3s;
+            text-transform: uppercase;
+            font-size: 12px;
+        }
+        .btn-action:hover { background: var(--neon-cyan); color: black; }
+    </style>
+</head>
+<body>
+
+    <div id="download-wrapper">
+        <div id="preview-area">
+            <!-- BACKGROUND (Default Luxury) -->
+            <img id="bg-layer" src="https://i.ibb.co/Xz9Z4mS/bg-luxury.jpg" crossorigin="anonymous">
+
+            <!-- BINGKAI -->
+            <img id="frame-layer" src="https://i.ibb.co/3sX8rR3/Frame-Hijau.png">
+
+            <!-- STRUK / RECEIPT -->
+            <div id="drag-receipt" class="draggable receipt-container" style="left: 70px; top: 120px; width: 320px;">
+                <!-- Mode HTML (Default) -->
+                <div id="mode-html" style="padding: 25px; color: #333;">
+                    <div class="flex justify-between items-center mb-5">
+                        <span class="font-bold text-sm">Transfer Berhasil</span>
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Bank_Central_Asia.svg/1280px-Bank_Central_Asia.svg.png" style="height: 12px;">
+                    </div>
+                    <div class="flex flex-col items-center mb-6">
+                        <div class="w-14 h-14 bg-emerald-500 rounded-full flex items-center justify-center mb-3 shadow-lg">
+                            <svg viewBox="0 0 24 24" width="28" height="28" stroke="white" stroke-width="4" fill="none"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        </div>
+                        <p class="text-[10px] text-gray-400 font-bold tracking-widest" id="disp-date">01 MARET 2026</p>
+                    </div>
+                    <div class="border-t border-b border-gray-100 py-4 flex justify-between items-center">
+                        <span class="text-[11px] text-gray-400 font-bold uppercase">Nominal WD</span>
+                        <span class="text-xl font-black text-black" id="disp-amount-receipt">Rp50.000.000</span>
+                    </div>
+                    <div class="mt-4 text-center">
+                        <p class="text-[9px] text-emerald-600 font-bold italic">Transaksi Aman & Terverifikasi</p>
+                    </div>
+                </div>
+                <!-- Mode Upload Gambar -->
+                <img id="uploaded-receipt-img" class="hidden w-full h-auto">
+            </div>
+
+            <!-- LOGO UTAMA -->
+            <div id="drag-logo" class="draggable" style="left: 520px; top: 60px;">
+                <img id="disp-logo-utama" src="https://i.ibb.co/3pY3f3Y/togelup-logo.png" style="width: 320px;">
+            </div>
+
+            <!-- TEKS UTAMA -->
+            <div id="drag-text" class="draggable text-center" style="left: 480px; top: 210px; width: 450px;">
+                <h3 class="text-3xl font-cartoon text-stroke-white mb-4 uppercase italic">Congratulations!</h3>
+                <div class="text-6xl font-cartoon text-neon-green mb-3">USER : <span id="disp-userid">WINNER77</span></div>
+                <div class="text-6xl font-cartoon text-neon-cyan">WD : <span id="disp-amount-wd">RP.50.000.000</span></div>
+            </div>
+
+            <!-- BADGE -->
+            <div id="drag-badge" class="draggable" style="left: 580px; top: 500px;">
+                <div class="bg-gradient-to-r from-emerald-600 via-green-500 to-cyan-600 px-8 py-3 rounded-full border-2 border-white text-white font-black italic text-lg shadow-2xl">
+                    PROSES CEPAT & TERPERCAYA
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PANEL KONTROL -->
+    <div class="admin-panel">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <!-- Input Data -->
+            <div class="flex flex-col gap-3">
+                <label class="text-xs font-bold text-cyan-400">DATA WINNER</label>
+                <input type="text" id="in-user" class="input-custom" value="WINNER77" oninput="updateUI()" placeholder="User ID">
+                <input type="number" id="in-amount" class="input-custom" value="50000000" oninput="updateUI()" placeholder="Nominal WD">
+            </div>
+
+            <!-- Ganti Background -->
+            <div class="flex flex-col gap-3">
+                <label class="text-xs font-bold text-cyan-400">GANTI BACKGROUND</label>
+                <select id="bg-selector" class="input-custom" onchange="changeBG(this.value)">
+                    <option value="https://images.unsplash.com/photo-1614850523296-d8c1af93d400?w=1000">Abstract Blue</option>
+                    <option value="https://images.unsplash.com/photo-1550684848-fac1c5b4e853?w=1000">Dark Gold</option>
+                    <option value="https://images.unsplash.com/photo-1534972195531-d756b9bfa9f2?w=1000">Cyber City</option>
+                    <option value="custom">Upload Custom BG...</option>
+                </select>
+                <input type="file" id="upload-bg" class="hidden" onchange="handleBGUpload(this)">
+                <button onclick="document.getElementById('upload-bg').click()" class="btn-action">Upload BG Sendiri</button>
+            </div>
+
+            <!-- Upload Struk -->
+            <div class="flex flex-col gap-3">
+                <label class="text-xs font-bold text-cyan-400">GANTI STRUK</label>
+                <button onclick="document.getElementById('upload-struk').click()" class="btn-action">Upload Foto Struk WD</button>
+                <input type="file" id="upload-struk" class="hidden" onchange="handleStrukUpload(this)">
+                <button onclick="resetStruk()" class="btn-action bg-red-900 border-red-500">Reset ke Default</button>
+            </div>
+
+            <!-- Download -->
+            <div class="flex flex-col gap-3 justify-end">
+                <button onclick="downloadJPG()" class="btn-action bg-cyan-600 py-4 text-sm shadow-lg shadow-cyan-900/50">💾 SIMPAN HASIL HD</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function updateUI() {
+            const user = document.getElementById('in-user').value || "WINNER";
+            const amt = document.getElementById('in-amount').value || "0";
+            const fmt = new Intl.NumberFormat('id-ID').format(amt);
+            
+            document.getElementById('disp-userid').innerText = user.toUpperCase();
+            document.getElementById('disp-amount-wd').innerText = "RP." + fmt;
+            document.getElementById('disp-amount-receipt').innerText = "Rp" + fmt;
+
+            // Update Date Otomatis
+            const now = new Date();
+            const options = { day: '2-digit', month: 'long', year: 'numeric' };
+            document.getElementById('disp-date').innerText = now.toLocaleDateString('id-ID', options).toUpperCase();
+        }
+
+        function changeBG(val) {
+            if (val !== 'custom') {
+                document.getElementById('bg-layer').src = val;
+            }
+        }
+
+        function handleBGUpload(input) {
+            const file = input.files[0];
+            if (file) {
+                const url = URL.createObjectURL(file);
+                document.getElementById('bg-layer').src = url;
+            }
+        }
+
+        function handleStrukUpload(input) {
+            const file = input.files[0]; if (!file) return;
+            const url = URL.createObjectURL(file);
+            document.getElementById('mode-html').classList.add('hidden');
+            document.getElementById('uploaded-receipt-img').classList.remove('hidden');
+            document.getElementById('uploaded-receipt-img').src = url;
+        }
+
+        function resetStruk() {
+            document.getElementById('mode-html').classList.remove('hidden');
+            document.getElementById('uploaded-receipt-img').classList.add('hidden');
+        }
+
+        function downloadJPG() {
+            const wrapper = document.getElementById('download-wrapper');
+            html2canvas(wrapper, { 
+                useCORS: true, 
+                scale: 3, // Skala tinggi untuk kualitas HD
+                backgroundColor: "#000"
+            }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = `Victory_Post_${Date.now()}.jpg`;
+                link.href = canvas.toDataURL("image/jpeg", 1.0);
+                link.click();
+            });
+        }
+
+        function makeDraggable(el) {
+            let p1 = 0, p2 = 0, p3 = 0, p4 = 0;
+            el.onmousedown = function(e) {
+                if (e.target.tagName === 'BUTTON' || e.target.tagName === 'INPUT') return;
+                e.preventDefault();
+                p3 = e.clientX;
+                p4 = e.clientY;
+                document.onmouseup = function() {
+                    document.onmouseup = null;
+                    document.onmousemove = null;
+                };
+                document.onmousemove = function(e) {
+                    e.preventDefault();
+                    p1 = p3 - e.clientX;
+                    p2 = p4 - e.clientY;
+                    p3 = e.clientX;
+                    p4 = e.clientY;
+                    el.style.top = (el.offsetTop - p2) + "px";
+                    el.style.left = (el.offsetLeft - p1) + "px";
+                };
+            };
+        }
+
+        // Jalankan Inisialisasi
+        ['drag-receipt', 'drag-logo', 'drag-text', 'drag-badge'].forEach(id => {
+            makeDraggable(document.getElementById(id));
+        });
+        updateUI();
+    </script>
+</body>
+</html>
