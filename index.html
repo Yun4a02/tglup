@@ -18,11 +18,7 @@
             --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             display: flex;
@@ -72,9 +68,7 @@
             flex-grow: 1;
         }
 
-        .menu-item {
-            margin-bottom: 12px;
-        }
+        .menu-item { margin-bottom: 12px; }
 
         .menu-link {
             text-decoration: none;
@@ -93,7 +87,7 @@
             position: relative;
         }
 
-        /* State Aktif (Agar tahu sedang di page mana) */
+        /* State Aktif */
         .menu-link.active {
             color: #fff;
             background: rgba(0, 251, 255, 0.1);
@@ -120,10 +114,7 @@
             transform: translateY(-3px); 
         }
 
-        .menu-link span.icon {
-            margin-right: 12px;
-            font-size: 18px;
-        }
+        .menu-link span.icon { margin-right: 12px; font-size: 18px; }
 
         /* --- AREA KONTEN --- */
         .content-area {
@@ -137,6 +128,7 @@
             height: 100%;
             border: none;
             display: block;
+            background-color: #000; /* Background hitam agar transisi mulus */
         }
 
         .footer-tag {
@@ -147,7 +139,6 @@
             letter-spacing: 1px;
             text-transform: uppercase;
         }
-
     </style>
 </head>
 <body>
@@ -191,45 +182,41 @@
     </nav>
 
     <main class="content-area">
-        <!-- iframe diberi ID agar bisa diakses JS -->
-        <iframe id="mainFrame" src="prediksi.html" name="mainFrame"></iframe>
+        <!-- PERBAIKAN: src dikosongkan agar tidak memuat prediksi.html dulu -->
+        <iframe id="mainFrame" name="mainFrame"></iframe>
     </main>
 
     <script>
-        // Fungsi untuk mengganti halaman dan menyimpan ke localStorage
-        function changePage(pageUrl, element) {
-            localStorage.setItem('lastOpenedPage', pageUrl);
-            updateActiveMenu(element);
-        }
+        // FUNGSI UTAMA UNTUK MENGATASI KEDIPAN
+        (function() {
+            const lastPage = localStorage.getItem('lastOpenedPage') || 'prediksi.html';
+            
+            // Set source iframe secepat mungkin sebelum DOM benar-benar siap render
+            document.addEventListener("DOMContentLoaded", function() {
+                const iframe = document.getElementById('mainFrame');
+                const links = document.querySelectorAll('.menu-link');
 
-        // Fungsi untuk mengupdate tampilan menu yang sedang aktif
-        function updateActiveMenu(activeElement) {
-            const links = document.querySelectorAll('.menu-link');
-            links.forEach(link => link.classList.remove('active'));
-            if(activeElement) activeElement.classList.add('active');
-        }
-
-        // Skrip yang berjalan otomatis saat halaman di-load/di-refresh
-        window.onload = function() {
-            const lastPage = localStorage.getItem('lastOpenedPage');
-            const iframe = document.getElementById('mainFrame');
-            const links = document.querySelectorAll('.menu-link');
-
-            if (lastPage) {
-                // Jika ada riwayat halaman terakhir, muat halaman itu
                 iframe.src = lastPage;
-                
-                // Cari menu mana yang memiliki href sama dengan lastPage untuk diberi class 'active'
+
+                // Set menu aktif
                 links.forEach(link => {
                     if (link.getAttribute('href') === lastPage) {
                         link.classList.add('active');
                     }
                 });
-            } else {
-                // Jika baru pertama kali buka (belum ada history), default ke prediksi.html
-                links[0].classList.add('active');
-            }
-        };
+            });
+        })();
+
+        function changePage(pageUrl, element) {
+            localStorage.setItem('lastOpenedPage', pageUrl);
+            updateActiveMenu(element);
+        }
+
+        function updateActiveMenu(activeElement) {
+            const links = document.querySelectorAll('.menu-link');
+            links.forEach(link => link.classList.remove('active'));
+            if(activeElement) activeElement.classList.add('active');
+        }
     </script>
 
 </body>
