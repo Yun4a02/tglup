@@ -44,10 +44,9 @@
             box-shadow: 10px 0 30px rgba(0, 0, 0, 0.5);
         }
 
-        /* --- PENGGANTI LOGO: TEXT DASHBOARD --- */
         .header-title {
             width: 100%;
-            padding: 30px 20px 10px 20px; /* Posisi paling atas */
+            padding: 30px 20px 10px 20px;
             text-align: center;
         }
 
@@ -59,28 +58,18 @@
             text-transform: uppercase;
             letter-spacing: 2px;
             line-height: 1.4;
-            text-shadow: 0 0 10px rgba(0, 251, 255, 0.5), 0 0 20px rgba(0, 251, 255, 0.2);
+            text-shadow: 0 0 10px rgba(0, 251, 255, 0.5);
             border-bottom: 2px solid rgba(0, 251, 255, 0.3);
             padding-bottom: 10px;
             display: inline-block;
         }
 
-        /* --- MENU CONTAINER (Dinaikkan ke atas) --- */
         .menu-container {
             list-style: none;
             padding: 0 15px;
             margin-top: 15px;
-            overflow-y: auto; /* Tambahan agar menu bisa di-scroll jika terlalu banyak */
+            overflow-y: auto;
             flex-grow: 1;
-        }
-
-        /* Scrollbar styling untuk sidebar */
-        .menu-container::-webkit-scrollbar {
-            width: 5px;
-        }
-        .menu-container::-webkit-scrollbar-thumb {
-            background: rgba(0, 251, 255, 0.2);
-            border-radius: 10px;
         }
 
         .menu-item {
@@ -104,18 +93,16 @@
             position: relative;
         }
 
-        /* EFEK MENGAMBANG SAAT HOVER */
-        .menu-link:hover {
+        /* State Aktif (Agar tahu sedang di page mana) */
+        .menu-link.active {
             color: #fff;
             background: rgba(0, 251, 255, 0.1);
             border-color: var(--neon-aqua);
-            transform: translateY(-5px); 
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4), 
-                        0 0 15px rgba(0, 251, 255, 0.2);
+            box-shadow: 0 0 15px rgba(0, 251, 255, 0.2);
         }
-
-        /* Indikator Titik Neon di Kanan */
-        .menu-link::after {
+        
+        .menu-link.active::after {
+            opacity: 1;
             content: '';
             position: absolute;
             right: 15px;
@@ -123,13 +110,14 @@
             height: 8px;
             background: var(--neon-aqua);
             border-radius: 50%;
-            opacity: 0;
-            transition: 0.3s;
-            box-shadow: 0 0 10px var(--neon-aqua), 0 0 20px var(--neon-aqua);
+            box-shadow: 0 0 10px var(--neon-aqua);
         }
 
-        .menu-link:hover::after {
-            opacity: 1;
+        .menu-link:hover {
+            color: #fff;
+            background: rgba(0, 251, 255, 0.1);
+            border-color: var(--neon-aqua);
+            transform: translateY(-3px); 
         }
 
         .menu-link span.icon {
@@ -165,38 +153,35 @@
 <body>
 
     <nav class="sidebar">
-        <!-- JUDUL TEKS DI POSISI PALING ATAS -->
         <div class="header-title">
             <div class="dashboard-text">
                 DASHBOARD<br>POSTINGAN UP
             </div>
         </div>
 
-        <!-- MENU LANGSUNG MENGIKUTI DI BAWAHNYA -->
         <ul class="menu-container">
             <li class="menu-item">
-                <a href="prediksi.html" target="mainFrame" class="menu-link">
+                <a href="prediksi.html" onclick="changePage('prediksi.html', this)" target="mainFrame" class="menu-link">
                     <span class="icon">🔥</span> PREDIKSI UP
                 </a>
             </li>
             <li class="menu-item">
-                <a href="syair.html" target="mainFrame" class="menu-link">
+                <a href="syair.html" onclick="changePage('syair.html', this)" target="mainFrame" class="menu-link">
                     <span class="icon">📜</span> SYAIR
                 </a>
             </li>
             <li class="menu-item">
-                <a href="kemenangan.html" target="mainFrame" class="menu-link">
+                <a href="kemenangan.html" onclick="changePage('kemenangan.html', this)" target="mainFrame" class="menu-link">
                     <span class="icon">💰</span> POST KEMENANGAN
                 </a>
             </li>
-            <!-- MENU BARU -->
             <li class="menu-item">
-                <a href="report_vip.html" target="mainFrame" class="menu-link">
+                <a href="report_vip.html" onclick="changePage('report_vip.html', this)" target="mainFrame" class="menu-link">
                     <span class="icon">📊</span> REPORT VIP
                 </a>
             </li>
             <li class="menu-item">
-                <a href="sc_peminjaman.html" target="mainFrame" class="menu-link">
+                <a href="sc_peminjaman.html" onclick="changePage('sc_peminjaman.html', this)" target="mainFrame" class="menu-link">
                     <span class="icon">📑</span> SC PEMINJAMAN
                 </a>
             </li>
@@ -206,9 +191,46 @@
     </nav>
 
     <main class="content-area">
-        <!-- Default page tetap prediksi.html -->
-        <iframe src="prediksi.html" name="mainFrame"></iframe>
+        <!-- iframe diberi ID agar bisa diakses JS -->
+        <iframe id="mainFrame" src="prediksi.html" name="mainFrame"></iframe>
     </main>
+
+    <script>
+        // Fungsi untuk mengganti halaman dan menyimpan ke localStorage
+        function changePage(pageUrl, element) {
+            localStorage.setItem('lastOpenedPage', pageUrl);
+            updateActiveMenu(element);
+        }
+
+        // Fungsi untuk mengupdate tampilan menu yang sedang aktif
+        function updateActiveMenu(activeElement) {
+            const links = document.querySelectorAll('.menu-link');
+            links.forEach(link => link.classList.remove('active'));
+            if(activeElement) activeElement.classList.add('active');
+        }
+
+        // Skrip yang berjalan otomatis saat halaman di-load/di-refresh
+        window.onload = function() {
+            const lastPage = localStorage.getItem('lastOpenedPage');
+            const iframe = document.getElementById('mainFrame');
+            const links = document.querySelectorAll('.menu-link');
+
+            if (lastPage) {
+                // Jika ada riwayat halaman terakhir, muat halaman itu
+                iframe.src = lastPage;
+                
+                // Cari menu mana yang memiliki href sama dengan lastPage untuk diberi class 'active'
+                links.forEach(link => {
+                    if (link.getAttribute('href') === lastPage) {
+                        link.classList.add('active');
+                    }
+                });
+            } else {
+                // Jika baru pertama kali buka (belum ada history), default ke prediksi.html
+                links[0].classList.add('active');
+            }
+        };
+    </script>
 
 </body>
 </html>
