@@ -7,15 +7,18 @@
     <link rel="icon" type="image/png" href="https://i.imgur.com/pDQOisi.png">
     
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
 
     <style>
         :root {
             --bg-dark: #000c14;
             --sidebar-bg: #00121a;
             --neon-aqua: #00fbff;
-            --glass-white: rgba(255, 255, 255, 0.03);
-            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            --neon-glow: rgba(0, 251, 255, 0.5);
+            --glass-white: rgba(255, 255, 255, 0.05);
+            --glass-hover: rgba(0, 251, 255, 0.12);
+            --text-main: #e0e6ed; /* Warna teks lebih terang agar jelas */
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         * {
@@ -35,97 +38,137 @@
 
         /* --- SIDEBAR --- */
         .sidebar {
-            width: 280px;
+            width: 290px;
             background-color: var(--sidebar-bg);
-            border-right: 1px solid rgba(0, 251, 255, 0.15);
+            border-right: 1px solid rgba(0, 251, 255, 0.2);
             display: flex;
             flex-direction: column;
             z-index: 100;
-            box-shadow: 10px 0 30px rgba(0, 0, 0, 0.5);
+            box-shadow: 10px 0 30px rgba(0, 0, 0, 0.8);
         }
 
         .header-title {
             width: 100%;
-            padding: 30px 20px 10px 20px;
+            padding: 40px 20px 25px 20px;
             text-align: center;
         }
 
         .dashboard-text {
             font-family: 'Orbitron', sans-serif;
-            font-size: 18px;
+            font-size: 19px;
             font-weight: 700;
             color: var(--neon-aqua);
             text-transform: uppercase;
-            letter-spacing: 2px;
+            letter-spacing: 2.5px;
             line-height: 1.4;
-            text-shadow: 0 0 10px rgba(0, 251, 255, 0.5);
-            border-bottom: 2px solid rgba(0, 251, 255, 0.3);
-            padding-bottom: 10px;
+            text-shadow: 0 0 15px var(--neon-glow);
+            border-bottom: 2px solid var(--neon-glow);
+            padding-bottom: 12px;
             display: inline-block;
         }
 
+        /* --- MENU CONTAINER --- */
         .menu-container {
             list-style: none;
-            padding: 0 15px;
-            margin-top: 15px;
+            padding: 10px 15px;
+            margin-top: 10px;
             overflow-y: auto;
             flex-grow: 1;
         }
 
         .menu-item {
-            margin-bottom: 12px;
+            margin-bottom: 10px;
+            position: relative;
         }
 
+        /* Styling Menu Utama (Parent) */
         .menu-link {
             text-decoration: none;
-            color: #b0c4de;
+            color: var(--text-main);
             display: flex;
             align-items: center;
-            padding: 16px 18px;
+            padding: 15px 18px;
             border-radius: 12px;
-            font-weight: 700;
+            font-weight: 700; /* Font Tebal */
             font-size: 15px;
             letter-spacing: 1.2px;
             text-transform: uppercase;
             background: var(--glass-white);
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
             transition: var(--transition);
-            position: relative;
-        }
-
-        /* State Aktif */
-        .menu-link.active {
-            color: #fff;
-            background: rgba(0, 251, 255, 0.1);
-            border-color: var(--neon-aqua);
-            box-shadow: 0 0 15px rgba(0, 251, 255, 0.2);
-        }
-        
-        .menu-link.active::after {
-            opacity: 1;
-            content: '';
-            position: absolute;
-            right: 15px;
-            width: 8px;
-            height: 8px;
-            background: var(--neon-aqua);
-            border-radius: 50%;
-            box-shadow: 0 0 10px var(--neon-aqua);
+            cursor: pointer;
+            user-select: none;
         }
 
         .menu-link:hover {
             color: #fff;
-            background: rgba(0, 251, 255, 0.1);
+            background: var(--glass-hover);
             border-color: var(--neon-aqua);
-            transform: translateY(-3px); 
+            transform: translateX(8px);
+            box-shadow: 0 0 20px rgba(0, 251, 255, 0.15);
         }
 
-        .menu-link span.icon {
-            margin-right: 12px;
-            font-size: 18px;
+        .menu-link.active {
+            color: #fff;
+            background: rgba(0, 251, 255, 0.15);
+            border-color: var(--neon-aqua);
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.5); /* Glow pada teks aktif */
         }
 
-        /* --- AREA KONTEN --- */
+        .menu-link .icon {
+            margin-right: 14px;
+            font-size: 20px;
+            filter: drop-shadow(0 0 5px rgba(255,255,255,0.2));
+        }
+
+        .arrow {
+            margin-left: auto;
+            font-size: 11px;
+            font-weight: 900;
+            transition: var(--transition);
+        }
+
+        .has-submenu.open .arrow {
+            transform: rotate(180deg);
+            color: var(--neon-aqua);
+        }
+
+        /* --- SUBMENU STYLE --- */
+        .submenu {
+            list-style: none;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            background: rgba(0, 0, 0, 0.3);
+            margin: 2px 5px 0 25px;
+            border-left: 2px solid var(--neon-aqua);
+            border-radius: 0 0 10px 10px;
+        }
+
+        .has-submenu.open .submenu {
+            max-height: 250px;
+            padding: 8px 0;
+        }
+
+        .submenu-item a {
+            text-decoration: none;
+            color: #a0aec0;
+            display: block;
+            padding: 12px 20px;
+            font-size: 14px;
+            font-weight: 700; /* Font Tebal pada Sub-menu */
+            letter-spacing: 1px;
+            transition: var(--transition);
+            text-transform: uppercase;
+        }
+
+        .submenu-item a:hover, .submenu-item a.active-sub {
+            color: var(--neon-aqua);
+            padding-left: 28px;
+            background: rgba(0, 251, 255, 0.05);
+        }
+
+        /* --- CONTENT AREA --- */
         .content-area {
             flex-grow: 1;
             height: 100vh;
@@ -136,16 +179,17 @@
             width: 100%;
             height: 100%;
             border: none;
-            display: block;
         }
 
         .footer-tag {
-            padding: 15px;
+            padding: 20px;
             text-align: center;
-            font-size: 10px;
-            color: #2a3a4a;
-            letter-spacing: 1px;
+            font-size: 12px;
+            color: #4a5568;
+            letter-spacing: 2px;
             text-transform: uppercase;
+            font-weight: 700;
+            border-top: 1px solid rgba(255,255,255,0.05);
         }
 
     </style>
@@ -160,32 +204,44 @@
         </div>
 
         <ul class="menu-container">
+            <!-- Menu Utama -->
             <li class="menu-item">
                 <a href="prediksi.html" onclick="changePage('prediksi.html', this)" target="mainFrame" class="menu-link">
                     <span class="icon">🔥</span> PREDIKSI UP
                 </a>
             </li>
-            <li class="menu-item">
-                <a href="syair.html" onclick="changePage('syair.html', this)" target="mainFrame" class="menu-link">
-                    <span class="icon">📜</span> SYAIR
-                </a>
+
+            <!-- Menu POSTINGAN dengan Dropdown (Syair & Kemenangan) -->
+            <li class="menu-item has-submenu">
+                <div class="menu-link" onclick="toggleSubmenu(this)">
+                    <span class="icon">📁</span> POSTINGAN <span class="arrow">▼</span>
+                </div>
+                <ul class="submenu">
+                    <li class="submenu-item">
+                        <a href="syair.html" target="mainFrame" onclick="setActiveSub(this)">📜 SYAIR</a>
+                    </li>
+                    <li class="submenu-item">
+                        <a href="kemenangan.html" target="mainFrame" onclick="setActiveSub(this)">💰 KEMENANGAN</a>
+                    </li>
+                </ul>
             </li>
-            <li class="menu-item">
-                <a href="kemenangan.html" onclick="changePage('kemenangan.html', this)" target="mainFrame" class="menu-link">
-                    <span class="icon">💰</span> POST KEMENANGAN
-                </a>
+
+            <!-- Menu LAYANAN VIP dengan Dropdown -->
+            <li class="menu-item has-submenu">
+                <div class="menu-link" onclick="toggleSubmenu(this)">
+                    <span class="icon">💎</span> LAYANAN VIP <span class="arrow">▼</span>
+                </div>
+                <ul class="submenu">
+                    <li class="submenu-item">
+                        <a href="sc-vip.html" target="mainFrame" onclick="setActiveSub(this)">📊 SC VIP</a>
+                    </li>
+                    <li class="submenu-item">
+                        <a href="report_vip.html" target="mainFrame" onclick="setActiveSub(this)">📈 REPORT VIP</a>
+                    </li>
+                </ul>
             </li>
-            <!-- MENU BARU DI TAMBAHKAN DI SINI -->
-            <li class="menu-item">
-                <a href="sc-vip.html" onclick="changePage('sc-vip.html', this)" target="mainFrame" class="menu-link">
-                    <span class="icon">💎</span> SC VIP
-                </a>
-            </li>
-            <li class="menu-item">
-                <a href="report_vip.html" onclick="changePage('report_vip.html', this)" target="mainFrame" class="menu-link">
-                    <span class="icon">📊</span> REPORT VIP
-                </a>
-            </li>
+
+            <!-- Menu Peminjaman -->
             <li class="menu-item">
                 <a href="sc_peminjaman.html" onclick="changePage('sc_peminjaman.html', this)" target="mainFrame" class="menu-link">
                     <span class="icon">📑</span> SC PEMINJAMAN
@@ -201,31 +257,62 @@
     </main>
 
     <script>
+        // Fungsi Dropdown
+        function toggleSubmenu(element) {
+            const parent = element.parentElement;
+            parent.classList.toggle('open');
+        }
+
+        // Fungsi Link Menu Utama
         function changePage(pageUrl, element) {
             localStorage.setItem('lastOpenedPage', pageUrl);
-            updateActiveMenu(element);
+            updateActiveState(element);
+            
+            // Tutup dropdown lain jika klik menu utama
+            document.querySelectorAll('.has-submenu').forEach(item => {
+                item.classList.remove('open');
+            });
         }
 
-        function updateActiveMenu(activeElement) {
-            const links = document.querySelectorAll('.menu-link');
-            links.forEach(link => link.classList.remove('active'));
-            if(activeElement) activeElement.classList.add('active');
+        // Fungsi Link Sub-menu
+        function setActiveSub(element) {
+            const pageUrl = element.getAttribute('href');
+            localStorage.setItem('lastOpenedPage', pageUrl);
+            updateActiveState(element);
         }
 
+        // Update Status Aktif (CSS)
+        function updateActiveState(element) {
+            document.querySelectorAll('.menu-link, .submenu-item a').forEach(el => {
+                el.classList.remove('active', 'active-sub');
+            });
+
+            if (element.classList.contains('menu-link')) {
+                element.classList.add('active');
+            } else {
+                element.classList.add('active-sub');
+                // Sorot bapaknya juga kalau anaknya aktif
+                element.closest('.has-submenu').querySelector('.menu-link').classList.add('active');
+            }
+        }
+
+        // Memory halaman terakhir saat refresh
         window.onload = function() {
             const lastPage = localStorage.getItem('lastOpenedPage');
             const iframe = document.getElementById('mainFrame');
-            const links = document.querySelectorAll('.menu-link');
+            const allLinks = document.querySelectorAll('.menu-link, .submenu-item a');
 
             if (lastPage) {
                 iframe.src = lastPage;
-                links.forEach(link => {
+                allLinks.forEach(link => {
                     if (link.getAttribute('href') === lastPage) {
-                        link.classList.add('active');
+                        updateActiveState(link);
+                        const parentSub = link.closest('.has-submenu');
+                        if(parentSub) parentSub.classList.add('open');
                     }
                 });
             } else {
-                links[0].classList.add('active');
+                document.querySelector('.menu-link').classList.add('active');
             }
         };
     </script>
