@@ -3,190 +3,153 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shortcut Selisih QRIS VIP</title>
+    <title>REPORT VIP - Under Development</title>
     
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+
     <style>
         :root {
-            --bg-body: #050a06;
-            --bg-card: #08110b;
-            --neon-green: #22c55e; /* Green-500 */
-            --border-color: rgba(34, 197, 94, 0.2);
+            --bg-dark: #000c14;
+            --neon-aqua: #00fbff;
+            --glass-white: rgba(255, 255, 255, 0.05);
         }
 
-        body {
-            background-color: var(--bg-body);
-            color: #e2e8f0;
-            font-family: 'Rajdhani', sans-serif;
-            padding: 20px;
-        }
-
-        /* Card Style */
-        .glass-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 16px;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
-        }
-
-        /* Section Title Style */
-        .section-title {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            color: var(--neon-green);
-            font-weight: 700;
-            font-size: 14px;
-            text-transform: uppercase;
-            margin-bottom: 12px;
-        }
-
-        /* Textarea & Inputs */
-        textarea {
-            background: rgba(0, 0, 0, 0.3) !important;
-            border: 1px solid var(--border-color) !important;
-            color: #fff !important;
-            resize: none;
+        body, html {
+            margin: 0;
+            padding: 0;
             width: 100%;
-            border-radius: 4px;
-            padding: 10px;
-            font-family: monospace;
-            font-size: 12px;
-        }
-
-        textarea:focus {
-            outline: none;
-            border-color: var(--neon-green) !important;
-        }
-
-        /* Buttons Custom */
-        .btn-green {
-            background: rgba(34, 197, 94, 0.1);
-            border: 1px solid var(--border-color);
-            color: #cbd5e1;
-            padding: 8px 16px;
-            border-radius: 6px;
-            font-size: 12px;
-            font-weight: 600;
-            transition: 0.3s;
+            height: 100%;
+            background-color: var(--bg-dark);
+            color: white;
+            font-family: 'Rajdhani', sans-serif;
             display: flex;
-            align-items: center;
             justify-content: center;
-            gap: 6px;
+            align-items: center;
+            overflow: hidden;
         }
 
-        .btn-green:hover {
-            background: var(--neon-green);
-            color: #000;
-            border-color: var(--neon-green);
+        /* Latar Belakang Partikel Animasi Ringan */
+        .bg-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at center, rgba(0, 251, 255, 0.05) 0%, transparent 70%);
+            z-index: 1;
         }
 
-        /* Note Bar */
-        .note-bar {
-            background: rgba(234, 179, 8, 0.1); /* Yellow low opacity */
-            border: 1px solid rgba(234, 179, 8, 0.3);
-            color: #facc15;
-            padding: 8px 12px;
-            border-radius: 4px;
-            font-size: 11px;
-            margin-bottom: 10px;
+        .container {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            padding: 40px;
+            background: var(--glass-white);
+            border: 1px solid rgba(0, 251, 255, 0.2);
+            border-radius: 30px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
+            max-width: 500px;
+            width: 90%;
         }
 
-        .note-bar b { color: #fef08a; }
+        /* Ikon Animasi Gear */
+        .icon-box {
+            font-size: 60px;
+            margin-bottom: 20px;
+            display: inline-block;
+            animation: rotate 4s linear infinite;
+        }
 
-        /* Statistics Number */
-        .stat-val {
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        h1 {
+            font-family: 'Orbitron', sans-serif;
             font-size: 32px;
-            font-weight: 700;
-            color: var(--neon-green);
-            margin: 10px 0;
+            letter-spacing: 4px;
+            color: var(--neon-aqua);
+            margin-bottom: 10px;
+            text-shadow: 0 0 15px rgba(0, 251, 255, 0.6);
+            text-transform: uppercase;
         }
+
+        p {
+            font-size: 18px;
+            color: #b0c4de;
+            letter-spacing: 1.5px;
+            margin-bottom: 30px;
+        }
+
+        /* PROGRESS BAR SIMULASI */
+        .progress-wrapper {
+            width: 100%;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            overflow: hidden;
+            margin-bottom: 15px;
+            border: 1px solid rgba(0, 251, 255, 0.1);
+        }
+
+        .progress-bar {
+            width: 65%; /* Persentase simulasi */
+            height: 100%;
+            background: linear-gradient(90deg, #00fbff, #0081ff);
+            box-shadow: 0 0 15px var(--neon-aqua);
+            border-radius: 20px;
+            animation: pulse 2s infinite;
+        }
+
+        .status-text {
+            font-size: 12px;
+            color: var(--neon-aqua);
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.6; }
+            50% { opacity: 1; }
+            100% { opacity: 0.6; }
+        }
+
+        /* Dekorasi Sudut */
+        .corner {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--neon-aqua);
+        }
+        .top-left { top: -2px; left: -2px; border-right: none; border-bottom: none; border-radius: 15px 0 0 0; }
+        .bottom-right { bottom: -2px; right: -2px; border-left: none; border-top: none; border-radius: 0 0 15px 0; }
+
     </style>
 </head>
 <body>
 
-    <!-- HEADER -->
-    <header class="text-center mb-10">
-        <h1 class="text-2xl font-bold flex items-center justify-center gap-3">
-            <span class="text-white">🗄️ SHORTCUT SELISIH QRIS VIP</span>
-        </h1>
-        <p class="text-gray-500 text-xs mt-1 uppercase tracking-widest">Alat untuk konversi, analisis, dan ekspor data transaksional.</p>
-    </header>
+    <div class="bg-overlay"></div>
 
-    <!-- SECTION 1: INPUT DATA -->
-    <div class="glass-card">
-        <div class="section-title">📁 Input Data</div>
-        <div class="note-bar">
-            <b>Catatan:</b> Tempel data Anda dengan format: Kolom1;Kolom2;Kolom3;...dst
-        </div>
-        <textarea rows="6" placeholder="Tempel data mentah Anda di sini..."></textarea>
+    <div class="container">
+        <!-- Dekorasi -->
+        <div class="corner top-left"></div>
+        <div class="corner bottom-right"></div>
+
+        <div class="icon-box">⚙️</div>
         
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mt-4">
-            <button class="btn-green">🔄 Konversi Teks</button>
-            <button class="btn-green">📄 Upload Excel</button>
-            <button class="btn-green">🗑️ Hapus</button>
-        </div>
-    </div>
+        <h1>REPORT VIP</h1>
+        <p>SEDANG TAHAP PENGEMBANGAN</p>
 
-    <!-- SECTION 2: TABEL HASIL -->
-    <div class="glass-card">
-        <div class="flex justify-between items-center mb-3">
-            <div class="section-title mb-0">🧮 Tabel Hasil</div>
-            <span class="text-[10px] text-gray-500">0 baris data</span>
+        <div class="progress-wrapper">
+            <div class="progress-bar"></div>
         </div>
         
-        <!-- Placeholder Area Table -->
-        <div class="border border-dashed border-gray-800 rounded-lg h-24 flex items-center justify-center text-gray-700 text-xs mb-4">
-            Data akan muncul di sini setelah dikonversi
-        </div>
+        <div class="status-text">System Optimization 65%</div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-            <button class="btn-green">📋 Salin Data</button>
-            <button class="btn-green">📥 Export Excel</button>
+        <div style="margin-top: 30px; font-size: 10px; color: rgba(255,255,255,0.3); letter-spacing: 2px;">
+            ESTIMASI SELESAI: MARET 2026
         </div>
-    </div>
-
-    <!-- SECTION 3: STATISTICS (3 Columns) -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-5">
-        <!-- Transaksi Success -->
-        <div class="glass-card mb-0">
-            <div class="section-title">✔️ Transaksi Success</div>
-            <div class="stat-val">0</div>
-        </div>
-
-        <!-- Transaksi Not Process -->
-        <div class="glass-card mb-0">
-            <div class="section-title">⚪ Transaksi Not Process</div>
-            <div class="stat-val">0</div>
-            <button class="btn-green w-full py-1 mt-2">📋 Tampilkan RRN</button>
-        </div>
-
-        <!-- Total Nominal -->
-        <div class="glass-card mb-0">
-            <div class="section-title">💵 Total Nominal</div>
-            <div class="stat-val text-green-400">Rp 0</div>
-            <button class="btn-green w-full py-1 mt-2">📋 Salin Nominal</button>
-        </div>
-    </div>
-
-    <!-- SECTION 4: DATA SELISIH RRN -->
-    <div class="glass-card">
-        <div class="section-title">⇄ Data Selisih RRN</div>
-        <div class="note-bar bg-red-900/10 border-red-500/30 text-red-400">
-            ⚠️ <b>CATATAN PENTING:</b> Cek lagi pada admin IDN sebelum memprosesnya!
-        </div>
-        
-        <div class="text-center py-10 text-gray-600 text-xs italic">
-            Data selisih akan muncul di sini
-        </div>
-
-        <button class="btn-green w-full">📋 Salin Data Selisih</button>
     </div>
 
 </body>
