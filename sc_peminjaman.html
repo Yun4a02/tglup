@@ -128,6 +128,7 @@
 
         .item-list {
             padding: 5px; font-family: 'Consolas', monospace; font-size: 14px;
+            flex-grow: 1;
         }
 
         .item-row {
@@ -136,13 +137,12 @@
             white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
         }
 
-        /* Styling baris TOTAL (Hanya Tampilan Visual) */
-        .total-row {
+        /* Styling baris TOTAL (Hanya Visual) */
+        .total-box-visual {
             padding: 12px 10px;
             color: #f1c40f; 
             font-weight: 800;
             border-top: 2px solid var(--neon-aqua);
-            margin-top: auto;
             background: rgba(0, 251, 255, 0.05);
             text-transform: uppercase;
             font-size: 13px;
@@ -222,9 +222,10 @@
         </div>
         <div class="result-col">
             <div class="col-header">NOMINAL <span class="copy-emoji" onclick="copyColumn('colAmount')">📋</span></div>
+            <!-- Wadah list nominal (Hanya ini yang di-copy) -->
             <div id="colAmount" class="item-list"></div>
-            <!-- Total hanya tampil di layar -->
-            <div id="totalAmountBox" class="total-row" style="display:none;"></div>
+            <!-- Wadah Total (Terpisah, tidak akan ikut tercopy) -->
+            <div id="visualTotalNominal" class="total-box-visual" style="display:none;"></div>
         </div>
         <div class="result-col">
             <div class="col-header">LAMPIRAN <span class="copy-emoji" onclick="copyColumn('colLink', true)">📋</span></div>
@@ -249,6 +250,7 @@
         const rawReport = document.getElementById('inputText').value;
         const rawLinks = document.getElementById('inputLampiran').value;
         
+        // Bersihkan tabel
         ['colBank', 'colName', 'colNumber', 'colAmount', 'colLink'].forEach(id => document.getElementById(id).innerHTML = "");
         
         let totalSum = 0;
@@ -294,7 +296,8 @@
             }
         });
 
-        const totalBox = document.getElementById('totalAmountBox');
+        // Tampilkan Total (Hanya Visual)
+        const totalBox = document.getElementById('visualTotalNominal');
         if (totalSum > 0) {
             totalBox.style.display = "block";
             totalBox.innerText = "TOTAL NOMINAL : " + totalSum.toLocaleString('en-US');
@@ -302,14 +305,13 @@
             totalBox.style.display = "none";
         }
 
+        // HASIL LAPORAN GABUNGAN (Tanpa Total)
         const areaGabungan = document.getElementById('fullReportArea');
         if (!rawReport.trim() && !rawLinks.trim()) {
             areaGabungan.innerText = "Menunggu data ditempel...";
         } else {
             let fullText = rawReport.trimEnd();
-            if (totalSum > 0) {
-                fullText += "\n\nTOTAL NOMINAL : " + totalSum.toLocaleString('en-US');
-            }
+            // Bagian penambahan total ke teks sudah dihapus di sini
             if (rawLinks.trim() !== "") {
                 fullText += "\n\nLampiran :\n" + rawLinks.trim();
             } else {
@@ -330,9 +332,12 @@
         container.appendChild(div);
     }
 
-    // UPDATE: Fungsi Copy Kolom (Total Nominal dikecualikan)
+    // FUNGSI COPY UPDATE (Total dijamin tidak ikut tercopy)
     function copyColumn(id, isLampiran = false) {
-        const rows = document.getElementById(id).getElementsByClassName('item-row');
+        // Mengambil elemen hanya dari dalam list (mengabaikan totalBox karena totalBox bukan bagian dari colAmount)
+        const container = document.getElementById(id);
+        const rows = container.getElementsByClassName('item-row');
+        
         if (rows.length === 0) return;
         
         let textToCopy = isLampiran ? "Lampiran :\n" : "";
@@ -340,7 +345,6 @@
             textToCopy += rows[i].innerText + "\n";
         }
         
-        // Logika tambahan untuk nominal dihapus agar tidak menyalin total
         executeCopy(textToCopy.trim());
     }
 
