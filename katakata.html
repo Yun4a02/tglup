@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KEMENANGAN - Glow Interaktif Dashboard</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-cyan: #00f5ff;
+            --deep-bg: #020b10;
+            --card-bg: #030f18;
+            --border-color: #0b2435;
+            --input-bg: #04131d;
+            --text-dim: #4e8297;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background-color: var(--deep-bg);
+            color: #fff;
+            min-height: 100vh;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* --- Judul Melambai --- */
+        .moving-title {
+            font-size: 2.2rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            color: var(--primary-cyan);
+            text-shadow: 0 0 15px rgba(0, 245, 255, 0.5);
+            margin-bottom: 40px;
+            animation: floating 3s ease-in-out infinite;
+        }
+
+        @keyframes floating {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-12px); }
+        }
+
+        /* --- Grid System --- */
+        .dashboard-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 35px;
+            width: 100%;
+            max-width: 1100px;
+        }
+
+        @media (max-width: 900px) {
+            .dashboard-container { grid-template-columns: 1fr; }
+        }
+
+        /* --- Card Styling dengan EFEK NYALA (Hover) --- */
+        .glass-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 30px 20px 20px 20px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Animasi halus */
+        }
+
+        /* EFEK MENYALA SAAT DISENTUH KUROR */
+        .glass-card:hover {
+            border-color: var(--primary-cyan); /* Garis menyala */
+            box-shadow: 0 0 25px rgba(0, 245, 255, 0.25); /* Cahaya luar */
+            transform: translateY(-8px); /* Sedikit terangkat */
+            background: rgba(3, 15, 24, 0.95);
+        }
+
+        .card-header-label {
+            position: absolute;
+            top: -14px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--deep-bg);
+            padding: 0 15px;
+            color: var(--primary-cyan);
+            font-weight: 700;
+            font-size: 1rem;
+            white-space: nowrap;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.3s;
+        }
+
+        .glass-card:hover .card-header-label {
+            text-shadow: 0 0 10px var(--primary-cyan); /* Judul label juga ikut menyala */
+        }
+
+        /* --- Input Section --- */
+        .field-label {
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            font-weight: 700;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+        }
+
+        .modern-input {
+            width: 100%;
+            background: var(--input-bg);
+            border: 1px solid #0f2c3e;
+            border-radius: 8px;
+            padding: 12px;
+            color: #fff;
+            font-size: 0.9rem;
+            margin-bottom: 12px;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        .modern-input:focus {
+            border-color: var(--primary-cyan);
+            box-shadow: inset 0 0 5px rgba(0, 245, 255, 0.2);
+        }
+
+        .btn-main {
+            background: var(--primary-cyan);
+            color: #000;
+            width: 100%;
+            padding: 14px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            border: none;
+            cursor: pointer;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 10px;
+            transition: 0.3s;
+        }
+
+        .btn-main:hover {
+            box-shadow: 0 0 20px rgba(0, 245, 255, 0.6);
+            transform: scale(1.02);
+        }
+
+        .action-group {
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .btn-icon {
+            padding: 6px 12px;
+            font-size: 0.75rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.05);
+            color: #fff;
+            transition: 0.3s;
+        }
+
+        .btn-edit { color: var(--warning); border-color: rgba(245, 158, 11, 0.3); }
+        .btn-copy { color: var(--primary-cyan); border-color: rgba(0, 245, 255, 0.3); }
+
+        .btn-icon:hover { background: rgba(255, 255, 255, 0.1); transform: translateY(-2px); }
+
+        /* --- Output Box --- */
+        .output-container {
+            background: #01060a;
+            border: 1px dashed var(--primary-cyan);
+            border-radius: 12px;
+            padding: 15px;
+            min-height: 120px;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            color: #fff;
+            white-space: pre-wrap;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        .glass-card:hover .output-container {
+            border-style: solid; /* Saat card dihover, garis putus berubah jadi solid */
+            background: rgba(1, 6, 10, 0.8);
+        }
+
+        .btn-reset {
+            background: transparent;
+            color: var(--danger);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            padding: 6px 15px;
+            font-size: 0.7rem;
+            border-radius: 6px;
+            align-self: flex-end;
+            margin-top: 12px;
+            cursor: pointer;
+            font-weight: 700;
+            text-transform: uppercase;
+            transition: 0.3s;
+        }
+
+        .btn-reset:hover { background: var(--danger); color: white; }
+
+        .toast {
+            position: fixed;
+            top: 20px;
+            background: var(--primary-cyan);
+            color: #000;
+            padding: 10px 30px;
+            border-radius: 5px;
+            font-weight: 700;
+            display: none;
+            z-index: 9999;
+            box-shadow: 0 0 15px var(--primary-cyan);
+        }
+    </style>
+</head>
+<body>
+
+    <h1 class="moving-title">KEMENANGAN</h1>
+
+    <div class="dashboard-container">
+        
+        <!-- CARD 1: INPUT DATA -->
+        <div class="glass-card">
+            <div class="card-header-label">
+                <i class="fa-solid fa-circle-plus"></i> Input Data Strategis
+            </div>
+            <label class="field-label">USER ID PEMENANG</label>
+            <input type="text" id="in-user" class="modern-input" placeholder="ID..." oninput="saveInputs()">
+            
+            <label class="field-label">NAMA PERMAINAN</label>
+            <input type="text" id="in-game" class="modern-input" placeholder="Nama game..." oninput="saveInputs()">
+            
+            <label class="field-label">NOMINAL KEMENANGAN</label>
+            <input type="text" id="in-nominal" class="modern-input" placeholder="0" onkeyup="formatNumber(this); saveInputs()">
+            
+            <button class="btn-main" onclick="generateReport()">
+                <i class="fa-solid fa-bolt"></i> GENERATE LAPORAN
+            </button>
+        </div>
+
+        <!-- CARD 2: HASIL POSTINGAN -->
+        <div class="glass-card">
+            <div class="card-header-label">
+                <i class="fa-solid fa-trophy"></i> Postingan Kemenangan
+            </div>
+            <div class="action-group">
+                <button class="btn-icon btn-edit" onclick="toggleEdit('box-post', this)"><i class="fa-solid fa-pen"></i> Edit</button>
+                <button class="btn-icon btn-copy" onclick="copyText('box-post')"><i class="fa-solid fa-copy"></i> Copy</button>
+            </div>
+            <div id="box-post" class="output-container" oninput="autoSave('box-post')">Generate data untuk hasil...</div>
+            <button class="btn-reset" onclick="resetForm()">
+                <i class="fa-solid fa-trash-can"></i> RESET DATA
+            </button>
+        </div>
+
+        <!-- CARD 3: KATA KATA PREDIKSI -->
+        <div class="glass-card">
+            <div class="card-header-label">
+                <i class="fa-solid fa-wand-magic-sparkles"></i> Kata Prediksi
+            </div>
+            <div class="action-group">
+                <button class="btn-icon btn-edit" onclick="toggleEdit('box-prediksi', this)"><i class="fa-solid fa-pen"></i> Edit</button>
+                <button class="btn-icon btn-copy" onclick="copyText('box-prediksi')"><i class="fa-solid fa-copy"></i> Copy</button>
+            </div>
+            <div id="box-prediksi" class="output-container" oninput="autoSave('box-prediksi')">🌌 Lagi cari angka jitu tapi nggak bikin kantong jebol?
+🌠 Di sini tempatnya!🪄 Mampir sekarang juga 🚀.
+🔥UTAMAKAN PREDIKSI SENDIRI🔥
+💰HANYA DI TOGELUP💰</div>
+        </div>
+
+        <!-- CARD 4: LINK ALTERNATIF -->
+        <div class="glass-card">
+            <div class="card-header-label">
+                <i class="fa-solid fa-link"></i> Link Alternatif Aman
+            </div>
+            <div class="action-group">
+                <button class="btn-icon btn-edit" onclick="toggleEdit('box-link', this)"><i class="fa-solid fa-pen"></i> Edit</button>
+                <button class="btn-icon btn-copy" onclick="copyText('box-link')"><i class="fa-solid fa-copy"></i> Copy</button>
+            </div>
+            <div id="box-link" class="output-container" oninput="autoSave('box-link')">🔗 Link aman sudah ready, bro!
+👉 Tinggal klik, langsung gas ⬇️
+🎯 Hoki lagi kumpul di sini hari ini!
+🔵 https://dkwl.b-cdn.net/togelup-kl1
+🔴 https://dkwl.b-cdn.net/togelup-kl2
+
+💥 Hari ini bisa jadi hari besar!
+💸 Tajamkan feeling, dengarkan insting 🧠
+🍀 Rezeki nggak salah alamat! 🎉💰
+🚀 Ayo gas, sebelum kesempatan lewat! 🔥🚀</div>
+        </div>
+
+    </div>
+
+    <div id="toast" class="toast">BERHASIL DISALIN!</div>
+
+    <script>
+        // JS tetap sama, mempertahankan fungsi simpan otomatis & generate
+        window.onload = function() {
+            loadSavedData('box-post');
+            loadSavedData('box-prediksi');
+            loadSavedData('box-link');
+            loadInputs();
+        };
+
+        function saveInputs() {
+            localStorage.setItem('in-user', document.getElementById('in-user').value);
+            localStorage.setItem('in-game', document.getElementById('in-game').value);
+            localStorage.setItem('in-nominal', document.getElementById('in-nominal').value);
+        }
+
+        function loadInputs() {
+            if(localStorage.getItem('in-user')) document.getElementById('in-user').value = localStorage.getItem('in-user');
+            if(localStorage.getItem('in-game')) document.getElementById('in-game').value = localStorage.getItem('in-game');
+            if(localStorage.getItem('in-nominal')) document.getElementById('in-nominal').value = localStorage.getItem('in-nominal');
+        }
+
+        function formatNumber(input) {
+            let value = input.value.replace(/\D/g, "");
+            input.value = value.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+
+        function generateReport() {
+            const uid = document.getElementById('in-user').value || '---';
+            const game = document.getElementById('in-game').value || '---';
+            const nom = document.getElementById('in-nominal').value || '0';
+
+            const template = `🎉 WINNER ALERT! 🎉
+🎰 User ID : ${uid} 🎰
+💥 Menang : ${game} 💥
+💸 Nominal Rp. ${nom} 💸 CASH OUT 💸
+🔥 Main tenang, MENANG = BAYAR! 🔥
+🚀 Jangan cuma lihat, ayo ikutan! 🚀
+📩 Giliran kamu selanjutnya! 📩`;
+
+            const box = document.getElementById('box-post');
+            box.innerText = template;
+            localStorage.setItem('box-post', template);
+            showToast("Laporan Berhasil!");
+        }
+
+        function copyText(id) {
+            const rawText = document.getElementById(id).innerText;
+            const cleanText = rawText.replace(/"/g, "");
+            navigator.clipboard.writeText(cleanText).then(() => {
+                showToast("Berhasil Disalin!");
+            });
+        }
+
+        function toggleEdit(id, btn) {
+            const el = document.getElementById(id);
+            const isEditing = el.contentEditable === "true";
+
+            if (!isEditing) {
+                el.contentEditable = "true";
+                el.focus();
+                btn.innerHTML = '<i class="fa-solid fa-check"></i> OK';
+                btn.style.color = "var(--success)";
+            } else {
+                el.contentEditable = "false";
+                btn.innerHTML = '<i class="fa-solid fa-pen"></i> Edit';
+                btn.style.color = "var(--warning)";
+                autoSave(id);
+                showToast("Tersimpan!");
+            }
+        }
+
+        function resetForm() {
+            if(confirm("Hapus semua data yang tersimpan?")) {
+                document.getElementById('in-user').value = "";
+                document.getElementById('in-game').value = "";
+                document.getElementById('in-nominal').value = "";
+                document.getElementById('box-post').innerText = "Generate data untuk hasil...";
+                localStorage.clear();
+                showToast("Data Reset!");
+            }
+        }
+
+        function autoSave(id) {
+            localStorage.setItem(id, document.getElementById(id).innerText);
+        }
+
+        function loadSavedData(id) {
+            const saved = localStorage.getItem(id);
+            if (saved) document.getElementById(id).innerText = saved;
+        }
+
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            t.innerText = msg;
+            t.style.display = 'block';
+            setTimeout(() => { t.style.display = 'none'; }, 2000);
+        }
+    </script>
+</body>
+</html>
