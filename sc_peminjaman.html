@@ -137,7 +137,7 @@
             white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
         }
 
-        /* Styling baris TOTAL (Hanya Visual) */
+        /* Tampilan Visual Total di Tabel */
         .total-box-visual {
             padding: 12px 10px;
             color: #f1c40f; 
@@ -222,9 +222,8 @@
         </div>
         <div class="result-col">
             <div class="col-header">NOMINAL <span class="copy-emoji" onclick="copyColumn('colAmount')">📋</span></div>
-            <!-- Wadah list nominal (Hanya ini yang di-copy) -->
             <div id="colAmount" class="item-list"></div>
-            <!-- Wadah Total (Terpisah, tidak akan ikut tercopy) -->
+            <!-- Total Visual (Hanya Pajangan di Tabel) -->
             <div id="visualTotalNominal" class="total-box-visual" style="display:none;"></div>
         </div>
         <div class="result-col">
@@ -250,7 +249,7 @@
         const rawReport = document.getElementById('inputText').value;
         const rawLinks = document.getElementById('inputLampiran').value;
         
-        // Bersihkan tabel
+        // Reset Tabel
         ['colBank', 'colName', 'colNumber', 'colAmount', 'colLink'].forEach(id => document.getElementById(id).innerHTML = "");
         
         let totalSum = 0;
@@ -296,7 +295,7 @@
             }
         });
 
-        // Tampilkan Total (Hanya Visual)
+        // 1. Tampilkan Total Visual di bawah Tabel Nominal (Hanya Pajangan)
         const totalBox = document.getElementById('visualTotalNominal');
         if (totalSum > 0) {
             totalBox.style.display = "block";
@@ -305,13 +304,18 @@
             totalBox.style.display = "none";
         }
 
-        // HASIL LAPORAN GABUNGAN (Tanpa Total)
+        // 2. Update Hasil Laporan Gabungan (DENGAN TOTAL)
         const areaGabungan = document.getElementById('fullReportArea');
         if (!rawReport.trim() && !rawLinks.trim()) {
             areaGabungan.innerText = "Menunggu data ditempel...";
         } else {
             let fullText = rawReport.trimEnd();
-            // Bagian penambahan total ke teks sudah dihapus di sini
+            
+            // Masukkan Total Nominal ke dalam kotak laporan gabungan
+            if (totalSum > 0) {
+                fullText += "\n\nTOTAL NOMINAL : " + totalSum.toLocaleString('en-US');
+            }
+            
             if (rawLinks.trim() !== "") {
                 fullText += "\n\nLampiran :\n" + rawLinks.trim();
             } else {
@@ -332,12 +336,10 @@
         container.appendChild(div);
     }
 
-    // FUNGSI COPY UPDATE (Total dijamin tidak ikut tercopy)
+    // 3. FUNGSI COPY KOLOM (Total dijamin tidak ikut tercopy)
     function copyColumn(id, isLampiran = false) {
-        // Mengambil elemen hanya dari dalam list (mengabaikan totalBox karena totalBox bukan bagian dari colAmount)
-        const container = document.getElementById(id);
-        const rows = container.getElementsByClassName('item-row');
-        
+        // Hanya mengambil data dari item-row saja
+        const rows = document.getElementById(id).getElementsByClassName('item-row');
         if (rows.length === 0) return;
         
         let textToCopy = isLampiran ? "Lampiran :\n" : "";
@@ -348,6 +350,7 @@
         executeCopy(textToCopy.trim());
     }
 
+    // 4. FUNGSI COPY SEMUA (Total ikut tercopy dari kotak gabungan)
     function copyFullReport() {
         const text = document.getElementById('fullReportArea').innerText;
         if (text.includes("Menunggu")) return;
