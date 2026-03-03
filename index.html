@@ -16,8 +16,9 @@
             --neon-aqua: #00fbff;
             --neon-glow: rgba(0, 251, 255, 0.5);
             --glass-white: rgba(255, 255, 255, 0.05);
-            --glass-hover: rgba(0, 251, 255, 0.12);
-            --text-main: #e0e6ed; /* Warna teks lebih terang agar jelas */
+            --glass-hover: rgba(0, 251, 255, 0.15);
+            --text-main: #e0e6ed;
+            --text-dim: #a0aec0;
             --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
@@ -38,28 +39,28 @@
 
         /* --- SIDEBAR --- */
         .sidebar {
-            width: 290px;
+            width: 300px;
             background-color: var(--sidebar-bg);
             border-right: 1px solid rgba(0, 251, 255, 0.2);
             display: flex;
             flex-direction: column;
             z-index: 100;
-            box-shadow: 10px 0 30px rgba(0, 0, 0, 0.8);
+            box-shadow: 10px 0 35px rgba(0, 0, 0, 0.9);
         }
 
         .header-title {
             width: 100%;
-            padding: 40px 20px 25px 20px;
+            padding: 45px 20px 30px 20px;
             text-align: center;
         }
 
         .dashboard-text {
             font-family: 'Orbitron', sans-serif;
-            font-size: 19px;
+            font-size: 20px;
             font-weight: 700;
             color: var(--neon-aqua);
             text-transform: uppercase;
-            letter-spacing: 2.5px;
+            letter-spacing: 3px;
             line-height: 1.4;
             text-shadow: 0 0 15px var(--neon-glow);
             border-bottom: 2px solid var(--neon-glow);
@@ -74,10 +75,20 @@
             margin-top: 10px;
             overflow-y: auto;
             flex-grow: 1;
+            scrollbar-width: thin;
+            scrollbar-color: var(--neon-aqua) transparent;
+        }
+
+        .menu-container::-webkit-scrollbar {
+            width: 5px;
+        }
+        .menu-container::-webkit-scrollbar-thumb {
+            background: var(--neon-aqua);
+            border-radius: 10px;
         }
 
         .menu-item {
-            margin-bottom: 10px;
+            margin-bottom: 12px;
             position: relative;
         }
 
@@ -87,9 +98,9 @@
             color: var(--text-main);
             display: flex;
             align-items: center;
-            padding: 15px 18px;
+            padding: 16px 20px;
             border-radius: 12px;
-            font-weight: 700; /* Font Tebal */
+            font-weight: 700;
             font-size: 15px;
             letter-spacing: 1.2px;
             text-transform: uppercase;
@@ -104,33 +115,39 @@
             color: #fff;
             background: var(--glass-hover);
             border-color: var(--neon-aqua);
-            transform: translateX(8px);
-            box-shadow: 0 0 20px rgba(0, 251, 255, 0.15);
+            transform: translateX(10px);
+            box-shadow: 0 0 25px rgba(0, 251, 255, 0.2);
         }
 
         .menu-link.active {
             color: #fff;
             background: rgba(0, 251, 255, 0.15);
             border-color: var(--neon-aqua);
-            text-shadow: 0 0 8px rgba(255, 255, 255, 0.5); /* Glow pada teks aktif */
+            text-shadow: 0 0 10px var(--neon-aqua);
+            box-shadow: inset 0 0 15px rgba(0, 251, 255, 0.1);
         }
 
         .menu-link .icon {
-            margin-right: 14px;
-            font-size: 20px;
-            filter: drop-shadow(0 0 5px rgba(255,255,255,0.2));
+            margin-right: 15px;
+            font-size: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            filter: drop-shadow(0 0 5px var(--neon-glow));
         }
 
         .arrow {
             margin-left: auto;
-            font-size: 11px;
+            font-size: 12px;
             font-weight: 900;
             transition: var(--transition);
+            opacity: 0.7;
         }
 
         .has-submenu.open .arrow {
             transform: rotate(180deg);
             color: var(--neon-aqua);
+            opacity: 1;
         }
 
         /* --- SUBMENU STYLE --- */
@@ -138,25 +155,25 @@
             list-style: none;
             max-height: 0;
             overflow: hidden;
-            transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            background: rgba(0, 0, 0, 0.3);
-            margin: 2px 5px 0 25px;
+            transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            background: rgba(0, 0, 0, 0.4);
+            margin: 4px 5px 0 25px;
             border-left: 2px solid var(--neon-aqua);
-            border-radius: 0 0 10px 10px;
+            border-radius: 0 0 12px 12px;
         }
 
         .has-submenu.open .submenu {
-            max-height: 250px;
-            padding: 8px 0;
+            max-height: 400px; /* Ditambah agar muat lebih banyak menu */
+            padding: 10px 0;
         }
 
         .submenu-item a {
             text-decoration: none;
-            color: #a0aec0;
+            color: var(--text-dim);
             display: block;
-            padding: 12px 20px;
+            padding: 12px 25px;
             font-size: 14px;
-            font-weight: 700; /* Font Tebal pada Sub-menu */
+            font-weight: 700;
             letter-spacing: 1px;
             transition: var(--transition);
             text-transform: uppercase;
@@ -164,8 +181,9 @@
 
         .submenu-item a:hover, .submenu-item a.active-sub {
             color: var(--neon-aqua);
-            padding-left: 28px;
-            background: rgba(0, 251, 255, 0.05);
+            padding-left: 35px;
+            background: rgba(0, 251, 255, 0.08);
+            text-shadow: 0 0 8px var(--neon-glow);
         }
 
         /* --- CONTENT AREA --- */
@@ -173,23 +191,35 @@
             flex-grow: 1;
             height: 100vh;
             background: #000;
+            position: relative;
+        }
+
+        .content-area::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at center, rgba(0, 251, 255, 0.03) 0%, transparent 70%);
+            pointer-events: none;
         }
 
         iframe {
             width: 100%;
             height: 100%;
             border: none;
+            position: relative;
+            z-index: 1;
         }
 
         .footer-tag {
-            padding: 20px;
+            padding: 25px;
             text-align: center;
             font-size: 12px;
             color: #4a5568;
-            letter-spacing: 2px;
+            letter-spacing: 3px;
             text-transform: uppercase;
-            font-weight: 700;
+            font-weight: 800;
             border-top: 1px solid rgba(255,255,255,0.05);
+            background: rgba(0, 0, 0, 0.2);
         }
 
     </style>
@@ -211,7 +241,7 @@
                 </a>
             </li>
 
-            <!-- Menu POSTINGAN dengan Dropdown (Syair & Kemenangan) -->
+            <!-- Menu POSTINGAN dengan Dropdown (Syair, Kemenangan, Reportan Slot) -->
             <li class="menu-item has-submenu">
                 <div class="menu-link" onclick="toggleSubmenu(this)">
                     <span class="icon">📁</span> POSTINGAN <span class="arrow">▼</span>
@@ -222,6 +252,10 @@
                     </li>
                     <li class="submenu-item">
                         <a href="kemenangan.html" target="mainFrame" onclick="setActiveSub(this)">💰 KEMENANGAN</a>
+                    </li>
+                    <li class="submenu-item">
+                        <!-- MENU BARU -->
+                        <a href="reportan_slot.html" target="mainFrame" onclick="setActiveSub(this)">🎰 REPORTAN SLOT</a>
                     </li>
                 </ul>
             </li>
@@ -260,6 +294,14 @@
         // Fungsi Dropdown
         function toggleSubmenu(element) {
             const parent = element.parentElement;
+            
+            // Tutup submenu lain jika ingin fokus ke satu menu (Opsional)
+            /*
+            document.querySelectorAll('.has-submenu').forEach(item => {
+                if(item !== parent) item.classList.remove('open');
+            });
+            */
+            
             parent.classList.toggle('open');
         }
 
@@ -268,7 +310,7 @@
             localStorage.setItem('lastOpenedPage', pageUrl);
             updateActiveState(element);
             
-            // Tutup dropdown lain jika klik menu utama
+            // Tutup semua dropdown saat pindah ke menu single
             document.querySelectorAll('.has-submenu').forEach(item => {
                 item.classList.remove('open');
             });
@@ -281,18 +323,22 @@
             updateActiveState(element);
         }
 
-        // Update Status Aktif (CSS)
+        // Update Status Aktif (CSS) secara menyeluruh
         function updateActiveState(element) {
+            // Hapus semua status aktif
             document.querySelectorAll('.menu-link, .submenu-item a').forEach(el => {
                 el.classList.remove('active', 'active-sub');
             });
 
             if (element.classList.contains('menu-link')) {
+                // Jika menu utama diklik
                 element.classList.add('active');
             } else {
+                // Jika sub-menu diklik
                 element.classList.add('active-sub');
-                // Sorot bapaknya juga kalau anaknya aktif
-                element.closest('.has-submenu').querySelector('.menu-link').classList.add('active');
+                // Beri warna aktif juga pada bapak (Parent) dropdown-nya
+                const parentLink = element.closest('.has-submenu').querySelector('.menu-link');
+                if(parentLink) parentLink.classList.add('active');
             }
         }
 
@@ -307,11 +353,13 @@
                 allLinks.forEach(link => {
                     if (link.getAttribute('href') === lastPage) {
                         updateActiveState(link);
+                        // Jika berada di dalam dropdown, buka induknya secara otomatis
                         const parentSub = link.closest('.has-submenu');
                         if(parentSub) parentSub.classList.add('open');
                     }
                 });
             } else {
+                // Default halaman pertama aktif jika belum ada cache
                 document.querySelector('.menu-link').classList.add('active');
             }
         };
