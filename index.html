@@ -163,7 +163,7 @@
         }
 
         .has-submenu.open .submenu {
-            max-height: 400px; /* Ditambah agar muat lebih banyak menu */
+            max-height: 500px;
             padding: 10px 0;
         }
 
@@ -241,12 +241,16 @@
                 </a>
             </li>
 
-            <!-- Menu POSTINGAN dengan Dropdown (Syair, Kemenangan, Reportan Slot) -->
+            <!-- Menu POSTINGAN dengan Dropdown -->
             <li class="menu-item has-submenu">
                 <div class="menu-link" onclick="toggleSubmenu(this)">
                     <span class="icon">📁</span> POSTINGAN <span class="arrow">▼</span>
                 </div>
                 <ul class="submenu">
+                    <!-- MENU KATA KATA (katakata.html) -->
+                    <li class="submenu-item">
+                        <a href="katakata.html" target="mainFrame" onclick="setActiveSub(this)">💬 KATA KATA</a>
+                    </li>
                     <li class="submenu-item">
                         <a href="syair.html" target="mainFrame" onclick="setActiveSub(this)">📜 SYAIR</a>
                     </li>
@@ -254,7 +258,6 @@
                         <a href="kemenangan.html" target="mainFrame" onclick="setActiveSub(this)">💰 KEMENANGAN</a>
                     </li>
                     <li class="submenu-item">
-                        <!-- MENU BARU -->
                         <a href="reportan_slot.html" target="mainFrame" onclick="setActiveSub(this)">🎰 REPORTAN SLOT</a>
                     </li>
                 </ul>
@@ -294,14 +297,6 @@
         // Fungsi Dropdown
         function toggleSubmenu(element) {
             const parent = element.parentElement;
-            
-            // Tutup submenu lain jika ingin fokus ke satu menu (Opsional)
-            /*
-            document.querySelectorAll('.has-submenu').forEach(item => {
-                if(item !== parent) item.classList.remove('open');
-            });
-            */
-            
             parent.classList.toggle('open');
         }
 
@@ -360,7 +355,8 @@
                 });
             } else {
                 // Default halaman pertama aktif jika belum ada cache
-                document.querySelector('.menu-link').classList.add('active');
+                const firstLink = document.querySelector('.menu-link');
+                if(firstLink) firstLink.classList.add('active');
             }
         };
     </script>
