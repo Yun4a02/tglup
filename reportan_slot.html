@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reportan Slot Pro - Postingan UP</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;800&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+    
+    <!-- Library untuk membaca Excel & CSV -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+    <style>
+        :root {
+            --bg-dark: #000c14;
+            --card-bg: #00121a;
+            --neon-aqua: #00fbff;
+            --neon-glow: rgba(0, 251, 255, 0.4);
+            --border: rgba(0, 251, 255, 0.2);
+            --glass: rgba(255, 255, 255, 0.05);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg-dark);
+            color: white;
+            font-family: 'Rajdhani', sans-serif;
+            padding: 50px 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        h2 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--neon-aqua);
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            margin-bottom: 70px;
+            font-size: 28px;
+            text-shadow: 0 0 15px var(--neon-glow);
+        }
+
+        /* --- GRID LAYOUT --- */
+        .report-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px 25px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 35px 25px 25px 25px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .card:hover {
+            border-color: var(--neon-aqua);
+            box-shadow: 0 0 20px rgba(0, 251, 255, 0.1);
+        }
+
+        /* --- ANIMASI JUDUL MELAMBAI --- */
+        @keyframes floatWave {
+            0% { transform: translate(-50%, 0px); text-shadow: 0 0 10px var(--neon-glow); }
+            50% { transform: translate(-50%, -15px); text-shadow: 0 0 25px var(--neon-aqua); }
+            100% { transform: translate(-50%, 0px); text-shadow: 0 0 10px var(--neon-glow); }
+        }
+
+        .floating-title {
+            position: absolute;
+            top: -24px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--bg-dark); 
+            padding: 5px 25px;
+            color: var(--neon-aqua);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 18px;
+            font-weight: 800;
+            text-transform: uppercase;
+            white-space: nowrap;
+            letter-spacing: 3px;
+            animation: floatWave 3s ease-in-out infinite;
+            z-index: 10;
+            border-radius: 8px;
+        }
+
+        /* --- EXCEL/CSV UPLOAD SECTION --- */
+        .excel-section {
+            background: rgba(0, 251, 255, 0.08);
+            border: 2px solid var(--neon-aqua);
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .excel-btn {
+            background: var(--neon-aqua);
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 800;
+            font-size: 11px;
+            cursor: pointer;
+            transition: var(--transition);
+            width: 100%;
+            text-transform: uppercase;
+        }
+
+        .excel-btn:hover {
+            filter: brightness(1.2);
+            box-shadow: 0 0 15px var(--neon-aqua);
+        }
+
+        /* --- FOLDER NAME SECTION --- */
+        .folder-section {
+            background: rgba(0, 251, 255, 0.03);
+            border: 1px dashed var(--neon-aqua);
+            border-radius: 12px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .folder-label {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 10px;
+            color: var(--neon-aqua);
+            letter-spacing: 1.5px;
+            opacity: 0.8;
+            font-weight: 700;
+        }
+
+        .folder-display {
+            font-size: 16px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .btn-copy-folder {
+            background: transparent;
+            border: 1px solid var(--neon-aqua);
+            color: var(--neon-aqua);
+            padding: 10px;
+            border-radius: 8px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+
+        .btn-copy-folder:hover {
+            background: var(--neon-aqua);
+            color: #000;
+        }
+
+        /* --- INPUTS --- */
+        .input-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        label {
+            font-size: 12px;
+            font-weight: 800;
+            color: #a0aec0;
+            text-transform: uppercase;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            background: rgba(0,0,0,0.4);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: #fff;
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+            font-size: 16px;
+            outline: none;
+        }
+
+        /* --- PREVIEW --- */
+        .preview-box {
+            background: rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 12px;
+            padding: 18px;
+            font-family: 'Consolas', monospace;
+            font-size: 14px;
+            color: #e0e6ed;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            min-height: 140px;
+        }
+
+        .btn-copy-report {
+            width: 100%;
+            padding: 16px;
+            background: var(--neon-aqua);
+            color: #000;
+            border: none;
+            border-radius: 12px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 800;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--neon-aqua);
+            color: #000;
+            padding: 12px 35px;
+            border-radius: 50px;
+            font-weight: 800;
+            display: none;
+            z-index: 10000;
+        }
+
+        @media (max-width: 850px) {
+            .report-grid { grid-template-columns: 1fr; gap: 60px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>🎰 REPORTAN SLOT DASHBOARD</h2>
+
+    <div class="report-grid">
+        
+        <!-- MENU 1: MAHJONG -->
+        <div class="card">
+            <div class="floating-title">Mahjong Ways 1 & 2</div>
+
+            <div class="excel-section">
+                <!-- Accept CSV, XLSX, XLS -->
+                <input type="file" id="excelInput1" accept=".xlsx, .xls, .csv" style="display: none;" onchange="handleExcel(this, 1)">
+                <button class="excel-btn" onclick="document.getElementById('excelInput1').click()">📁 UPLOAD</button>
+            </div>
+
+            <div class="folder-section">
+                <div class="folder-label">FOLDER NAME (RENAME)</div>
+                <div class="folder-display" id="folderName1"></div>
+                <button class="btn-copy-folder" onclick="copyText('folderName1')">📋 COPY NAMA FOLDER</button>
+            </div>
+
+            <div class="input-row">
+                <div class="input-group">
+                    <label>Total All :</label>
+                    <input type="text" id="total1" placeholder="0" oninput="updateUI(1)">
+                </div>
+                <div class="input-group">
+                    <label>Total Nominal :</label>
+                    <input type="text" id="nominal1" placeholder="Nominal..." oninput="formatCurrency(this, 1)">
+                </div>
+            </div>
+
+            <div class="preview-box" id="preview1"></div>
+            <button class="btn-copy-report" onclick="copyText('preview1')">📋 COPY</button>
+        </div>
+
+        <!-- MENU 2: FREESPIN & BUYSPIN -->
+        <div class="card">
+            <div class="floating-title">FreeSpin & Buyspin</div>
+
+            <div class="excel-section">
+                <!-- Accept CSV, XLSX, XLS -->
+                <input type="file" id="excelInput2" accept=".xlsx, .xls, .csv" style="display: none;" onchange="handleExcel(this, 2)">
+                <button class="excel-btn" onclick="document.getElementById('excelInput2').click()">📁 UPLOAD</button>
+            </div>
+
+            <div class="folder-section">
+                <div class="folder-label">FOLDER NAME (RENAME)</div>
+                <div class="folder-display" id="folderName2"></div>
+                <button class="btn-copy-folder" onclick="copyText('folderName2')">📋 COPY NAMA FOLDER</button>
+            </div>
+
+            <div class="input-row">
+                <div class="input-group">
+                    <label>Total All :</label>
+                    <input type="text" id="total2" placeholder="0" oninput="updateUI(2)">
+                </div>
+                <div class="input-group">
+                    <label>Total Nominal :</label>
+                    <input type="text" id="nominal2" placeholder="Nominal..." oninput="formatCurrency(this, 2)">
+                </div>
+            </div>
+
+            <div class="preview-box" id="preview2"></div>
+            <button class="btn-copy-report" onclick="copyText('preview2')">📋 COPY</button>
+        </div>
+
+    </div>
+</div>
+
+<div id="toast" class="toast">BERHASIL DISALIN!</div>
+
+<script>
+    const titles = {
+        1: "Bonus scatter mahjong ways 1 & 2",
+        2: "Bonus FreeSpin & Buyspin"
+    };
+
+    function getTodayDate() {
+        const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        const d = new Date();
+        return `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
+    }
+
+    // Fungsi Handle Excel & CSV Universal
+    function handleExcel(input, id) {
+        const file = input.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const data = new Uint8Array(e.target.result);
+            const workbook = XLSX.read(data, { type: 'array' });
+            const sheetName = workbook.SheetNames[0];
+            const worksheet = workbook.Sheets[sheetName];
+            const json = XLSX.utils.sheet_to_json(worksheet);
+
+            if (json.length === 0) {
+                alert("File kosong!");
+                return;
+            }
+
+            let totalUser = 0;
+            let totalNominal = 0;
+
+            const firstRow = json[0];
+            let colUser = "";
+            let colKoin = "";
+
+            // Deteksi kolom secara dinamis
+            for (let key in firstRow) {
+                const k = key.toLowerCase();
+                if (k.includes("userid") || k.includes("user id") || k.includes("username")) colUser = key;
+                
+                if (id === 1) {
+                    if (k.includes("total koin") || k.includes("koin") || k.includes("nominal")) colKoin = key;
+                } else {
+                    // Mencari "Total Hadiah" atau "Hadiah"
+                    if (k.includes("hadiah") || k.includes("total hadiah") || k.includes("bonus")) colKoin = key;
+                }
+            }
+
+            if (!colUser || !colKoin) {
+                alert(`Kolom tidak ditemukan!\nCari: User ID & ${id === 1 ? 'Total Koin' : 'Total Hadiah'}`);
+                return;
+            }
+
+            json.forEach(row => {
+                if (row[colUser]) totalUser++;
+                if (row[colKoin]) {
+                    // Konversi ke string lalu hilangkan karakter non-angka kecuali titik/koma desimal
+                    let valRaw = String(row[colKoin]).replace(/[^0-9.,]/g, "");
+                    
+                    // Normalisasi: ganti koma desimal menjadi titik agar bisa diproses JavaScript
+                    valRaw = valRaw.replace(/,/g, ".");
+                    
+                    let valNum = parseFloat(valRaw) || 0;
+
+                    // LOGIKA: Jika nominal desimal (misal 0.5), dihitung menjadi 1 (Math.ceil)
+                    totalNominal += Math.ceil(valNum);
+                }
+            });
+
+            // Update Input
+            document.getElementById('total' + id).value = totalUser;
+            const formattedNominal = String(totalNominal).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            document.getElementById('nominal' + id).value = formattedNominal;
+
+            updateUI(id);
+            alert(`File ${id === 1 ? 'Mahjong' : 'FreeSpin'} (CSV/Excel) Berhasil Diproses!`);
+            input.value = ""; 
+        };
+        reader.readAsArrayBuffer(file);
+    }
+
+    function formatCurrency(el, id) {
+        let val = el.value.replace(/\D/g, "");
+        if (val !== "") {
+            el.value = val.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        } else {
+            el.value = "";
+        }
+        updateUI(id);
+    }
+
+    function updateUI(id) {
+        const date = getTodayDate();
+        const total = document.getElementById('total' + id).value || '0';
+        const nominal = document.getElementById('nominal' + id).value || '0';
+        
+        const folderText = `${titles[id]}_ ${date}`;
+        document.getElementById('folderName' + id).innerText = folderText;
+
+        let reportText = "";
+        if(id === 1) {
+            reportText = `Bonus scatter mahjong ways 1 & 2\n`;
+            reportText += `Total All : ${total}\n`;
+            reportText += `Nominal  : Rp. ${nominal}\n\n`;
+            reportText += `Ket : Dilakukan Manual Deposit yang dimana Member mendapatkan Bonus scatter.`;
+        } else {
+            reportText = `Bonus FreeSpin & Buyspin\n`;
+            reportText += `Total All : ${total}\n`;
+            reportText += `Nominal  : Rp. ${nominal}\n\n`;
+            reportText += `Ket :di lakukan manual deposit yang dimana member yang di atas mendapatkan bonus freespin/buyspin ya ko/ci.`;
+        }
+        document.getElementById('preview' + id).innerText = reportText;
+    }
+
+    function copyText(elementId) {
+        const text = document.getElementById(elementId).innerText;
+        const el = document.createElement('textarea');
+        el.value = text;
+        document.body.appendChild(el);
+        el.select();
+        document.execCommand('copy');
+        document.body.removeChild(el);
+
+        const toast = document.getElementById('toast');
+        toast.style.display = "block";
+        setTimeout(() => { toast.style.display = "none"; }, 1500);
+    }
+
+    updateUI(1);
+    updateUI(2);
+</script>
+
+</body>
+</html>
