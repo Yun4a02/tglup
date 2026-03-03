@@ -136,10 +136,10 @@
             white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
         }
 
-        /* Styling baris TOTAL */
+        /* Styling baris TOTAL (Hanya Tampilan Visual) */
         .total-row {
             padding: 12px 10px;
-            color: #f1c40f; /* Warna kuning agar menonjol */
+            color: #f1c40f; 
             font-weight: 800;
             border-top: 2px solid var(--neon-aqua);
             margin-top: auto;
@@ -223,6 +223,7 @@
         <div class="result-col">
             <div class="col-header">NOMINAL <span class="copy-emoji" onclick="copyColumn('colAmount')">📋</span></div>
             <div id="colAmount" class="item-list"></div>
+            <!-- Total hanya tampil di layar -->
             <div id="totalAmountBox" class="total-row" style="display:none;"></div>
         </div>
         <div class="result-col">
@@ -248,7 +249,6 @@
         const rawReport = document.getElementById('inputText').value;
         const rawLinks = document.getElementById('inputLampiran').value;
         
-        // Bersihkan tabel visual sebelum memproses
         ['colBank', 'colName', 'colNumber', 'colAmount', 'colLink'].forEach(id => document.getElementById(id).innerHTML = "");
         
         let totalSum = 0;
@@ -278,27 +278,22 @@
                 const aMatch = clean.match(/[\d.,]{4,}/);
                 if (aMatch) {
                     currentAmount = aMatch[0].replace(/[.,]$/, "");
-                    // Hitung Total Nominal (hilangkan koma untuk parsing angka)
                     let numValue = parseInt(currentAmount.replace(/,/g, ''));
                     if (!isNaN(numValue)) totalSum += numValue;
                 }
                 hasAmount = true;
             }
 
-            // Jika satu set data ditemukan, masukkan ke tabel
             if (hasName && hasNumber && hasAmount) {
                 appendToTable('colBank', currentBank);
                 appendToTable('colName', currentName);
                 appendToTable('colNumber', currentNumber);
                 appendToTable('colAmount', currentAmount);
-                
-                // Reset flag untuk data berikutnya
                 currentBank = "-"; currentName = "-"; currentNumber = "-"; currentAmount = "-";
                 hasBank = false; hasName = false; hasNumber = false; hasAmount = false;
             }
         });
 
-        // Tampilkan Total Nominal di dalam kotak tabel nominal
         const totalBox = document.getElementById('totalAmountBox');
         if (totalSum > 0) {
             totalBox.style.display = "block";
@@ -307,19 +302,14 @@
             totalBox.style.display = "none";
         }
 
-        // --- UPDATE HASIL LAPORAN GABUNGAN ---
         const areaGabungan = document.getElementById('fullReportArea');
         if (!rawReport.trim() && !rawLinks.trim()) {
             areaGabungan.innerText = "Menunggu data ditempel...";
         } else {
             let fullText = rawReport.trimEnd();
-            
-            // Tambahkan Total Nominal ke ringkasan teks
             if (totalSum > 0) {
                 fullText += "\n\nTOTAL NOMINAL : " + totalSum.toLocaleString('en-US');
             }
-            
-            // Tambahkan Lampiran
             if (rawLinks.trim() !== "") {
                 fullText += "\n\nLampiran :\n" + rawLinks.trim();
             } else {
@@ -328,7 +318,6 @@
             areaGabungan.innerText = fullText;
         }
 
-        // Update link di tabel visual
         const linkArray = rawLinks.split('\n').filter(l => l.trim() !== "");
         linkArray.forEach(link => appendToTable('colLink', link.trim()));
     }
@@ -341,20 +330,17 @@
         container.appendChild(div);
     }
 
+    // UPDATE: Fungsi Copy Kolom (Total Nominal dikecualikan)
     function copyColumn(id, isLampiran = false) {
         const rows = document.getElementById(id).getElementsByClassName('item-row');
         if (rows.length === 0) return;
+        
         let textToCopy = isLampiran ? "Lampiran :\n" : "";
         for (let i = 0; i < rows.length; i++) {
             textToCopy += rows[i].innerText + "\n";
         }
         
-        // Khusus kolom nominal, tambahkan totalnya juga saat dicopy jika ada
-        if (id === 'colAmount') {
-            const totalText = document.getElementById('totalAmountBox').innerText;
-            if (totalText) textToCopy += "\n" + totalText;
-        }
-        
+        // Logika tambahan untuk nominal dihapus agar tidak menyalin total
         executeCopy(textToCopy.trim());
     }
 
