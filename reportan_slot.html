@@ -20,6 +20,7 @@
             --border: rgba(0, 251, 255, 0.2);
             --glass: rgba(255, 255, 255, 0.05);
             --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --neon-red: #ff3131;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -234,6 +235,35 @@
             cursor: pointer;
         }
 
+        /* --- RESET BUTTON SECTION --- */
+        .reset-container {
+            margin-top: 50px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .btn-reset {
+            background: transparent;
+            border: 2px solid var(--neon-red);
+            color: var(--neon-red);
+            padding: 15px 40px;
+            border-radius: 12px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 800;
+            font-size: 14px;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: var(--transition);
+            box-shadow: 0 0 10px rgba(255, 49, 49, 0.2);
+        }
+
+        .btn-reset:hover {
+            background: var(--neon-red);
+            color: #fff;
+            box-shadow: 0 0 25px rgba(255, 49, 49, 0.5);
+        }
+
         .toast {
             position: fixed;
             bottom: 30px;
@@ -322,6 +352,11 @@
             <button class="btn-copy-report" onclick="copyText('preview2')">📋 COPY</button>
         </div>
 
+    </div>
+
+    <!-- TOMBOL RESET DI POSISI YANG DITANDAI -->
+    <div class="reset-container">
+        <button class="btn-reset" onclick="resetAllData()">🔄 RESET </button>
     </div>
 </div>
 
@@ -452,7 +487,33 @@
         document.execCommand('copy');
         document.body.removeChild(el);
 
+        showToast("BERHASIL DISALIN!");
+    }
+
+    // FUNGSI RESET DATA
+    function resetAllData() {
+        if (confirm("Apakah Anda yakin ingin mereset seluruh data?")) {
+            // Reset input fields
+            document.getElementById('total1').value = "";
+            document.getElementById('nominal1').value = "";
+            document.getElementById('total2').value = "";
+            document.getElementById('nominal2').value = "";
+
+            // Reset file inputs
+            document.getElementById('excelInput1').value = "";
+            document.getElementById('excelInput2').value = "";
+
+            // Refresh UI Previews
+            updateUI(1);
+            updateUI(2);
+
+            showToast("DATA TELAH DIRESET!");
+        }
+    }
+
+    function showToast(message) {
         const toast = document.getElementById('toast');
+        toast.innerText = message;
         toast.style.display = "block";
         setTimeout(() => { toast.style.display = "none"; }, 1500);
     }
