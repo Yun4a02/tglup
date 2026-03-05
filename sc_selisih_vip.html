@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VIP DATA SCANNER - JARVIS FINAL</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-main: #01080e;
+            --neon-aqua: #00fbff;
+            --neon-aqua-dim: rgba(0, 251, 255, 0.3);
+            --neon-green: #39ff14;
+            --neon-red: #ff3131;
+            --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Custom Scrollbar Jarvis */
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: var(--bg-main); }
+        ::-webkit-scrollbar-thumb { background: var(--neon-aqua-dim); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--neon-aqua); }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg-main);
+            background-image: radial-gradient(circle at 50% 50%, #02121d 0%, #01080e 100%), 
+                              linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%);
+            background-size: 100% 100%, 100% 4px;
+            color: #d1d9e0;
+            font-family: 'Rajdhani', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        .container { width: 100%; max-width: 880px; }
+
+        /* --- HEADER --- */
+        .header-section { text-align: center; margin-bottom: 20px; }
+        .glitch-title {
+            font-family: 'Orbitron', sans-serif; font-size: 26px; font-weight: 900;
+            color: #fff; text-transform: uppercase; letter-spacing: 8px;
+            text-shadow: 2px 2px 0px #ff00c1, -2px -2px 0px #00fff9;
+            animation: floating 4s ease-in-out infinite;
+        }
+        @keyframes floating { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+
+        /* --- LOCALIZED SCANNER PANELS --- */
+        .scanner-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px; }
+        
+        .neon-panel {
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid var(--neon-aqua-dim);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            position: relative; /* Penting untuk laser */
+        }
+
+        .neon-panel:hover {
+            border-color: var(--neon-aqua);
+            box-shadow: 0 0 25px var(--neon-aqua-dim);
+        }
+
+        /* GARIS LASER (Hanya muncul di dalam kotak ini) */
+        .scan-line {
+            display: none; 
+            position: absolute; 
+            top: 0; left: 0; width: 100%; height: 3px;
+            background: var(--neon-aqua); 
+            box-shadow: 0 0 15px 1px var(--neon-aqua), 0 0 5px #fff;
+            z-index: 10; 
+            animation: scanMove 1.5s linear infinite;
+            pointer-events: none;
+        }
+        @keyframes scanMove { 0% { top: -5%; } 100% { top: 105%; } }
+
+        .panel-header {
+            background: rgba(0, 251, 255, 0.1);
+            padding: 8px;
+            text-align: center;
+            font-family: 'Orbitron';
+            font-weight: 900;
+            font-size: 11px;
+            letter-spacing: 2px;
+            color: #fff;
+            border-bottom: 1px solid var(--neon-aqua-dim);
+            text-shadow: 0 0 8px var(--neon-aqua);
+        }
+
+        textarea { 
+            width: 100%; height: 160px; background: transparent; 
+            border: none; padding: 12px; color: #fff; 
+            font-family: 'Courier New', monospace; font-size: 11px;
+            resize: none; outline: none;
+        }
+
+        /* --- BUTTONS --- */
+        .btn-container { display: flex; gap: 12px; margin-bottom: 20px; }
+        
+        .btn-action, .btn-reset {
+            padding: 12px; background: transparent; font-family: 'Orbitron'; 
+            font-size: 13px; font-weight: 900; letter-spacing: 3px; 
+            cursor: pointer; transition: var(--transition); text-transform: uppercase; 
+            border-radius: 8px;
+        }
+
+        .btn-action { flex: 3; border: 2px solid var(--neon-aqua-dim); color: var(--neon-aqua); }
+        .btn-action:hover { background: var(--neon-aqua); color: #000; box-shadow: 0 0 30px var(--neon-aqua-dim); }
+
+        .btn-reset { flex: 1; border: 2px solid rgba(255, 49, 49, 0.4); color: var(--neon-red); }
+        .btn-reset:hover { background: var(--neon-red); color: #fff; box-shadow: 0 0 30px rgba(255, 49, 49, 0.3); }
+
+        /* --- STATUS BAR (PENYALUR ANTARA PANEL DAN HASIL) --- */
+        #statusBar {
+            display: none; text-align: center; font-family: 'Orbitron'; font-size: 10px;
+            color: var(--neon-aqua); margin-bottom: 15px; letter-spacing: 2px; animation: blink 1s infinite;
+        }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+        /* --- REPORT CARD COMPACT --- */
+        .report-card { 
+            display: none; padding: 20px; border-radius: 20px; 
+            border: 2px solid var(--neon-aqua-dim); background: rgba(0,0,0,0.9);
+            margin-bottom: 20px;
+        }
+        .report-card:hover { border-color: var(--neon-aqua); box-shadow: 0 0 40px var(--neon-aqua-dim); transform: scale(1.01); }
+
+        .report-label { text-align: center; color: #fff; font-family: 'Orbitron'; font-weight: 900; font-size: 11px; letter-spacing: 3px; margin-bottom: 5px; }
+        
+        .user-id-badge { 
+            font-size: 36px; font-weight: 900; color: #fff; text-align: center; 
+            margin-bottom: 20px; text-shadow: 0 0 15px rgba(255, 255, 255, 0.5); 
+            font-style: italic; letter-spacing: 2px; 
+        }
+
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
+        .stat-card { 
+            padding: 15px; text-align: center; font-style: italic; border-radius: 12px;
+            background: rgba(255,255,255,0.02); border: 2px solid var(--neon-aqua-dim);
+        }
+        .stat-card:hover { border-color: var(--neon-aqua); box-shadow: 0 0 15px var(--neon-aqua-dim); }
+        .stat-title { font-size: 9px; font-weight: 900; color: var(--neon-aqua); letter-spacing: 1px; margin-bottom: 8px; text-transform: uppercase; }
+        .stat-value { font-family: 'Orbitron'; font-size: 22px; font-weight: 900; color: #fff; }
+        
+        /* TRANSACTIONS LABEL - PUTIH JELAS TEBAL */
+        .stat-sub { 
+            font-size: 12px; color: #ffffff !important; font-weight: 900; 
+            margin-top: 8px; text-transform: uppercase; text-shadow: 0 0 5px rgba(255,255,255,0.4);
+        }
+
+        /* --- VERDICT --- */
+        .verdict-board { padding: 25px; border-radius: 15px; text-align: center; font-style: italic; border: 3px solid; }
+        .verdict-msg { font-size: 18px; font-weight: 900; margin-bottom: 10px; letter-spacing: 3px; text-transform: uppercase; }
+        .verdict-diff { font-family: 'Orbitron'; font-size: 50px; font-weight: 900; }
+
+        .st-aman { color: var(--neon-green); border-color: rgba(57, 255, 20, 0.4) !important; text-shadow: 0 0 20px rgba(57, 255, 20, 0.3); }
+        .st-selisih { color: var(--neon-red); border-color: rgba(255, 49, 49, 0.4) !important; text-shadow: 0 0 15px rgba(255, 49, 49, 0.3); }
+
+        .footer {
+            text-align: center; margin-top: 10px; font-family: 'Orbitron'; font-size: 10px;
+            letter-spacing: 4px; color: #444; text-transform: uppercase; padding-bottom: 20px;
+        }
+        .footer span { color: var(--neon-aqua); font-weight: 900; }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header class="header-section">
+            <h1 class="glitch-title">SC SELISIH VIP</h1>
+        </header>
+
+        <!-- INPUT SCANNER AREA -->
+        <section class="scanner-grid">
+            <div class="neon-panel" id="panelVip">
+                <div class="scan-line"></div> <!-- Laser hanya di sini -->
+                <div class="panel-header">DATA QRIS VIP</div>
+                <textarea id="inpVip" placeholder="PASTE VIP LOG..."></textarea>
+            </div>
+            <div class="neon-panel" id="panelIdn">
+                <div class="scan-line"></div> <!-- Laser hanya di sini -->
+                <div class="panel-header">DATA IDN HISTORY</div>
+                <textarea id="inpIdn" placeholder="PASTE HISTORY LOG..."></textarea>
+            </div>
+        </section>
+
+        <div class="btn-container">
+            <button class="btn-action" id="mainBtn" onclick="startJarvis()">RUN SYSTEM ANALYSIS</button>
+            <button class="btn-reset" onclick="resetAll()">RESET</button>
+        </div>
+
+        <div id="statusBar">ANALYZING LOG DATA... ACCESSING ENCRYPTED FILES</div>
+
+        <!-- RESULT SECTION -->
+        <div id="reportCard" class="report-card">
+            <div class="report-label">ENCRYPTED REPORT FOR</div>
+            <div id="resUserId" class="user-id-badge">-</div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-title">TOTAL VIP BALANCE</div>
+                    <div id="resTotalVip" class="stat-value">0</div>
+                    <div id="resCountVip" class="stat-sub">0 TRANSACTIONS</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-title">TOTAL IDN BALANCE</div>
+                    <div id="resTotalIdn" class="stat-value">0</div>
+                    <div id="resCountIdn" class="stat-sub">0 TRANSACTIONS</div>
+                </div>
+            </div>
+
+            <div id="verdictBox" class="verdict-board">
+                <div id="statusMsg" class="verdict-msg">-</div>
+                <div id="resDiff" class="verdict-diff">(0)</div>
+            </div>
+        </div>
+
+        <div class="footer">Official System Security • Created by <span>Wukong</span></div>
+    </div>
+
+    <script>
+        const formatKoma = (n) => n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
+        function resetAll() {
+            if(confirm("Reset seluruh data sistem?")) {
+                location.reload();
+            }
+        }
+
+        function startJarvis() {
+            const v = document.getElementById('inpVip').value;
+            const i = document.getElementById('inpIdn').value;
+            if (!v || !i) { alert("ERROR: Paste both logs before analysis."); return; }
+
+            // 1. Trigger Laser & Status di Table
+            document.getElementById('reportCard').style.display = 'none';
+            document.getElementById('statusBar').style.display = 'block';
+            document.querySelectorAll('.scan-line').forEach(el => el.style.display = 'block');
+            document.getElementById('mainBtn').disabled = true;
+            document.getElementById('mainBtn').innerText = "SCANNING...";
+
+            // 2. Simulasi Proses 2 Detik
+            setTimeout(() => {
+                processData(v, i);
+                document.getElementById('statusBar').style.display = 'none';
+                document.querySelectorAll('.scan-line').forEach(el => el.style.display = 'none');
+                document.getElementById('mainBtn').disabled = false;
+                document.getElementById('mainBtn').innerText = "RUN SYSTEM ANALYSIS";
+            }, 2000);
+        }
+
+        function processData(rawV, rawI) {
+            const card = document.getElementById('reportCard');
+            let user = "UNKNOWN", tV = 0, cV = 0, tI = 0, cI = 0;
+
+            // VIP Parsing
+            rawV.split('\n').forEach(l => {
+                const m = l.match(/DYNAMIC\s+\d+\s+([a-zA-Z0-9_]+)\s+([\d,]+)/i);
+                if (m) { user = m[1].toUpperCase(); tV += parseInt(m[2].replace(/,/g, '')); cV++; }
+            });
+
+            // IDN Parsing
+            rawI.split('\n').forEach(l => {
+                if (l.toLowerCase().includes('deposit')) {
+                    const m = l.match(/\d{1,3}(,\d{3})+/g);
+                    if (m) { tI += parseInt(m[0].replace(/,/g, '')); cI++; }
+                }
+            });
+
+            document.getElementById('resUserId').innerText = user;
+            document.getElementById('resTotalVip').innerText = formatKoma(tV);
+            document.getElementById('resCountVip').innerText = cV + " TRANSACTIONS";
+            document.getElementById('resTotalIdn').innerText = formatKoma(tI);
+            document.getElementById('resCountIdn').innerText = cI + " TRANSACTIONS";
+
+            const diff = tV - tI;
+            const msg = document.getElementById('statusMsg');
+            const res = document.getElementById('resDiff');
+            const box = document.getElementById('verdictBox');
+            
+            box.className = "verdict-board";
+            card.style.display = "block";
+
+            if (diff === 0 && (cV === cI)) {
+                msg.innerText = "DATA SYSTEM STATUS: SECURE";
+                res.innerText = "AMAN";
+                box.classList.add('st-aman');
+            } else {
+                msg.innerText = "SELISIH !!!!!";
+                res.innerText = "(" + formatKoma(Math.abs(diff)) + ")";
+                box.classList.add('st-selisih');
+            }
+        }
+    </script>
+</body>
+</html>
