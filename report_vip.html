@@ -3,154 +3,351 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>REPORT VIP - Under Development</title>
-    
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
-
+    <title>REPORT DAILY QRIS VIP MELAYANG</title>
     <style>
         :root {
-            --bg-dark: #000c14;
-            --neon-aqua: #00fbff;
-            --glass-white: rgba(255, 255, 255, 0.05);
+            --bg-color: #000b0e;
+            --card-bg: #001219;
+            --border-color: #0a2e36;
+            --neon-teal: #00f5ff;
+            --neon-orange: #ff4d4d;
+            --text-color: #e0fbfc;
         }
 
-        body, html {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            background-color: var(--bg-dark);
-            color: white;
-            font-family: 'Rajdhani', sans-serif;
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
             display: flex;
             justify-content: center;
-            align-items: center;
-            overflow: hidden;
-        }
-
-        /* Latar Belakang Partikel Animasi Ringan */
-        .bg-overlay {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at center, rgba(0, 251, 255, 0.05) 0%, transparent 70%);
-            z-index: 1;
+            padding: 20px;
+            margin: 0;
         }
 
         .container {
-            position: relative;
-            z-index: 2;
-            text-align: center;
-            padding: 40px;
-            background: var(--glass-white);
-            border: 1px solid rgba(0, 251, 255, 0.2);
-            border-radius: 30px;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
-            max-width: 500px;
-            width: 90%;
-        }
-
-        /* Ikon Animasi Gear */
-        .icon-box {
-            font-size: 60px;
-            margin-bottom: 20px;
-            display: inline-block;
-            animation: rotate 4s linear infinite;
-        }
-
-        @keyframes rotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
-        h1 {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 32px;
-            letter-spacing: 4px;
-            color: var(--neon-aqua);
-            margin-bottom: 10px;
-            text-shadow: 0 0 15px rgba(0, 251, 255, 0.6);
-            text-transform: uppercase;
-        }
-
-        p {
-            font-size: 18px;
-            color: #b0c4de;
-            letter-spacing: 1.5px;
-            margin-bottom: 30px;
-        }
-
-        /* PROGRESS BAR SIMULASI */
-        .progress-wrapper {
             width: 100%;
-            height: 10px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            overflow: hidden;
-            margin-bottom: 15px;
-            border: 1px solid rgba(0, 251, 255, 0.1);
+            max-width: 900px;
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 0 20px rgba(0, 245, 255, 0.05);
         }
 
-        .progress-bar {
-            width: 65%; /* Persentase simulasi */
-            height: 100%;
-            background: linear-gradient(90deg, #00fbff, #0081ff);
-            box-shadow: 0 0 15px var(--neon-aqua);
-            border-radius: 20px;
-            animation: pulse 2s infinite;
+        h2 {
+            text-align: center;
+            color: var(--neon-teal);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 30px;
+            text-shadow: 0 0 10px rgba(0, 245, 255, 0.5);
         }
 
-        .status-text {
-            font-size: 12px;
-            color: var(--neon-aqua);
+        .header-info {
+            margin-bottom: 20px;
+            font-weight: bold;
+            color: var(--neon-teal);
+            border-bottom: 1px dashed var(--border-color);
+            padding-bottom: 10px;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .item-box {
+            background: rgba(10, 46, 54, 0.3);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 15px;
+            transition: 0.3s;
+        }
+
+        .item-box:hover {
+            border-color: var(--neon-teal);
+        }
+
+        .item-box label {
+            display: block;
+            color: var(--neon-teal);
+            font-size: 0.85rem;
+            margin-bottom: 10px;
             font-weight: bold;
             text-transform: uppercase;
-            letter-spacing: 2px;
         }
 
-        @keyframes pulse {
-            0% { opacity: 0.6; }
-            50% { opacity: 1; }
-            100% { opacity: 0.6; }
+        .input-group {
+            margin-bottom: 10px;
         }
 
-        /* Dekorasi Sudut */
-        .corner {
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            border: 2px solid var(--neon-aqua);
+        .input-group span {
+            font-size: 0.8rem;
+            display: block;
+            margin-bottom: 3px;
+            color: #888;
         }
-        .top-left { top: -2px; left: -2px; border-right: none; border-bottom: none; border-radius: 15px 0 0 0; }
-        .bottom-right { bottom: -2px; right: -2px; border-left: none; border-top: none; border-radius: 0 0 15px 0; }
 
+        input[type="text"] {
+            width: 100%;
+            background: #000;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 8px;
+            color: #fff;
+            box-sizing: border-box;
+            outline: none;
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--neon-teal);
+        }
+
+        /* Tombol Bersihkan */
+        .btn-reset {
+            width: 100%;
+            background: transparent;
+            color: var(--neon-orange);
+            border: 1px solid var(--neon-orange);
+            padding: 12px;
+            text-transform: uppercase;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-bottom: 30px;
+            transition: 0.3s;
+        }
+
+        .btn-reset:hover {
+            background: var(--neon-orange);
+            color: white;
+            box-shadow: 0 0 15px rgba(255, 77, 77, 0.4);
+        }
+
+        /* Area Hasil */
+        .result-section {
+            border: 1px dashed var(--neon-teal);
+            border-radius: 8px;
+            padding: 15px;
+            position: relative;
+        }
+
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .result-title {
+            color: var(--neon-teal);
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .btn-copy {
+            background: transparent;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.85rem;
+        }
+
+        .btn-copy:hover {
+            color: var(--neon-teal);
+        }
+
+        #outputReport {
+            width: 100%;
+            height: 300px;
+            background: transparent;
+            border: none;
+            color: #fff;
+            font-family: 'Courier New', Courier, monospace;
+            resize: none;
+            outline: none;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        #notif {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--neon-teal);
+            color: #000;
+            padding: 10px 20px;
+            border-radius: 5px;
+            display: none;
+            font-weight: bold;
+            z-index: 100;
+        }
     </style>
 </head>
 <body>
 
-    <div class="bg-overlay"></div>
+<div class="container">
+    <h2>REPORT DAILY QRIS VIP MELAYANG</h2>
+    
+    <div class="header-info">
+        Perihal : Report Qris MINERA, PRN, NST, V2HIM, PGA & ORION <br>
+        Tanggal : <span id="currentDate"></span>
+    </div>
 
-    <div class="container">
-        <!-- Dekorasi -->
-        <div class="corner top-left"></div>
-        <div class="corner bottom-right"></div>
-
-        <div class="icon-box">⚙️</div>
-        
-        <h1>REPORT VIP</h1>
-        <p>SEDANG TAHAP PENGEMBANGAN</p>
-
-        <div class="progress-wrapper">
-            <div class="progress-bar"></div>
+    <div class="grid-container" id="formInput">
+        <!-- Item 1 -->
+        <div class="item-box">
+            <label>Saldo Qris MNN & NST</label>
+            <div class="input-group">
+                <span>Keterangan:</span>
+                <input type="text" class="ket" value="KLOP" oninput="updateLiveReport()">
+            </div>
+            <div class="input-group">
+                <span>Lampiran:</span>
+                <input type="text" class="lamp" placeholder="Tempel link..." oninput="updateLiveReport()">
+            </div>
         </div>
-        
-        <div class="status-text">System Optimization 65%</div>
 
-        <div style="margin-top: 30px; font-size: 10px; color: rgba(255,255,255,0.3); letter-spacing: 2px;">
-            ESTIMASI SELESAI: MARET 2026
+        <!-- Item 2 -->
+        <div class="item-box">
+            <label>Saldo Qris PRN</label>
+            <div class="input-group">
+                <span>Keterangan:</span>
+                <input type="text" class="ket" value="KLOP" oninput="updateLiveReport()">
+            </div>
+            <div class="input-group">
+                <span>Lampiran:</span>
+                <input type="text" class="lamp" placeholder="Tempel link..." oninput="updateLiveReport()">
+            </div>
+        </div>
+
+        <!-- Item 3 -->
+        <div class="item-box">
+            <label>Saldo Qris ORION</label>
+            <div class="input-group">
+                <span>Keterangan:</span>
+                <input type="text" class="ket" value="KLOP" oninput="updateLiveReport()">
+            </div>
+            <div class="input-group">
+                <span>Lampiran:</span>
+                <input type="text" class="lamp" placeholder="Tempel link..." oninput="updateLiveReport()">
+            </div>
+        </div>
+
+        <!-- Item 4 -->
+        <div class="item-box">
+            <label>Saldo Qris Minerapay</label>
+            <div class="input-group">
+                <span>Keterangan:</span>
+                <input type="text" class="ket" value="KLOP" oninput="updateLiveReport()">
+            </div>
+            <div class="input-group">
+                <span>Lampiran:</span>
+                <input type="text" class="lamp" placeholder="Tempel link..." oninput="updateLiveReport()">
+            </div>
+        </div>
+
+        <!-- Item 5 -->
+        <div class="item-box">
+            <label>Saldo Qris V2HIM</label>
+            <div class="input-group">
+                <span>Keterangan:</span>
+                <input type="text" class="ket" value="KLOP" oninput="updateLiveReport()">
+            </div>
+            <div class="input-group">
+                <span>Lampiran:</span>
+                <input type="text" class="lamp" placeholder="Tempel link..." oninput="updateLiveReport()">
+            </div>
+        </div>
+
+        <!-- Item 6 -->
+        <div class="item-box">
+            <label>Saldo Qris PGA</label>
+            <div class="input-group">
+                <span>Keterangan:</span>
+                <input type="text" class="ket" value="KLOP" oninput="updateLiveReport()">
+            </div>
+            <div class="input-group">
+                <span>Lampiran:</span>
+                <input type="text" class="lamp" placeholder="Tempel link..." oninput="updateLiveReport()">
+            </div>
         </div>
     </div>
+
+    <button class="btn-reset" onclick="resetForm()">Bersihkan Semua Data</button>
+
+    <div class="result-section">
+        <div class="result-header">
+            <div class="result-title">HASIL LAPORAN GABUNGAN</div>
+            <button class="btn-copy" onclick="copyReport()">📋 COPY SEMUA</button>
+        </div>
+        <textarea id="outputReport" readonly>Menunggu data...</textarea>
+    </div>
+</div>
+
+<div id="notif">Data berhasil disalin!</div>
+
+<script>
+    // Inisialisasi Tanggal
+    function updateDate() {
+        const now = new Date();
+        const d = String(now.getDate()).padStart(2, '0');
+        const m = String(now.getMonth() + 1).padStart(2, '0');
+        const y = now.getFullYear();
+        document.getElementById('currentDate').innerText = `${d} - ${m} - ${y}`;
+    }
+
+    // Fungsi Update Live Report
+    function updateLiveReport() {
+        const tgl = document.getElementById('currentDate').innerText;
+        const boxes = document.querySelectorAll('.item-box');
+        let reportText = `Perihal : Report Qris MINERA , PRN , NST , V2HIM, PGA & ORION\n`;
+        reportText += `Tanggal : ${tgl}\n\n`;
+
+        boxes.forEach((box) => {
+            const label = box.querySelector('label').innerText;
+            const ket = box.querySelector('.ket').value || "-";
+            const lamp = box.querySelector('.lamp').value || "-";
+
+            reportText += `${label}\nKeterangan : ${ket}\nLampiran : ${lamp}\n\n`;
+        });
+
+        document.getElementById('outputReport').value = reportText.trim();
+    }
+
+    // Fungsi Copy
+    function copyReport() {
+        const copyText = document.getElementById("outputReport");
+        copyText.select();
+        copyText.setSelectionRange(0, 99999);
+        navigator.clipboard.writeText(copyText.value);
+
+        const notif = document.getElementById('notif');
+        notif.style.display = 'block';
+        setTimeout(() => { notif.style.display = 'none'; }, 2000);
+    }
+
+    // Fungsi Reset
+    function resetForm() {
+        const inputsKet = document.querySelectorAll('.ket');
+        const inputsLamp = document.querySelectorAll('.lamp');
+        
+        inputsKet.forEach(input => input.value = 'KLOP');
+        inputsLamp.forEach(input => input.value = '');
+        
+        updateLiveReport();
+    }
+
+    // Run on Load
+    updateDate();
+    updateLiveReport();
+</script>
 
 </body>
 </html>
