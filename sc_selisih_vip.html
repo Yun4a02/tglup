@@ -211,7 +211,8 @@
     </div>
 
     <script>
-        const formatKoma = (n) => n.toLocaleString('en-US');
+        // Fungsi format angka ke ribuan dengan koma
+        const formatKoma = (n) => n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 
         function resetAll() {
             if(confirm("Reset seluruh data sistem?")) {
@@ -222,7 +223,7 @@
         function startJarvis() {
             const v = document.getElementById('inpVip').value;
             const i = document.getElementById('inpIdn').value;
-            if (!v.trim() || !i.trim()) { alert("ERROR: Paste both logs before analysis."); return; }
+            if (!v.trim() || !i.trim()) { alert("ERROR: Mohon masukkan kedua data log."); return; }
 
             document.getElementById('reportCard').style.display = 'none';
             document.getElementById('statusBar').style.display = 'block';
@@ -236,51 +237,47 @@
                 document.querySelectorAll('.scan-line').forEach(el => el.style.display = 'none');
                 document.getElementById('mainBtn').disabled = false;
                 document.getElementById('mainBtn').innerText = "RUN SYSTEM ANALYSIS";
-            }, 2000);
+            }, 1500);
         }
 
         function processData(rawV, rawI) {
             const card = document.getElementById('reportCard');
             let user = "UNKNOWN", tV = 0, cV = 0, tI = 0, cI = 0;
 
-            // --- PERBAIKAN LOGIKA VIP (MULTILINE) ---
-            const vLines = rawV.split('\n').map(l => l.trim()).filter(l => l !== "");
-            for (let idx = 0; idx < vLines.length; idx++) {
-                // Cari baris yang mengandung DYNAMIC
-                if (vLines[idx].includes("DYNAMIC")) {
-                    const parts = vLines[idx].split(/\s+/);
-                    // Ambil username (biasanya setelah angka panjang)
-                    if (parts.length >= 3) {
-                        user = parts[2].toUpperCase();
-                    }
-                    
-                    // Cek baris di bawahnya untuk mengambil nominal angka
-                    // Kita cari baris berikutnya yang isinya angka (ada komanya)
-                    if (vLines[idx + 1]) {
-                        const cleanVal = vLines[idx+1].replace(/,/g, '');
-                        if (!isNaN(cleanVal) && cleanVal !== "") {
-                            tV += parseInt(cleanVal);
-                            cV++;
-                        }
-                    }
+            // --- 1. SCAN USERNAME (VIP) ---
+            // Mencari kata setelah 'DYNAMIC [angka] [username]'
+            const userMatch = rawV.match(/DYNAMIC\s+\S+\s+([a-zA-Z0-9_]+)/i);
+            if (userMatch) {
+                user = userMatch[1].toUpperCase();
+            }
+
+            // --- 2. SCAN NOMINAL VIP (RECURSIVE SCAN) ---
+            // Mencari pola "Total : 50,000" secara global (g)
+            const vipRegex = /Total\s*:\s*([\d,]+)/gi;
+            let vMatch;
+            while ((vMatch = vipRegex.exec(rawV)) !== null) {
+                const val = parseInt(vMatch[1].replace(/,/g, ''));
+                if (!isNaN(val)) {
+                    tV += val;
+                    cV++;
                 }
             }
 
-            // --- PERBAIKAN LOGIKA IDN ---
-            // Mencari nominal uang di history IDN (biasanya angka ribuan ke atas)
-            const iLines = rawI.split('\n').map(l => l.trim()).filter(l => l !== "");
-            iLines.forEach(l => {
-                // Mencari pola angka seperti 50,000 atau 100,000
-                const matches = l.match(/\d{1,3}(,\d{3})+/g);
-                if (matches) {
-                    // Jika ada kata deposit atau ini adalah log saldo masuk
-                    // (Anda bisa sesuaikan keywordnya jika IDN punya tanda khusus)
-                    tI += parseInt(matches[0].replace(/,/g, ''));
-                    cI++;
+            // --- 3. SCAN NOMINAL IDN (RECURSIVE SCAN) ---
+            // Memecah baris IDN dan mencari baris yang mengandung "Deposit"
+            const idnLines = rawI.split('\n');
+            idnLines.forEach(line => {
+                if (line.toLowerCase().includes('deposit')) {
+                    // Cari pola angka ribuan (format 00,000)
+                    const moneyMatch = line.match(/\d{1,3}(,\d{3})+/);
+                    if (moneyMatch) {
+                        tI += parseInt(moneyMatch[0].replace(/,/g, ''));
+                        cI++;
+                    }
                 }
             });
 
-            // Update UI
+            // --- 4. UPDATE INTERFACE ---
             document.getElementById('resUserId').innerText = user;
             document.getElementById('resTotalVip').innerText = formatKoma(tV);
             document.getElementById('resCountVip').innerText = cV + " TRANSACTIONS";
@@ -295,7 +292,7 @@
             box.className = "verdict-board";
             card.style.display = "block";
 
-            if (diff === 0 && tV !== 0) {
+            if (diff === 0 && tV > 0) {
                 msg.innerText = "DATA SYSTEM STATUS: SECURE";
                 res.innerText = "AMAN";
                 box.classList.add('st-aman');
