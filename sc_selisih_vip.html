@@ -40,7 +40,6 @@
 
         .container { width: 100%; max-width: 880px; }
 
-        /* --- HEADER --- */
         .header-section { text-align: center; margin-bottom: 20px; }
         .glitch-title {
             font-family: 'Orbitron', sans-serif; font-size: 26px; font-weight: 900;
@@ -50,7 +49,6 @@
         }
         @keyframes floating { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
 
-        /* --- LOCALIZED SCANNER PANELS --- */
         .scanner-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px; }
         
         .neon-panel {
@@ -61,7 +59,7 @@
             transition: var(--transition);
             display: flex;
             flex-direction: column;
-            position: relative; /* Penting untuk laser */
+            position: relative;
         }
 
         .neon-panel:hover {
@@ -69,7 +67,6 @@
             box-shadow: 0 0 25px var(--neon-aqua-dim);
         }
 
-        /* GARIS LASER (Hanya muncul di dalam kotak ini) */
         .scan-line {
             display: none; 
             position: absolute; 
@@ -102,7 +99,6 @@
             resize: none; outline: none;
         }
 
-        /* --- BUTTONS --- */
         .btn-container { display: flex; gap: 12px; margin-bottom: 20px; }
         
         .btn-action, .btn-reset {
@@ -118,20 +114,17 @@
         .btn-reset { flex: 1; border: 2px solid rgba(255, 49, 49, 0.4); color: var(--neon-red); }
         .btn-reset:hover { background: var(--neon-red); color: #fff; box-shadow: 0 0 30px rgba(255, 49, 49, 0.3); }
 
-        /* --- STATUS BAR (PENYALUR ANTARA PANEL DAN HASIL) --- */
         #statusBar {
             display: none; text-align: center; font-family: 'Orbitron'; font-size: 10px;
             color: var(--neon-aqua); margin-bottom: 15px; letter-spacing: 2px; animation: blink 1s infinite;
         }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
 
-        /* --- REPORT CARD COMPACT --- */
         .report-card { 
             display: none; padding: 20px; border-radius: 20px; 
             border: 2px solid var(--neon-aqua-dim); background: rgba(0,0,0,0.9);
             margin-bottom: 20px;
         }
-        .report-card:hover { border-color: var(--neon-aqua); box-shadow: 0 0 40px var(--neon-aqua-dim); transform: scale(1.01); }
 
         .report-label { text-align: center; color: #fff; font-family: 'Orbitron'; font-weight: 900; font-size: 11px; letter-spacing: 3px; margin-bottom: 5px; }
         
@@ -146,30 +139,22 @@
             padding: 15px; text-align: center; font-style: italic; border-radius: 12px;
             background: rgba(255,255,255,0.02); border: 2px solid var(--neon-aqua-dim);
         }
-        .stat-card:hover { border-color: var(--neon-aqua); box-shadow: 0 0 15px var(--neon-aqua-dim); }
         .stat-title { font-size: 9px; font-weight: 900; color: var(--neon-aqua); letter-spacing: 1px; margin-bottom: 8px; text-transform: uppercase; }
         .stat-value { font-family: 'Orbitron'; font-size: 22px; font-weight: 900; color: #fff; }
-        
-        /* TRANSACTIONS LABEL - PUTIH JELAS TEBAL */
-        .stat-sub { 
-            font-size: 12px; color: #ffffff !important; font-weight: 900; 
-            margin-top: 8px; text-transform: uppercase; text-shadow: 0 0 5px rgba(255,255,255,0.4);
-        }
+        .stat-sub { font-size: 12px; color: #ffffff !important; font-weight: 900; margin-top: 8px; text-transform: uppercase; }
 
-        /* --- VERDICT --- */
         .verdict-board { padding: 25px; border-radius: 15px; text-align: center; font-style: italic; border: 3px solid; }
         .verdict-msg { font-size: 18px; font-weight: 900; margin-bottom: 10px; letter-spacing: 3px; text-transform: uppercase; }
         .verdict-diff { font-family: 'Orbitron'; font-size: 50px; font-weight: 900; }
 
-        .st-aman { color: var(--neon-green); border-color: rgba(57, 255, 20, 0.4) !important; text-shadow: 0 0 20px rgba(57, 255, 20, 0.3); }
-        .st-selisih { color: var(--neon-red); border-color: rgba(255, 49, 49, 0.4) !important; text-shadow: 0 0 15px rgba(255, 49, 49, 0.3); }
+        .st-aman { color: var(--neon-green); border-color: rgba(57, 255, 20, 0.4) !important; }
+        .st-selisih { color: var(--neon-red); border-color: rgba(255, 49, 49, 0.4) !important; }
 
         .footer {
             text-align: center; margin-top: 10px; font-family: 'Orbitron'; font-size: 10px;
             letter-spacing: 4px; color: #444; text-transform: uppercase; padding-bottom: 20px;
         }
         .footer span { color: var(--neon-aqua); font-weight: 900; }
-
     </style>
 </head>
 <body>
@@ -179,15 +164,14 @@
             <h1 class="glitch-title">SC SELISIH VIP</h1>
         </header>
 
-        <!-- INPUT SCANNER AREA -->
         <section class="scanner-grid">
             <div class="neon-panel" id="panelVip">
-                <div class="scan-line"></div> <!-- Laser hanya di sini -->
+                <div class="scan-line"></div>
                 <div class="panel-header">DATA QRIS VIP</div>
                 <textarea id="inpVip" placeholder="PASTE VIP LOG..."></textarea>
             </div>
             <div class="neon-panel" id="panelIdn">
-                <div class="scan-line"></div> <!-- Laser hanya di sini -->
+                <div class="scan-line"></div>
                 <div class="panel-header">DATA IDN HISTORY</div>
                 <textarea id="inpIdn" placeholder="PASTE HISTORY LOG..."></textarea>
             </div>
@@ -200,7 +184,6 @@
 
         <div id="statusBar">ANALYZING LOG DATA... ACCESSING ENCRYPTED FILES</div>
 
-        <!-- RESULT SECTION -->
         <div id="reportCard" class="report-card">
             <div class="report-label">ENCRYPTED REPORT FOR</div>
             <div id="resUserId" class="user-id-badge">-</div>
@@ -228,7 +211,7 @@
     </div>
 
     <script>
-        const formatKoma = (n) => n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        const formatKoma = (n) => n.toLocaleString('en-US');
 
         function resetAll() {
             if(confirm("Reset seluruh data sistem?")) {
@@ -239,16 +222,14 @@
         function startJarvis() {
             const v = document.getElementById('inpVip').value;
             const i = document.getElementById('inpIdn').value;
-            if (!v || !i) { alert("ERROR: Paste both logs before analysis."); return; }
+            if (!v.trim() || !i.trim()) { alert("ERROR: Paste both logs before analysis."); return; }
 
-            // 1. Trigger Laser & Status di Table
             document.getElementById('reportCard').style.display = 'none';
             document.getElementById('statusBar').style.display = 'block';
             document.querySelectorAll('.scan-line').forEach(el => el.style.display = 'block');
             document.getElementById('mainBtn').disabled = true;
             document.getElementById('mainBtn').innerText = "SCANNING...";
 
-            // 2. Simulasi Proses 2 Detik
             setTimeout(() => {
                 processData(v, i);
                 document.getElementById('statusBar').style.display = 'none';
@@ -262,20 +243,44 @@
             const card = document.getElementById('reportCard');
             let user = "UNKNOWN", tV = 0, cV = 0, tI = 0, cI = 0;
 
-            // VIP Parsing
-            rawV.split('\n').forEach(l => {
-                const m = l.match(/DYNAMIC\s+\d+\s+([a-zA-Z0-9_]+)\s+([\d,]+)/i);
-                if (m) { user = m[1].toUpperCase(); tV += parseInt(m[2].replace(/,/g, '')); cV++; }
-            });
+            // --- PERBAIKAN LOGIKA VIP (MULTILINE) ---
+            const vLines = rawV.split('\n').map(l => l.trim()).filter(l => l !== "");
+            for (let idx = 0; idx < vLines.length; idx++) {
+                // Cari baris yang mengandung DYNAMIC
+                if (vLines[idx].includes("DYNAMIC")) {
+                    const parts = vLines[idx].split(/\s+/);
+                    // Ambil username (biasanya setelah angka panjang)
+                    if (parts.length >= 3) {
+                        user = parts[2].toUpperCase();
+                    }
+                    
+                    // Cek baris di bawahnya untuk mengambil nominal angka
+                    // Kita cari baris berikutnya yang isinya angka (ada komanya)
+                    if (vLines[idx + 1]) {
+                        const cleanVal = vLines[idx+1].replace(/,/g, '');
+                        if (!isNaN(cleanVal) && cleanVal !== "") {
+                            tV += parseInt(cleanVal);
+                            cV++;
+                        }
+                    }
+                }
+            }
 
-            // IDN Parsing
-            rawI.split('\n').forEach(l => {
-                if (l.toLowerCase().includes('deposit')) {
-                    const m = l.match(/\d{1,3}(,\d{3})+/g);
-                    if (m) { tI += parseInt(m[0].replace(/,/g, '')); cI++; }
+            // --- PERBAIKAN LOGIKA IDN ---
+            // Mencari nominal uang di history IDN (biasanya angka ribuan ke atas)
+            const iLines = rawI.split('\n').map(l => l.trim()).filter(l => l !== "");
+            iLines.forEach(l => {
+                // Mencari pola angka seperti 50,000 atau 100,000
+                const matches = l.match(/\d{1,3}(,\d{3})+/g);
+                if (matches) {
+                    // Jika ada kata deposit atau ini adalah log saldo masuk
+                    // (Anda bisa sesuaikan keywordnya jika IDN punya tanda khusus)
+                    tI += parseInt(matches[0].replace(/,/g, ''));
+                    cI++;
                 }
             });
 
+            // Update UI
             document.getElementById('resUserId').innerText = user;
             document.getElementById('resTotalVip').innerText = formatKoma(tV);
             document.getElementById('resCountVip').innerText = cV + " TRANSACTIONS";
@@ -290,7 +295,7 @@
             box.className = "verdict-board";
             card.style.display = "block";
 
-            if (diff === 0 && (cV === cI)) {
+            if (diff === 0 && tV !== 0) {
                 msg.innerText = "DATA SYSTEM STATUS: SECURE";
                 res.innerText = "AMAN";
                 box.classList.add('st-aman');
