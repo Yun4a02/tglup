@@ -210,24 +210,16 @@
             z-index: 1;
         }
 
-        /* --- FOOTER PERBAIKAN --- */
         .footer-tag {
-            padding: 20px;
+            padding: 25px;
             text-align: center;
-            font-size: 11px;
-            color: #6d7d8b; /* Warna abu-abu yang lebih terlihat */
-            letter-spacing: 2px;
+            font-size: 12px;
+            color: #4a5568;
+            letter-spacing: 3px;
             text-transform: uppercase;
-            font-weight: 700;
-            border-top: 1px solid rgba(0, 251, 255, 0.15);
-            background: rgba(0, 0, 0, 0.3);
-            font-family: 'Orbitron', sans-serif;
-        }
-
-        .wukong-text {
-            color: var(--neon-aqua);
-            text-shadow: 0 0 10px var(--neon-glow);
-            font-weight: 900;
+            font-weight: 800;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            background: rgba(0, 0, 0, 0.2);
         }
 
     </style>
@@ -270,10 +262,10 @@
                 </ul>
             </li>
 
-            <!-- Menu LAYANAN VIP dengan Dropdown -->
+            <!-- Menu VIP & USDT dengan Dropdown (NAMA SUDAH DIGANTI) -->
             <li class="menu-item has-submenu">
                 <div class="menu-link" onclick="toggleSubmenu(this)">
-                    <span class="icon">💎</span> LAYANAN VIP <span class="arrow">▼</span>
+                    <span class="icon">💎</span> VIP & USDT <span class="arrow">▼</span>
                 </div>
                 <ul class="submenu">
                     <li class="submenu-item">
@@ -288,6 +280,10 @@
                     <li class="submenu-item">
                         <a href="sc_selisih_vip.html" target="mainFrame" onclick="setActiveSub(this)">📑 SC SELISIH VIP</a>
                     </li>
+                    <!-- MENU BARU RATE USDT -->
+                    <li class="submenu-item">
+                        <a href="rate_usdt.html" target="mainFrame" onclick="setActiveSub(this)">💲 RATE USDT</a>
+                    </li>
                 </ul>
             </li>
 
@@ -299,10 +295,7 @@
             </li>
         </ul>
 
-        <!-- FOOTER YANG DIUBAH -->
-        <div class="footer-tag">
-            OFFICIAL SYSTEM SECURITY · CREATED BY <span class="wukong-text">WUKONG</span>
-        </div>
+        <div class="footer-tag">OFFICIAL MANAGEMENT</div>
     </nav>
 
     <main class="content-area">
