@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional USDT Rate Generator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Rajdhani:wght@700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-body: #01080b;
+            --card-bg: rgba(2, 15, 20, 0.95);
+            --neon-cyan: #00fbff;
+            --neon-glow: rgba(0, 251, 255, 0.6);
+            --text-main: #ffffff;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg-body);
+            background-image: 
+                radial-gradient(circle at 50% 50%, rgba(0, 251, 255, 0.03) 0%, transparent 80%);
+            color: var(--text-main);
+            font-family: 'Rajdhani', sans-serif;
+            display: flex;
+            justify-content: center;
+            padding: 60px 20px;
+            min-height: 100vh;
+        }
+
+        /* --- TABLE LUAR: NEON CYAN KEDAP-KEDIP --- */
+        .dashboard-card {
+            width: 100%;
+            max-width: 800px;
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border: 3px solid var(--neon-cyan);
+            border-radius: 30px;
+            padding: 45px;
+            position: relative;
+            animation: cyanBlink 2.5s infinite alternate; /* Animasi Kedap Kedip */
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+        }
+
+        @keyframes cyanBlink {
+            0% { 
+                border-color: rgba(0, 251, 255, 0.2);
+                box-shadow: 0 0 10px rgba(0, 251, 255, 0.1), inset 0 0 5px rgba(0, 251, 255, 0.05);
+            }
+            100% { 
+                border-color: var(--neon-cyan);
+                box-shadow: 0 0 40px var(--neon-glow), inset 0 0 15px var(--neon-glow);
+            }
+        }
+
+        /* --- JUDUL UTAMA MELAYANG --- */
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .header h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 32px;
+            font-weight: 900;
+            letter-spacing: 8px;
+            color: var(--neon-cyan);
+            text-transform: uppercase;
+            text-shadow: 0 0 25px var(--neon-glow);
+            display: inline-block;
+            animation: floatingTitle 4s ease-in-out infinite; /* Animasi Melayang */
+        }
+
+        @keyframes floatingTitle {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-20px) scale(1.05); text-shadow: 0 0 40px var(--neon-cyan); }
+        }
+
+        /* --- TABLE DALAM / SEKSI INPUT --- */
+        .inner-section {
+            background: rgba(0, 0, 0, 0.6);
+            border: 2px solid rgba(0, 251, 255, 0.3);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+
+        label {
+            display: block;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 13px;
+            font-weight: 900; /* Cetak Tebal */
+            color: var(--neon-cyan);
+            margin-bottom: 12px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        /* --- TEXTAREA & INPUT --- */
+        textarea, input {
+            width: 100%;
+            background: rgba(0, 30, 40, 0.7);
+            border: 2px solid rgba(0, 251, 255, 0.2);
+            border-radius: 12px;
+            color: #fff;
+            padding: 15px;
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700; /* Cetak Tebal */
+            font-size: 17px;
+            outline: none;
+            transition: var(--transition);
+        }
+
+        textarea:focus, input:focus {
+            border-color: var(--neon-cyan);
+            background: rgba(0, 45, 60, 0.9);
+            box-shadow: 0 0 15px var(--neon-glow);
+        }
+
+        textarea { height: 110px; resize: none; }
+
+        /* --- GRID LAYOUT --- */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        /* --- ANIMASI SCAN PADA BOX DATA RAW --- */
+        .scan-container {
+            position: relative;
+            overflow: hidden;
+            border-radius: 12px;
+        }
+
+        .scan-line {
+            display: none;
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 4px;
+            background: var(--neon-cyan);
+            box-shadow: 0 0 25px var(--neon-cyan);
+            z-index: 5;
+        }
+
+        .scanning .scan-line {
+            display: block;
+            animation: scanAction 2s linear infinite;
+        }
+
+        @keyframes scanAction {
+            0% { top: 0; } 100% { top: 100%; }
+        }
+
+        /* --- BUTTONS --- */
+        .btn-group { display: flex; gap: 20px; }
+
+        button {
+            flex: 1;
+            padding: 18px;
+            border-radius: 15px;
+            border: none;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 900;
+            font-size: 14px;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            transition: var(--transition);
+        }
+
+        .btn-generate {
+            background: var(--neon-cyan);
+            color: #000;
+            box-shadow: 0 0 20px rgba(0, 251, 255, 0.4);
+        }
+
+        .btn-generate:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 40px var(--neon-cyan);
+        }
+
+        .btn-reset {
+            background: transparent;
+            color: #ff4d4d;
+            border: 2px solid #ff4d4d;
+        }
+
+        .btn-reset:hover { background: rgba(255, 77, 77, 0.1); }
+
+        /* --- TERMINAL OUTPUT --- */
+        .output-terminal {
+            margin-top: 40px;
+            background: #000;
+            border: 2px solid var(--neon-cyan);
+            border-radius: 20px;
+            padding: 25px;
+            position: relative;
+        }
+
+        #resultOutput {
+            font-family: 'Courier New', monospace;
+            color: var(--neon-cyan);
+            font-size: 16px;
+            font-weight: 900; /* Cetak Tebal */
+            line-height: 1.7;
+            white-space: pre-wrap;
+        }
+
+        .copy-btn {
+            width: 100%;
+            margin-top: 20px;
+            background: rgba(0, 251, 255, 0.1);
+            color: var(--neon-cyan);
+            border: 2px solid var(--neon-cyan);
+        }
+
+        .copy-btn:hover { background: var(--neon-cyan); color: #000; }
+
+        #toast {
+            position: fixed; bottom: 40px; left: 50%;
+            transform: translateX(-50%);
+            background: var(--neon-cyan);
+            color: #000; padding: 15px 40px;
+            border-radius: 50px; font-weight: 900;
+            display: none; box-shadow: 0 0 30px var(--neon-cyan);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="dashboard-card">
+        <div class="header">
+            <h1>USDT RATE GENERATOR</h1>
+        </div>
+
+        <!-- SEKSI 1: PASTE RAW DATA -->
+        <div class="inner-section">
+            <label>📡 ANALYZE DATA CORE (PASTE RAW)</label>
+            <div class="scan-container" id="scanWrapper">
+                <div class="scan-line"></div>
+                <textarea id="rawInput" placeholder="PASTE DATA RAW DISINI UNTUK DETEKSI OTOMATIS..." oninput="autoFillData()"></textarea>
+            </div>
+        </div>
+
+        <!-- SEKSI 2: MANUAL INPUTS -->
+        <div class="inner-section">
+            <div class="grid-2">
+                <div class="input-box">
+                    <label>RATIO DEPOSIT</label>
+                    <input type="text" id="depoRatio" placeholder="16,000">
+                </div>
+                <div class="input-box">
+                    <label>RATIO WITHDRAW</label>
+                    <input type="text" id="wdRatio" placeholder="17,000">
+                </div>
+            </div>
+
+            <div class="input-box" style="margin-bottom: 25px;">
+                <label>TIMESTAMP UPDATE (MANUAL)</label>
+                <input type="text" id="manualTime">
+            </div>
+
+            <div class="grid-2">
+                <div class="input-box">
+                    <label>LAMPIRAN URL 1</label>
+                    <input type="text" id="link1" placeholder="HTTPS://PRNT.SC/XXXX">
+                </div>
+                <div class="input-box">
+                    <label>LAMPIRAN URL 2</label>
+                    <input type="text" id="link2" placeholder="HTTPS://PRNT.SC/XXXX">
+                </div>
+            </div>
+        </div>
+
+        <div class="btn-group">
+            <button class="btn-generate" onclick="generateReport()">GENERATE REPORT</button>
+            <button class="btn-reset" onclick="resetForm()">RESET SYSTEM</button>
+        </div>
+
+        <!-- OUTPUT TERMINAL -->
+        <div class="output-terminal">
+            <div id="resultOutput">// SYSTEM READY: WAITING FOR DATA INJECTION...</div>
+            <button class="copy-btn" id="btnCopy" onclick="copyText()" style="display: none;">COPY FINAL REPORT</button>
+        </div>
+    </div>
+
+    <div id="toast">SYSTEM: DATA Berhasil Disalin!</div>
+
+    <script>
+        // Fungsi Auto Fill dengan Regex
+        function autoFillData() {
+            const rawText = document.getElementById('rawInput').value;
+            const depoMatch = rawText.match(/Deposit\s*:\s*([\d,.]+)/i);
+            const wdMatch = rawText.match(/Withdraw\s*:\s*([\d,.]+)/i);
+            if (depoMatch) document.getElementById('depoRatio').value = depoMatch[1];
+            if (wdMatch) document.getElementById('wdRatio').value = wdMatch[1];
+        }
+
+        // Set Jam Otomatis Saat Load
+        window.onload = function() {
+            const now = new Date();
+            let hours = now.getHours();
+            let minutes = now.getMinutes();
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12 || 12;
+            minutes = minutes < 10 ? '0' + minutes : minutes;
+            document.getElementById('manualTime').value = (hours < 10 ? '0' + hours : hours) + ':' + minutes + ' ' + ampm;
+        };
+
+        // Generate Report dengan Animasi Scan
+        function generateReport() {
+            const wrapper = document.getElementById('scanWrapper');
+            const depo = document.getElementById('depoRatio').value;
+            const wd = document.getElementById('wdRatio').value;
+
+            if (!depo || !wd) { alert("DATA ERROR: Silahkan isi ratio terlebih dahulu!"); return; }
+
+            wrapper.classList.add('scanning');
+
+            setTimeout(() => {
+                const time = document.getElementById('manualTime').value;
+                const l1 = document.getElementById('link1').value || '-';
+                const l2 = document.getElementById('link2').value || '-';
+                const d = new Date();
+                const months = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agt", "Sep", "Okt", "Nov", "Des"];
+                const fullDate = `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
+
+                const output = `RATE SEKARANG
+Usdt Ratio Deposit : ${depo}
+Usdt Ratio Withdraw : ${wd}
+UPDATE : ${fullDate} (${time})
+Lampiran :
+${l1}
+${l2}`;
+
+                document.getElementById('resultOutput').innerText = output;
+                document.getElementById('btnCopy').style.display = 'block';
+                wrapper.classList.remove('scanning');
+            }, 1500);
+        }
+
+        function copyText() {
+            const text = document.getElementById('resultOutput').innerText;
+            navigator.clipboard.writeText(text).then(() => {
+                const toast = document.getElementById("toast");
+                toast.style.display = "block";
+                setTimeout(() => { toast.style.display = "none"; }, 2500);
+            });
+        }
+
+        function resetForm() {
+            location.reload();
+        }
+    </script>
+</body>
+</html>
