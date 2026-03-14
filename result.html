@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wukong Dashboard - Sweep Aligned</title>
+    <title>Wukong Dashboard - Hokidraw Fix 50m</title>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         :root {
@@ -49,21 +49,20 @@
         @keyframes floating { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
 
         .marquee-wrapper {
-            width: 100%; max-width: 900px; margin: 0 auto 15px auto;
-            overflow: hidden; white-space: nowrap;
-            border-bottom: 1px solid rgba(0, 242, 255, 0.2); padding-bottom: 5px;
+            width: 100%; overflow: hidden; white-space: nowrap;
+            border-bottom: 1px solid rgba(0, 242, 255, 0.3);
+            padding-bottom: 8px; margin-bottom: 20px;
         }
         .marquee-content {
             display: inline-block; color: var(--neon-yellow);
-            font-size: 15px; text-transform: uppercase;
-            text-shadow: 0 0 5px var(--neon-yellow);
+            font-size: 16px; text-transform: uppercase;
+            text-shadow: 0 0 8px var(--neon-yellow);
             animation: walk 15s linear infinite; 
         }
         @keyframes walk { 0% { transform: translateX(100vw); } 100% { transform: translateX(-100%); } }
 
         .dashboard-grid { display: grid; grid-template-columns: 1fr 380px; gap: 15px; align-items: start; }
 
-        /* NAV AREA */
         .nav-area {
             display: flex; align-items: center; justify-content: space-between;
             margin-bottom: 12px; gap: 12px; width: 100%;
@@ -82,10 +81,7 @@
             padding: 0 10px; border-radius: 5px; height: 32px;
         }
         .label-quote-sm { color: var(--neon-yellow); font-size: 9px; white-space: nowrap; margin-right: 8px; }
-        .input-quote-sm {
-            background: transparent; border: none; color: white;
-            font-size: 10px; outline: none; width: 100%;
-        }
+        .input-quote-sm { background: transparent; border: none; color: white; font-size: 10px; outline: none; width: 100%; }
         .btn-reset { background: #30363d; color: #ff4757; border: none; padding: 0 15px; cursor: pointer; border-radius: 5px; font-weight: bold; font-size: 9px; text-transform: uppercase; height: 32px; }
 
         .sticky-sidebar { position: sticky; top: 15px; display: flex; flex-direction: column; gap: 15px; }
@@ -104,7 +100,6 @@
         .label-input { color: var(--neon-blue); font-size: 10px; white-space: nowrap; }
         .main-input { background: transparent; border: none; color: var(--neon-yellow); font-size: 13px; font-weight: 900; outline: none; width: 100%; }
 
-        /* POST SECTION */
         .post-section { background: var(--card-bg); border: 2px solid var(--neon-red); border-radius: 8px; padding: 12px; }
         .post-content {
             background: #000; color: #fff; padding: 12px; border-radius: 5px;
@@ -114,50 +109,32 @@
         }
         .btn-copy { width: 100%; margin-top: 12px; background: var(--neon-green); color: black; border: none; padding: 10px; border-radius: 5px; font-weight: bold; cursor: pointer; text-transform: uppercase; font-size: 11px; }
 
-        /* --- SINGAPORE SWEEP STYLES (WITH SPACING) --- */
         .sweep-section { background: var(--card-bg); border: 2px solid var(--neon-purple); border-radius: 8px; padding: 12px; }
         .sweep-title { color: var(--neon-purple); font-size: 11px; margin-bottom: 8px; text-align: center; text-transform: uppercase; border-bottom: 1px solid #333; padding-bottom: 5px; }
-        
-        .sweep-paste-box { 
-            width: 100%; background: #000; border: 1px solid var(--neon-purple); color: var(--neon-yellow); 
-            padding: 10px; border-radius: 5px; font-size: 12px; outline: none; margin-bottom: 12px; 
-            box-sizing: border-box; text-align: center; font-weight: 900;
-        }
-
-        .sweep-preview-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-bottom: 12px;
-        }
-
+        .sweep-paste-box { width: 100%; background: #000; border: 1px solid var(--neon-purple); color: var(--neon-yellow); padding: 10px; border-radius: 5px; font-size: 12px; outline: none; margin-bottom: 12px; box-sizing: border-box; text-align: center; font-weight: 900; }
+        .sweep-preview-container { display: flex; justify-content: center; align-items: center; margin-bottom: 12px; }
         .ball-group { display: flex; gap: 5px; }
-        
-        .ball-sm {
-            width: 35px; background: #222; border: 1px solid #444; color: var(--neon-yellow); 
-            font-size: 12px; text-align: center; padding: 6px 0; border-radius: 4px;
-        }
-
-        /* JARAK KHUSUS UNTUK ADD NUMBER */
-        .ball-add {
-            margin-left: 15px; /* Jarak yang Anda minta */
-            width: 40px; border: 1px solid var(--neon-blue); color: var(--neon-blue); 
-            background: rgba(0, 242, 255, 0.05);
-        }
-
+        .ball-sm { width: 35px; background: #222; border: 1px solid #444; color: var(--neon-yellow); font-size: 12px; text-align: center; padding: 6px 0; border-radius: 4px; }
+        .ball-add { margin-left: 15px; width: 40px; border: 1px solid var(--neon-blue); color: var(--neon-blue); background: rgba(0, 242, 255, 0.05); }
         .sweep-result-box { background: #000; border: 2px solid var(--neon-green); padding: 10px; text-align: center; border-radius: 5px; }
         .sweep-4d { font-size: 32px; color: var(--neon-green); text-shadow: 0 0 10px var(--neon-green); letter-spacing: 8px; font-weight: 900; }
 
-        /* TABLE */
-        .table-section { background: var(--card-bg); border-radius: 8px; padding: 8px; border: 1px solid #30363d; }
+        .table-section { background: var(--card-bg); border-radius: 10px; padding: 10px; border: 1px solid #30363d; }
         table { width: 100%; border-collapse: collapse; font-size: 13px; } 
-        th { color: var(--neon-blue); text-align: left; padding: 10px 6px; border-bottom: 2px solid #30363d; background: #0d1117; }
+        th { color: var(--neon-blue); text-align: left; padding: 12px 10px; border-bottom: 2px solid #30363d; background: #0d1117; }
         td { padding: 4px 6px; border-bottom: 1px solid #21262d; }
 
-        .row-done { color: var(--neon-green) !important; text-shadow: 0 0 6px var(--neon-green) !important; background: rgba(57, 255, 20, 0.04) !important; }
+        /* STATUSES */
+        .row-done { color: var(--neon-green) !important; text-shadow: 0 0 10px var(--neon-green) !important; background: rgba(57, 255, 20, 0.04) !important; }
         .row-next-up { color: #fff !important; background: rgba(0, 242, 255, 0.12) !important; animation: blinkBlueNeon 0.7s infinite alternate !important; }
         @keyframes blinkBlueNeon { from { text-shadow: 0 0 3px var(--neon-blue); } to { text-shadow: 0 0 15px var(--neon-blue); color: var(--neon-blue); } }
-        .row-hokidraw { color: var(--neon-red) !important; animation: blinkRedNeon 0.8s infinite alternate !important; }
+        
+        /* HOKIDRAW FIX (MERAH KEDIP) */
+        .row-hokidraw { 
+            color: var(--neon-red) !important; 
+            animation: blinkRedNeon 0.8s infinite alternate !important; 
+            background: rgba(255, 0, 68, 0.05) !important;
+        }
         @keyframes blinkRedNeon { from { text-shadow: 0 0 3px var(--neon-red); } to { text-shadow: 0 0 15px var(--neon-red); } }
     </style>
 </head>
@@ -205,20 +182,18 @@
                 
                 <div class="input-box-wrapper">
                     <span class="label-input">RESULT :</span>
-                    <input type="text" id="main-input" class="main-input" placeholder="Tempel: pasar : SYDNEY 3238" oninput="autoProcess(this.value)">
+                    <input type="text" id="main-input" class="main-input" placeholder="Tempel Periode & Pasar di sini..." oninput="autoProcess(this.value)">
                 </div>
 
                 <div class="post-section">
-                    <div style="color:var(--neon-red); margin-bottom:8px; font-size: 11px;">FORMAT POSTINGAN:</div>
+                    <div style="color:var(--neon-red); margin-bottom:8px; font-size: 11px; text-align: left;">FORMAT POSTINGAN:</div>
                     <div class="post-content" id="post-display"></div>
                     <button class="btn-copy" onclick="copyPost()">SALIN & POST RESULT</button>
                 </div>
 
-                <!-- MENU SINGAPORE SWEEP SMART PASTE WITH SPACING -->
                 <div class="sweep-section">
                     <div class="sweep-title">RUMUS SINGAPORE SWEEP</div>
                     <input type="text" class="sweep-paste-box" id="sweep-paste" placeholder="TEMPEL 7 ANGKA RESULT DI SINI..." oninput="smartCalcSweep(this.value)">
-                    
                     <div class="sweep-preview-container">
                         <div class="ball-group">
                             <div class="ball-sm" id="pv-b1">00</div>
@@ -228,22 +203,18 @@
                             <div class="ball-sm" id="pv-b5">00</div>
                             <div class="ball-sm" id="pv-b6">00</div>
                         </div>
-                        <!-- BOLA ADD DENGAN JARAK KHUSUS -->
                         <div class="ball-sm ball-add" id="pv-add">00</div>
                     </div>
-
                     <div class="sweep-result-box">
                         <div style="font-size: 9px; color: #888; margin-bottom: 4px;">ANGKA KELUAR (4D)</div>
                         <div class="sweep-4d" id="sweep-output">0000</div>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
 
     <script>
-        // DATA TETAP LENGKAP
         const shioTable = {
             "Kuda": ["01","13","25","37","49","61","73","85","97"], "ULAR": ["02","14","26","38","50","62","74","86","98"],
             "Naga": ["03","15","27","39","51","63","75","87","99"], "Kelinci": ["04","16","28","40","52","64","76","88","00"],
@@ -312,43 +283,25 @@
         let doneIDs = JSON.parse(localStorage.getItem('autoDoneIDs')) || [];
         let activeTab = "ALL";
 
-        // SMART CALC SINGAPORE SWEEP (FIXED FORMULA)
-        function smartCalcSweep(val) {
-            const nums = val.match(/\d+/g); 
-            if (!nums || nums.length < 7) return;
-
-            const b = nums.slice(0, 6).map(n => parseInt(n));
-            const add = parseInt(nums[6]);
-
-            // Update Preview UI
-            for(let i=0; i<6; i++) {
-                document.getElementById(`pv-b${i+1}`).innerText = b[i].toString().padStart(2, '0');
-            }
-            document.getElementById('pv-add').innerText = add.toString().padStart(2, '0');
-
-            // Formula Logic
-            const digit1 = (b[1] + b[2]).toString().slice(-1);
-            const digit2 = (b[3] + b[4]).toString().slice(-1);
-            const sumB = b.reduce((a, b) => a + b, 0);
-            const step4 = (sumB * 2) - b[0] - b[5] + add;
-            const lastTwo = step4.toString().slice(-2).padStart(2, '0');
-
-            document.getElementById('sweep-output').innerText = digit1 + digit2 + lastTwo;
-        }
-
         function wukongAlert(msg) {
             const t = document.getElementById('wukong-toast');
             t.innerText = msg; t.classList.add('show');
             setTimeout(() => t.classList.remove('show'), 2000);
         }
 
+        // FUNGSI UPDATE JAM DAN RESET HOKIDRAW
         function updateClock() {
             const now = new Date();
-            if (now.getMinutes() >= 50 && doneIDs.includes(1)) {
+            const mins = now.getMinutes();
+
+            // PAKSA RESET HOKIDRAW (ID 1) JIKA MENIT >= 50
+            if (mins >= 50 && doneIDs.includes(1)) {
                 doneIDs = doneIDs.filter(id => id !== 1);
                 localStorage.setItem('autoDoneIDs', JSON.stringify(doneIDs));
-                render();
+                render(); // Trigger pembaruan tampilan ke merah
+                wukongAlert("HOKIDRAW AUTO RESET (MENIT 50)");
             }
+
             const days = ["MINGGU", "SENIN", "SELASA", "RABU", "KAMIS", "JUM'AT", "SABTU"];
             const months = ["JANUARI", "FEBRUARI", "MARET", "APRIL", "MEI", "JUNI", "JULI", "AGUSTUS", "SEPTEMBER", "OKTOBER", "NOVEMBER", "DESEMBER"];
             let h = now.getHours(), m = now.getMinutes(), s = now.getSeconds();
@@ -357,7 +310,23 @@
             document.getElementById('digital-clock').innerText = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')} ${ampm}`;
             document.getElementById('digital-date').innerText = `${days[now.getDay()]}, ${now.getDate()} March ${now.getFullYear()}`;
         }
-        setInterval(updateClock, 1000); updateClock();
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        function smartCalcSweep(val) {
+            const nums = val.match(/\d+/g); 
+            if (!nums || nums.length < 7) return;
+            const b = nums.slice(0, 6).map(n => parseInt(n));
+            const add = parseInt(nums[6]);
+            for(let i=0; i<6; i++) document.getElementById(`pv-b${i+1}`).innerText = b[i].toString().padStart(2, '0');
+            document.getElementById('pv-add').innerText = add.toString().padStart(2, '0');
+            const digit1 = (b[1] + b[2]).toString().slice(-1);
+            const digit2 = (b[3] + b[4]).toString().slice(-1);
+            const sumB = b.reduce((a, b) => a + b, 0);
+            const step4 = (sumB * 2) - b[0] - b[5] + add;
+            const lastTwo = step4.toString().slice(-2).padStart(2, '0');
+            document.getElementById('sweep-output').innerText = digit1 + digit2 + lastTwo;
+        }
 
         function updateQuote(v) {
             localStorage.setItem('permanentQuote', v);
@@ -383,19 +352,22 @@
             const nums = val.match(/\d{4}/g) || [];
 
             if(matched && nums.length > 0) {
-                if(!doneIDs.includes(matched.id)) {
-                    doneIDs.push(matched.id);
-                    localStorage.setItem('autoDoneIDs', JSON.stringify(doneIDs));
+                // Jangan biarkan Hokidraw jadi hijau jika sudah masuk waktu reset
+                if (matched.id === 1 && new Date().getMinutes() >= 50) {
+                    wukongAlert("HOKIDRAW MASUK WAKTU RESET!");
+                } else {
+                    if(!doneIDs.includes(matched.id)) {
+                        doneIDs.push(matched.id);
+                        localStorage.setItem('autoDoneIDs', JSON.stringify(doneIDs));
+                    }
                 }
                 const now = new Date();
                 const daysStr = ["MINGGU", "SENIN", "SELASA", "RABU", "KAMIS", "JUM'AT", "SABTU"];
                 const dateStr = `${now.getDate()} March ${now.getFullYear()}`;
-
                 let post = `Hasil Pengeluaran ${matched.nama}\nHari Ini ${daysStr[now.getDay()]}, ${dateStr}\n`;
                 if(nums.length === 1) post += `Result : ${nums[0]}\nSHIO : ${getShio(nums[0])}`;
                 else post += `Prize 1 : ${nums[0]}, SHIO : ${getShio(nums[0])}\nPrize 2 : ${nums[1] || '----'}\nPrize 3 : ${nums[2] || '----'}`;
                 post += `\nSelamat Kepada Pemenang, Salam JP Hanya di TogelUP`;
-                
                 document.getElementById('post-display').innerText = post;
                 render();
             }
@@ -420,8 +392,11 @@
 
         function resetAll() {
             localStorage.removeItem('autoDoneIDs');
-            doneIDs = []; document.getElementById('main-input').value = ""; document.getElementById('post-display').innerText = "";
-            render(); wukongAlert("WUKONG RESET DATA ALL");
+            doneIDs = []; 
+            document.getElementById('main-input').value = ""; 
+            document.getElementById('post-display').innerText = "";
+            render(); 
+            wukongAlert("WUKONG RESET DATA ALL");
         }
 
         function copyPost() {
