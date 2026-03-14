@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wukong Dashboard - Auto Reset Menit 50</title>
+    <title>Wukong Dashboard - Sweep Aligned</title>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         :root {
@@ -11,6 +11,7 @@
             --neon-green: #39ff14;
             --neon-red: #ff0044;
             --neon-yellow: #fff200;
+            --neon-purple: #bc13fe;
             --bg-site: #0d1117;
             --card-bg: #161b22;
             --text-white: #ffffff;
@@ -22,115 +23,142 @@
             font-family: 'Segoe UI', sans-serif;
             font-weight: bold;
             margin: 0;
-            padding: 20px;
+            padding: 15px;
             overflow-x: hidden;
         }
 
-        /* WUKONG TOAST */
+        /* WUKONG NOTIFICATION */
         #wukong-toast {
             position: fixed; top: -100px; left: 50%; transform: translateX(-50%);
-            background: rgba(0, 0, 0, 0.9); border: 2px solid var(--neon-yellow);
-            color: var(--neon-yellow); padding: 15px 40px; border-radius: 50px;
-            font-size: 18px; font-weight: 900; text-transform: uppercase;
-            box-shadow: 0 0 20px rgba(255, 242, 0, 0.6); z-index: 10000;
+            background: rgba(0, 0, 0, 0.95); border: 2px solid var(--neon-yellow);
+            color: var(--neon-yellow); padding: 12px 35px; border-radius: 50px;
+            font-size: 16px; font-weight: 900; text-transform: uppercase;
+            box-shadow: 0 0 25px rgba(255, 242, 0, 0.5); z-index: 10000;
             transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); pointer-events: none;
         }
-        #wukong-toast.show { top: 50px; }
+        #wukong-toast.show { top: 40px; }
 
-        .main-wrapper { max-width: 1650px; margin: 0 auto; }
+        .main-wrapper { max-width: 1600px; margin: 0 auto; }
 
         .neon-title {
             font-size: 2.2rem; text-transform: uppercase; letter-spacing: 5px;
             color: #fff; text-shadow: 0 0 10px var(--neon-blue);
-            text-align: center; margin-bottom: 10px;
+            text-align: center; margin-bottom: 5px;
             animation: floating 3s ease-in-out infinite;
         }
         @keyframes floating { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
 
         .marquee-wrapper {
-            width: 100%; max-width: 900px; margin: 0 auto 20px auto;
+            width: 100%; max-width: 900px; margin: 0 auto 15px auto;
             overflow: hidden; white-space: nowrap;
             border-bottom: 1px solid rgba(0, 242, 255, 0.2); padding-bottom: 5px;
         }
         .marquee-content {
             display: inline-block; color: var(--neon-yellow);
-            font-size: 14px; text-transform: uppercase;
+            font-size: 15px; text-transform: uppercase;
             text-shadow: 0 0 5px var(--neon-yellow);
-            animation: walk 20s linear infinite;
+            animation: walk 15s linear infinite; 
         }
-        @keyframes walk { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
+        @keyframes walk { 0% { transform: translateX(100vw); } 100% { transform: translateX(-100%); } }
 
-        .dashboard-grid { display: grid; grid-template-columns: 1fr 400px; gap: 20px; align-items: start; }
+        .dashboard-grid { display: grid; grid-template-columns: 1fr 380px; gap: 15px; align-items: start; }
 
-        .nav-area { display: flex; justify-content: space-between; margin-bottom: 15px; gap: 15px; }
-        .nav-menu { display: flex; gap: 8px; }
+        /* NAV AREA */
+        .nav-area {
+            display: flex; align-items: center; justify-content: space-between;
+            margin-bottom: 12px; gap: 12px; width: 100%;
+        }
+        .nav-menu { display: flex; gap: 6px; flex-shrink: 0; }
         .btn-nav {
             background: #21262d; color: white; border: 1px solid #30363d;
-            padding: 8px 12px; cursor: pointer; font-weight: bold;
-            border-radius: 6px; font-size: 10px; text-transform: uppercase;
+            padding: 6px 10px; cursor: pointer; font-weight: bold;
+            border-radius: 5px; font-size: 9px; text-transform: uppercase; height: 32px;
         }
         .btn-nav.active { background: var(--neon-blue); color: black; box-shadow: 0 0 8px var(--neon-blue); }
-        .btn-reset { background: #30363d; color: #ff4757; border: none; padding: 8px 12px; cursor: pointer; border-radius: 6px; font-weight: bold; font-size: 10px; }
 
-        .sticky-sidebar { position: sticky; top: 20px; }
+        .quote-toolbar-wrapper {
+            width: 400px; display: flex; align-items: center;
+            background: rgba(0, 0, 0, 0.4); border: 1px solid #444;
+            padding: 0 10px; border-radius: 5px; height: 32px;
+        }
+        .label-quote-sm { color: var(--neon-yellow); font-size: 9px; white-space: nowrap; margin-right: 8px; }
+        .input-quote-sm {
+            background: transparent; border: none; color: white;
+            font-size: 10px; outline: none; width: 100%;
+        }
+        .btn-reset { background: #30363d; color: #ff4757; border: none; padding: 0 15px; cursor: pointer; border-radius: 5px; font-weight: bold; font-size: 9px; text-transform: uppercase; height: 32px; }
+
+        .sticky-sidebar { position: sticky; top: 15px; display: flex; flex-direction: column; gap: 15px; }
 
         .clock-container {
             background: rgba(0, 0, 0, 0.3); border: 1px solid #30363d;
-            border-radius: 10px; padding: 10px; text-align: center; margin-bottom: 15px;
+            border-radius: 8px; padding: 8px; text-align: center;
         }
-        #digital-clock { color: var(--neon-blue); font-size: 18px; text-shadow: 0 0 10px var(--neon-blue); display: block; }
-        #digital-date { color: #8b949e; font-size: 11px; text-transform: uppercase; }
+        #digital-clock { color: var(--neon-blue); font-size: 16px; text-shadow: 0 0 8px var(--neon-blue); display: block; }
+        #digital-date { color: #8b949e; font-size: 10px; text-transform: uppercase; }
 
         .input-box-wrapper {
             background: rgba(0, 0, 0, 0.4); border: 2px solid var(--neon-blue);
-            padding: 10px 15px; border-radius: 10px; display: flex;
-            align-items: center; gap: 10px; margin-bottom: 15px;
+            padding: 8px 12px; border-radius: 8px; display: flex; align-items: center; gap: 10px;
         }
-        .label-input { color: var(--neon-blue); font-size: 11px; white-space: nowrap; }
-        .main-input {
-            background: transparent; border: none; color: var(--neon-yellow);
-            font-size: 14px; font-weight: 900; outline: none; width: 100%;
-        }
+        .label-input { color: var(--neon-blue); font-size: 10px; white-space: nowrap; }
+        .main-input { background: transparent; border: none; color: var(--neon-yellow); font-size: 13px; font-weight: 900; outline: none; width: 100%; }
 
-        .post-section { background: var(--card-bg); border: 2px solid var(--neon-red); border-radius: 10px; padding: 15px; margin-bottom: 15px; }
+        /* POST SECTION */
+        .post-section { background: var(--card-bg); border: 2px solid var(--neon-red); border-radius: 8px; padding: 12px; }
         .post-content {
-            background: #000; color: #fff; padding: 15px; border-radius: 6px;
-            font-family: 'Courier New', monospace; font-size: 13px;
-            white-space: pre-wrap; border: 1px dashed #444; line-height: 1.5; min-height: 250px;
+            background: #000; color: #fff; padding: 12px; border-radius: 5px;
+            font-family: 'Courier New', monospace; font-size: 12px;
+            white-space: pre-wrap; border: 1px dashed #444; line-height: 1.5; 
+            height: 220px; width: 100%; box-sizing: border-box; text-align: left; overflow-y: auto;
         }
-        .btn-copy {
-            width: 100%; margin-top: 15px; background: var(--neon-green);
-            color: black; border: none; padding: 12px; border-radius: 6px;
-            font-weight: bold; cursor: pointer; text-transform: uppercase;
+        .btn-copy { width: 100%; margin-top: 12px; background: var(--neon-green); color: black; border: none; padding: 10px; border-radius: 5px; font-weight: bold; cursor: pointer; text-transform: uppercase; font-size: 11px; }
+
+        /* --- SINGAPORE SWEEP STYLES (WITH SPACING) --- */
+        .sweep-section { background: var(--card-bg); border: 2px solid var(--neon-purple); border-radius: 8px; padding: 12px; }
+        .sweep-title { color: var(--neon-purple); font-size: 11px; margin-bottom: 8px; text-align: center; text-transform: uppercase; border-bottom: 1px solid #333; padding-bottom: 5px; }
+        
+        .sweep-paste-box { 
+            width: 100%; background: #000; border: 1px solid var(--neon-purple); color: var(--neon-yellow); 
+            padding: 10px; border-radius: 5px; font-size: 12px; outline: none; margin-bottom: 12px; 
+            box-sizing: border-box; text-align: center; font-weight: 900;
         }
 
-        .quote-input-panel { background: #1c2128; border: 1px solid #444; padding: 15px; border-radius: 10px; }
-        .label-quote { color: var(--neon-yellow); font-size: 12px; margin-bottom: 8px; display: block; }
-        .input-quote {
-            width: 100%; background: #000; border: 1px solid #333; color: white;
-            padding: 10px; border-radius: 5px; outline: none; font-size: 12px; box-sizing: border-box;
+        .sweep-preview-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 12px;
         }
 
-        .table-section { background: var(--card-bg); border-radius: 10px; padding: 10px; border: 1px solid #30363d; }
-        table { width: 100%; border-collapse: collapse; font-size: 11px; }
-        th { color: var(--neon-blue); text-align: left; padding: 12px 8px; border-bottom: 2px solid #30363d; background: #0d1117; }
-        td { padding: 6px 8px; border-bottom: 1px solid #21262d; }
-
-        /* STATUS */
-        .row-done { color: var(--neon-green) !important; text-shadow: 0 0 10px var(--neon-green) !important; background: rgba(57, 255, 20, 0.05) !important; }
-        .row-next-up { color: #fff !important; background: rgba(0, 242, 255, 0.15) !important; animation: blinkBlueNeon 0.6s infinite alternate !important; }
-        @keyframes blinkBlueNeon { from { text-shadow: 0 0 5px var(--neon-blue); } to { text-shadow: 0 0 20px var(--neon-blue), 0 0 35px var(--neon-blue); color: var(--neon-blue); } }
-
-        /* HOKIDRAW MERAH KEDIP */
-        .row-hokidraw { 
-            color: var(--neon-red) !important; 
-            animation: blinkRedNeon 0.8s infinite alternate !important; 
-            background: rgba(255, 0, 68, 0.05) !important;
+        .ball-group { display: flex; gap: 5px; }
+        
+        .ball-sm {
+            width: 35px; background: #222; border: 1px solid #444; color: var(--neon-yellow); 
+            font-size: 12px; text-align: center; padding: 6px 0; border-radius: 4px;
         }
-        @keyframes blinkRedNeon { from { text-shadow: 0 0 5px var(--neon-red); } to { text-shadow: 0 0 20px var(--neon-red), 0 0 30px var(--neon-red); } }
 
-        ::-webkit-scrollbar { width: 5px; }
-        ::-webkit-scrollbar-thumb { background: #444; border-radius: 10px; }
+        /* JARAK KHUSUS UNTUK ADD NUMBER */
+        .ball-add {
+            margin-left: 15px; /* Jarak yang Anda minta */
+            width: 40px; border: 1px solid var(--neon-blue); color: var(--neon-blue); 
+            background: rgba(0, 242, 255, 0.05);
+        }
+
+        .sweep-result-box { background: #000; border: 2px solid var(--neon-green); padding: 10px; text-align: center; border-radius: 5px; }
+        .sweep-4d { font-size: 32px; color: var(--neon-green); text-shadow: 0 0 10px var(--neon-green); letter-spacing: 8px; font-weight: 900; }
+
+        /* TABLE */
+        .table-section { background: var(--card-bg); border-radius: 8px; padding: 8px; border: 1px solid #30363d; }
+        table { width: 100%; border-collapse: collapse; font-size: 13px; } 
+        th { color: var(--neon-blue); text-align: left; padding: 10px 6px; border-bottom: 2px solid #30363d; background: #0d1117; }
+        td { padding: 4px 6px; border-bottom: 1px solid #21262d; }
+
+        .row-done { color: var(--neon-green) !important; text-shadow: 0 0 6px var(--neon-green) !important; background: rgba(57, 255, 20, 0.04) !important; }
+        .row-next-up { color: #fff !important; background: rgba(0, 242, 255, 0.12) !important; animation: blinkBlueNeon 0.7s infinite alternate !important; }
+        @keyframes blinkBlueNeon { from { text-shadow: 0 0 3px var(--neon-blue); } to { text-shadow: 0 0 15px var(--neon-blue); color: var(--neon-blue); } }
+        .row-hokidraw { color: var(--neon-red) !important; animation: blinkRedNeon 0.8s infinite alternate !important; }
+        @keyframes blinkRedNeon { from { text-shadow: 0 0 3px var(--neon-red); } to { text-shadow: 0 0 15px var(--neon-red); } }
     </style>
 </head>
 <body>
@@ -139,7 +167,6 @@
 
     <div class="main-wrapper">
         <h1 class="neon-title">ANGKA RESULT</h1>
-
         <div class="marquee-wrapper">
             <div class="marquee-content" id="quote-display">SILAHKAN ISI QUOTES ANDA...</div>
         </div>
@@ -150,6 +177,10 @@
                 <button class="btn-nav" onclick="filterTab('PAGI', this)">PAGI</button>
                 <button class="btn-nav" onclick="filterTab('SORE', this)">SORE</button>
                 <button class="btn-nav" onclick="filterTab('MALAM', this)">MALAM</button>
+            </div>
+            <div class="quote-toolbar-wrapper">
+                <span class="label-quote-sm">FORMAT QUOTES :</span>
+                <input type="text" id="quote-input" class="input-quote-sm" placeholder="Tulis kata-kata..." oninput="updateQuote(this.value)">
             </div>
             <button class="btn-reset" onclick="resetAll()">RESET ALL</button>
         </div>
@@ -169,26 +200,50 @@
             <div class="right-col sticky-sidebar">
                 <div class="clock-container">
                     <span id="digital-clock">00:00:00 AM</span>
-                    <span id="digital-date">MEMUAT...</span>
+                    <span id="digital-date">MEMUAT WAKTU...</span>
                 </div>
+                
                 <div class="input-box-wrapper">
                     <span class="label-input">RESULT :</span>
-                    <input type="text" id="main-input" class="main-input" placeholder="Tempel Periode & Pasar di sini..." oninput="autoProcess(this.value)">
+                    <input type="text" id="main-input" class="main-input" placeholder="Tempel: pasar : SYDNEY 3238" oninput="autoProcess(this.value)">
                 </div>
+
                 <div class="post-section">
-                    <div style="color:var(--neon-red); margin-bottom:10px; font-size: 12px;">FORMAT POSTINGAN:</div>
-                    <div class="post-content" id="post-display">Menunggu input...</div>
+                    <div style="color:var(--neon-red); margin-bottom:8px; font-size: 11px;">FORMAT POSTINGAN:</div>
+                    <div class="post-content" id="post-display"></div>
                     <button class="btn-copy" onclick="copyPost()">SALIN & POST RESULT</button>
                 </div>
-                <div class="quote-input-panel">
-                    <label class="label-quote">FORMAT QUOTES :</label>
-                    <textarea id="quote-input" class="input-quote" rows="2" placeholder="Tulis kata-kata..." oninput="updateQuote(this.value)"></textarea>
+
+                <!-- MENU SINGAPORE SWEEP SMART PASTE WITH SPACING -->
+                <div class="sweep-section">
+                    <div class="sweep-title">RUMUS SINGAPORE SWEEP</div>
+                    <input type="text" class="sweep-paste-box" id="sweep-paste" placeholder="TEMPEL 7 ANGKA RESULT DI SINI..." oninput="smartCalcSweep(this.value)">
+                    
+                    <div class="sweep-preview-container">
+                        <div class="ball-group">
+                            <div class="ball-sm" id="pv-b1">00</div>
+                            <div class="ball-sm" id="pv-b2">00</div>
+                            <div class="ball-sm" id="pv-b3">00</div>
+                            <div class="ball-sm" id="pv-b4">00</div>
+                            <div class="ball-sm" id="pv-b5">00</div>
+                            <div class="ball-sm" id="pv-b6">00</div>
+                        </div>
+                        <!-- BOLA ADD DENGAN JARAK KHUSUS -->
+                        <div class="ball-sm ball-add" id="pv-add">00</div>
+                    </div>
+
+                    <div class="sweep-result-box">
+                        <div style="font-size: 9px; color: #888; margin-bottom: 4px;">ANGKA KELUAR (4D)</div>
+                        <div class="sweep-4d" id="sweep-output">0000</div>
+                    </div>
                 </div>
+
             </div>
         </div>
     </div>
 
     <script>
+        // DATA TETAP LENGKAP
         const shioTable = {
             "Kuda": ["01","13","25","37","49","61","73","85","97"], "ULAR": ["02","14","26","38","50","62","74","86","98"],
             "Naga": ["03","15","27","39","51","63","75","87","99"], "Kelinci": ["04","16","28","40","52","64","76","88","00"],
@@ -257,38 +312,52 @@
         let doneIDs = JSON.parse(localStorage.getItem('autoDoneIDs')) || [];
         let activeTab = "ALL";
 
+        // SMART CALC SINGAPORE SWEEP (FIXED FORMULA)
+        function smartCalcSweep(val) {
+            const nums = val.match(/\d+/g); 
+            if (!nums || nums.length < 7) return;
+
+            const b = nums.slice(0, 6).map(n => parseInt(n));
+            const add = parseInt(nums[6]);
+
+            // Update Preview UI
+            for(let i=0; i<6; i++) {
+                document.getElementById(`pv-b${i+1}`).innerText = b[i].toString().padStart(2, '0');
+            }
+            document.getElementById('pv-add').innerText = add.toString().padStart(2, '0');
+
+            // Formula Logic
+            const digit1 = (b[1] + b[2]).toString().slice(-1);
+            const digit2 = (b[3] + b[4]).toString().slice(-1);
+            const sumB = b.reduce((a, b) => a + b, 0);
+            const step4 = (sumB * 2) - b[0] - b[5] + add;
+            const lastTwo = step4.toString().slice(-2).padStart(2, '0');
+
+            document.getElementById('sweep-output').innerText = digit1 + digit2 + lastTwo;
+        }
+
         function wukongAlert(msg) {
             const t = document.getElementById('wukong-toast');
             t.innerText = msg; t.classList.add('show');
             setTimeout(() => t.classList.remove('show'), 2000);
         }
 
-        // FUNGSI UTAMA JAM DAN RESET HOKIDRAW
         function updateClock() {
             const now = new Date();
-            const mins = now.getMinutes();
-
-            // LOGIKA RESET OTOMATIS: JIKA MENIT SUDAH >= 50
-            if (mins >= 50) {
-                if (doneIDs.includes(1)) {
-                    doneIDs = doneIDs.filter(id => id !== 1); // Hapus Hoki dari list Done
-                    localStorage.setItem('autoDoneIDs', JSON.stringify(doneIDs));
-                    render(); // Update warna tabel seketika
-                    wukongAlert("HOKIDRAW MASUK WAKTU RESET!");
-                }
+            if (now.getMinutes() >= 50 && doneIDs.includes(1)) {
+                doneIDs = doneIDs.filter(id => id !== 1);
+                localStorage.setItem('autoDoneIDs', JSON.stringify(doneIDs));
+                render();
             }
-
-            // Tampilkan Jam
             const days = ["MINGGU", "SENIN", "SELASA", "RABU", "KAMIS", "JUM'AT", "SABTU"];
             const months = ["JANUARI", "FEBRUARI", "MARET", "APRIL", "MEI", "JUNI", "JULI", "AGUSTUS", "SEPTEMBER", "OKTOBER", "NOVEMBER", "DESEMBER"];
             let h = now.getHours(), m = now.getMinutes(), s = now.getSeconds();
             let ampm = h >= 12 ? 'PM' : 'AM';
             h = h % 12 || 12;
             document.getElementById('digital-clock').innerText = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')} ${ampm}`;
-            document.getElementById('digital-date').innerText = `${days[now.getDay()]}, ${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
+            document.getElementById('digital-date').innerText = `${days[now.getDay()]}, ${now.getDate()} March ${now.getFullYear()}`;
         }
-        setInterval(updateClock, 1000); 
-        updateClock();
+        setInterval(updateClock, 1000); updateClock();
 
         function updateQuote(v) {
             localStorage.setItem('permanentQuote', v);
@@ -302,43 +371,32 @@
         }
 
         function autoProcess(val) {
-            localStorage.setItem('lastInputText', val);
-            if(!val) return;
+            if(!val) { document.getElementById('post-display').innerText = ""; return; }
             const upper = val.toUpperCase();
-            let marketNameSearch = "";
-
+            let marketSearch = "";
             if (upper.includes("PASAR :")) {
-                marketNameSearch = upper.split("PASAR :")[1].trim().split(" ")[0] + " " + (upper.split("PASAR :")[1].trim().split(" ")[1] || "");
-            } else {
-                marketNameSearch = upper.split(/\s+/)[0];
-            }
+                marketSearch = upper.split("PASAR :")[1].trim().split(" ")[0] + (upper.split("PASAR :")[1].trim().split(" ")[1] || "");
+            } else { marketSearch = upper.split(/\s+/)[0]; }
 
-            const cleanSearch = marketNameSearch.replace(/\s/g, '');
+            const cleanSearch = marketSearch.replace(/\s/g, '');
             let matched = markets.find(m => m.nama.replace(/\s/g, '').includes(cleanSearch));
             const nums = val.match(/\d{4}/g) || [];
 
             if(matched && nums.length > 0) {
-                // Jangan biarkan Hoki jadi Hijau jika sudah masuk menit 50
-                const currentMins = new Date().getMinutes();
-                if(matched.id === 1 && currentMins >= 50) {
-                    wukongAlert("HOKIDRAW RESET AKTIF (MENIT 50+)");
-                } else {
-                    if(!doneIDs.includes(matched.id)) {
-                        doneIDs.push(matched.id);
-                        localStorage.setItem('autoDoneIDs', JSON.stringify(doneIDs));
-                    }
+                if(!doneIDs.includes(matched.id)) {
+                    doneIDs.push(matched.id);
+                    localStorage.setItem('autoDoneIDs', JSON.stringify(doneIDs));
                 }
-
-                // Format Postingan
                 const now = new Date();
-                const dateStr = `14 March 2026`; 
-                let post = `Hasil Pengeluaran ${matched.nama}\nHari Ini SABTU, ${dateStr}\n`;
+                const daysStr = ["MINGGU", "SENIN", "SELASA", "RABU", "KAMIS", "JUM'AT", "SABTU"];
+                const dateStr = `${now.getDate()} March ${now.getFullYear()}`;
+
+                let post = `Hasil Pengeluaran ${matched.nama}\nHari Ini ${daysStr[now.getDay()]}, ${dateStr}\n`;
                 if(nums.length === 1) post += `Result : ${nums[0]}\nSHIO : ${getShio(nums[0])}`;
                 else post += `Prize 1 : ${nums[0]}, SHIO : ${getShio(nums[0])}\nPrize 2 : ${nums[1] || '----'}\nPrize 3 : ${nums[2] || '----'}`;
                 post += `\nSelamat Kepada Pemenang, Salam JP Hanya di TogelUP`;
                 
                 document.getElementById('post-display').innerText = post;
-                localStorage.setItem('lastPostContent', post);
                 render();
             }
         }
@@ -347,12 +405,8 @@
             const tbody = document.getElementById('table-body');
             const filtered = activeTab === "ALL" ? markets : markets.filter(m => m.cat === activeTab || m.id === 1);
             const nextUpID = markets.find(m => m.id !== 1 && !doneIDs.includes(m.id))?.id;
-
             tbody.innerHTML = filtered.map((m) => {
-                let cls = "";
-                if(doneIDs.includes(m.id)) cls = "row-done";
-                else if(m.id === 1) cls = "row-hokidraw";
-                else if(m.id === nextUpID) cls = "row-next-up";
+                let cls = doneIDs.includes(m.id) ? "row-done" : (m.id === 1 ? "row-hokidraw" : (m.id === nextUpID ? "row-next-up" : ""));
                 return `<tr class="${cls}"><td>${m.id}</td><td style="font-weight:900;">${m.nama}</td><td>${m.jadwal}</td><td>${m.buka}</td><td>${m.tutup}</td></tr>`;
             }).join('');
         }
@@ -366,25 +420,18 @@
 
         function resetAll() {
             localStorage.removeItem('autoDoneIDs');
-            localStorage.removeItem('lastInputText');
-            localStorage.removeItem('lastPostContent');
-            doneIDs = [];
-            document.getElementById('main-input').value = "";
-            document.getElementById('post-display').innerText = "Menunggu input...";
-            render();
-            wukongAlert("WUKONG RESET DATA ALL");
+            doneIDs = []; document.getElementById('main-input').value = ""; document.getElementById('post-display').innerText = "";
+            render(); wukongAlert("WUKONG RESET DATA ALL");
         }
 
         function copyPost() {
             const txt = document.getElementById('post-display').innerText;
-            if(txt.includes("Menunggu")) return;
+            if(!txt) return;
             navigator.clipboard.writeText(txt).then(() => wukongAlert("WUKONG TELAH MENYALIN"));
         }
 
         document.getElementById('quote-input').value = localStorage.getItem('permanentQuote') || "";
         document.getElementById('quote-display').innerText = localStorage.getItem('permanentQuote') || "SILAHKAN ISI QUOTES ANDA...";
-        document.getElementById('main-input').value = localStorage.getItem('lastInputText') || "";
-        document.getElementById('post-display').innerText = localStorage.getItem('lastPostContent') || "Menunggu input...";
         render();
     </script>
 </body>
