@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wukong Result Dashboard</title>
+    <title>Wukong Result Dashboard - Auto Next</title>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         :root {
@@ -26,45 +26,27 @@
             overflow-x: hidden;
         }
 
-        /* WUKONG POPUP NOTIFICATION */
+        /* WUKONG TOAST */
         #wukong-toast {
-            position: fixed;
-            top: -100px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(0, 0, 0, 0.9);
-            border: 2px solid var(--neon-yellow);
-            color: var(--neon-yellow);
-            padding: 15px 40px;
-            border-radius: 50px;
-            font-size: 18px;
-            font-weight: 900;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            box-shadow: 0 0 20px rgba(255, 242, 0, 0.6);
-            z-index: 10000;
-            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            pointer-events: none;
+            position: fixed; top: -100px; left: 50%; transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.9); border: 2px solid var(--neon-yellow);
+            color: var(--neon-yellow); padding: 15px 40px; border-radius: 50px;
+            font-size: 18px; font-weight: 900; text-transform: uppercase;
+            box-shadow: 0 0 20px rgba(255, 242, 0, 0.6); z-index: 10000;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); pointer-events: none;
         }
         #wukong-toast.show { top: 50px; }
 
         .main-wrapper { max-width: 1650px; margin: 0 auto; }
 
         .neon-title {
-            font-size: 2.2rem;
-            text-transform: uppercase;
-            letter-spacing: 5px;
-            color: #fff;
-            text-shadow: 0 0 10px var(--neon-blue);
-            text-align: center;
-            margin-bottom: 10px;
+            font-size: 2.2rem; text-transform: uppercase; letter-spacing: 5px;
+            color: #fff; text-shadow: 0 0 10px var(--neon-blue);
+            text-align: center; margin-bottom: 10px;
             animation: floating 3s ease-in-out infinite;
         }
 
-        @keyframes floating {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-5px); }
-        }
+        @keyframes floating { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
 
         .marquee-wrapper {
             width: 100%; max-width: 900px; margin: 0 auto 20px auto;
@@ -79,27 +61,19 @@
             animation: walk 20s linear infinite;
         }
 
-        @keyframes walk {
-            0% { transform: translateX(100%); }
-            100% { transform: translateX(-100%); }
-        }
+        @keyframes walk { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
 
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: 1fr 400px;
-            gap: 20px;
-            align-items: start;
-        }
+        .dashboard-grid { display: grid; grid-template-columns: 1fr 400px; gap: 20px; align-items: start; }
 
-        .nav-area { display: flex; justify-content: space-between; margin-bottom: 15px; }
+        .nav-area { display: flex; justify-content: space-between; margin-bottom: 15px; gap: 15px; }
         .nav-menu { display: flex; gap: 8px; }
         .btn-nav {
             background: #21262d; color: white; border: 1px solid #30363d;
-            padding: 8px 15px; cursor: pointer; font-weight: bold;
-            border-radius: 6px; font-size: 11px; text-transform: uppercase;
+            padding: 8px 12px; cursor: pointer; font-weight: bold;
+            border-radius: 6px; font-size: 10px; text-transform: uppercase;
         }
-        .btn-nav.active { background: var(--neon-blue); color: black; box-shadow: 0 0 10px var(--neon-blue); }
-        .btn-reset { background: #30363d; color: #ff4757; border: none; padding: 8px 15px; cursor: pointer; border-radius: 6px; font-weight: bold; font-size: 11px; text-transform: uppercase; }
+        .btn-nav.active { background: var(--neon-blue); color: black; box-shadow: 0 0 8px var(--neon-blue); }
+        .btn-reset { background: #30363d; color: #ff4757; border: none; padding: 8px 12px; cursor: pointer; border-radius: 6px; font-weight: bold; font-size: 10px; }
 
         .sticky-sidebar { position: sticky; top: 20px; }
 
@@ -140,14 +114,27 @@
             padding: 10px; border-radius: 5px; outline: none; font-size: 12px; box-sizing: border-box;
         }
 
+        /* TABLE STYLES */
         .table-section { background: var(--card-bg); border-radius: 10px; padding: 10px; border: 1px solid #30363d; }
         table { width: 100%; border-collapse: collapse; font-size: 11px; }
         th { color: var(--neon-blue); text-align: left; padding: 12px 8px; border-bottom: 2px solid #30363d; background: #0d1117; }
         td { padding: 6px 8px; border-bottom: 1px solid #21262d; }
 
+        /* STATUS COLORS */
         .row-done { color: var(--neon-green) !important; text-shadow: 0 0 8px var(--neon-green); background: rgba(57, 255, 20, 0.05); }
-        .row-hokidraw { color: var(--neon-red); animation: blink 1s infinite alternate; }
-        @keyframes blink { from { opacity: 1; } to { opacity: 0.4; } }
+        
+        /* PASARAN YANG AKAN DATANG (BIRU KEDIP) */
+        .row-next-up { 
+            color: var(--neon-blue) !important; 
+            text-shadow: 0 0 12px var(--neon-blue); 
+            animation: blinkBlue 1s infinite alternate;
+            background: rgba(0, 242, 255, 0.08);
+        }
+        @keyframes blinkBlue { from { opacity: 1; } to { opacity: 0.5; } }
+
+        /* HOKIDRAW URGENT (MERAH KEDIP) */
+        .row-hokidraw { color: var(--neon-red) !important; animation: blinkRed 0.8s infinite alternate; }
+        @keyframes blinkRed { from { opacity: 1; text-shadow: 0 0 5px var(--neon-red); } to { opacity: 0.4; text-shadow: 0 0 15px var(--neon-red); } }
 
         ::-webkit-scrollbar { width: 5px; }
         ::-webkit-scrollbar-thumb { background: #444; border-radius: 10px; }
@@ -155,7 +142,6 @@
 </head>
 <body>
 
-    <!-- WUKONG TOAST ELEMENT -->
     <div id="wukong-toast">WUKONG NOTIFICATION</div>
 
     <div class="main-wrapper">
@@ -165,18 +151,19 @@
             <div class="marquee-content" id="quote-display">SILAHKAN ISI QUOTES ANDA...</div>
         </div>
 
+        <div class="nav-area">
+            <div class="nav-menu">
+                <button class="btn-nav active" onclick="filterTab('ALL', this)">ALL PASARAN</button>
+                <button class="btn-nav" onclick="filterTab('PAGI', this)">PAGI</button>
+                <button class="btn-nav" onclick="filterTab('SORE', this)">SORE</button>
+                <button class="btn-nav" onclick="filterTab('MALAM', this)">MALAM</button>
+            </div>
+            <button class="btn-reset" onclick="resetAll()">RESET ALL</button>
+        </div>
+
         <div class="dashboard-grid">
-            <!-- KIRI -->
+            <!-- TABEL KIRI -->
             <div class="left-col">
-                <div class="nav-area">
-                    <div class="nav-menu">
-                        <button class="btn-nav active" onclick="filterTab('ALL', this)">ALL PASARAN</button>
-                        <button class="btn-nav" onclick="filterTab('PAGI', this)">PAGI</button>
-                        <button class="btn-nav" onclick="filterTab('SORE', this)">SORE</button>
-                        <button class="btn-nav" onclick="filterTab('MALAM', this)">MALAM</button>
-                    </div>
-                    <button class="btn-reset" onclick="resetAll()">RESET ALL</button>
-                </div>
                 <div class="table-section">
                     <table>
                         <thead>
@@ -187,11 +174,11 @@
                 </div>
             </div>
 
-            <!-- KANAN -->
+            <!-- SIDEBAR KANAN -->
             <div class="right-col sticky-sidebar">
                 <div class="clock-container">
                     <span id="digital-clock">00:00:00 AM</span>
-                    <span id="digital-date">MEMUAT...</span>
+                    <span id="digital-date">MEMUAT WAKTU...</span>
                 </div>
                 <div class="input-box-wrapper">
                     <span class="label-input">ANGKA RESULT :</span>
@@ -204,7 +191,7 @@
                 </div>
                 <div class="quote-input-panel">
                     <label class="label-quote">FORMAT QUOTES :</label>
-                    <textarea id="quote-input" class="input-quote" rows="2" placeholder="Tulis kata-kata di sini..." oninput="updateQuote(this.value)"></textarea>
+                    <textarea id="quote-input" class="input-quote" rows="2" placeholder="Tulis kata-kata..." oninput="updateQuote(this.value)"></textarea>
                 </div>
             </div>
         </div>
@@ -279,12 +266,10 @@
         let doneIDs = JSON.parse(localStorage.getItem('autoDoneIDs')) || [];
         let activeTab = "ALL";
 
-        // FUNCTION WUKONG NOTIFICATION
         function wukongAlert(msg) {
-            const toast = document.getElementById('wukong-toast');
-            toast.innerText = msg;
-            toast.classList.add('show');
-            setTimeout(() => toast.classList.remove('show'), 2000);
+            const t = document.getElementById('wukong-toast');
+            t.innerText = msg; t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 2000);
         }
 
         function updateClock() {
@@ -299,9 +284,9 @@
         }
         setInterval(updateClock, 1000); updateClock();
 
-        function updateQuote(val) {
-            localStorage.setItem('permanentQuote', val);
-            document.getElementById('quote-display').innerText = val || "SILAHKAN ISI QUOTES ANDA...";
+        function updateQuote(v) {
+            localStorage.setItem('permanentQuote', v);
+            document.getElementById('quote-display').innerText = v || "SILAHKAN ISI QUOTES ANDA...";
         }
 
         function getShio(num) {
@@ -321,7 +306,6 @@
                 if(!doneIDs.includes(matched.id)) {
                     doneIDs.push(matched.id);
                     localStorage.setItem('autoDoneIDs', JSON.stringify(doneIDs));
-                    render();
                 }
                 const now = new Date();
                 const dateStr = `14 March 2026`; 
@@ -331,14 +315,26 @@
                 post += `\nSelamat Kepada Pemenang, Salam JP Hanya di TogelUP`;
                 document.getElementById('post-display').innerText = post;
                 localStorage.setItem('lastPostContent', post);
+                render();
             }
         }
 
         function render() {
             const tbody = document.getElementById('table-body');
             const filtered = activeTab === "ALL" ? markets : markets.filter(m => m.cat === activeTab || m.id === 1);
+            
+            // Cari ID pasaran yang akan datang (pertama yang tidak DONE dan bukan HOKIDRAW)
+            const nextUpID = markets.find(m => m.id !== 1 && !doneIDs.includes(m.id))?.id;
+
             tbody.innerHTML = filtered.map((m) => {
-                let cls = doneIDs.includes(m.id) ? "row-done" : (m.id === 1 ? "row-hokidraw" : "");
+                let cls = "";
+                if(doneIDs.includes(m.id)) {
+                    cls = "row-done";
+                } else if(m.id === 1) {
+                    cls = "row-hokidraw";
+                } else if(m.id === nextUpID) {
+                    cls = "row-next-up"; // Biru Kedip
+                }
                 return `<tr class="${cls}"><td>${m.id}</td><td style="font-weight:900;">${m.nama}</td><td>${m.jadwal}</td><td>${m.buka}</td><td>${m.tutup}</td></tr>`;
             }).join('');
         }
@@ -364,14 +360,11 @@
         function copyPost() {
             const txt = document.getElementById('post-display').innerText;
             if(txt.includes("Menunggu")) return;
-            navigator.clipboard.writeText(txt).then(() => {
-                wukongAlert("WUKONG TELAH MENYALIN");
-            });
+            navigator.clipboard.writeText(txt).then(() => wukongAlert("WUKONG TELAH MENYALIN"));
         }
 
-        const savedQuote = localStorage.getItem('permanentQuote') || "";
-        document.getElementById('quote-input').value = savedQuote;
-        document.getElementById('quote-display').innerText = savedQuote || "SILAHKAN ISI QUOTES ANDA...";
+        document.getElementById('quote-input').value = localStorage.getItem('permanentQuote') || "";
+        document.getElementById('quote-display').innerText = localStorage.getItem('permanentQuote') || "SILAHKAN ISI QUOTES ANDA...";
         document.getElementById('main-input').value = localStorage.getItem('lastInputText') || "";
         document.getElementById('post-display').innerText = localStorage.getItem('lastPostContent') || "Menunggu input...";
         render();
