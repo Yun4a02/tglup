@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wukong Dashboard - Hokidraw Fix 50m</title>
+    <title>Wukong Dashboard - Auto Reset Menit 50</title>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         :root {
@@ -45,7 +45,6 @@
             text-align: center; margin-bottom: 10px;
             animation: floating 3s ease-in-out infinite;
         }
-
         @keyframes floating { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
 
         .marquee-wrapper {
@@ -53,14 +52,12 @@
             overflow: hidden; white-space: nowrap;
             border-bottom: 1px solid rgba(0, 242, 255, 0.2); padding-bottom: 5px;
         }
-
         .marquee-content {
             display: inline-block; color: var(--neon-yellow);
             font-size: 14px; text-transform: uppercase;
             text-shadow: 0 0 5px var(--neon-yellow);
             animation: walk 20s linear infinite;
         }
-
         @keyframes walk { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
 
         .dashboard-grid { display: grid; grid-template-columns: 1fr 400px; gap: 20px; align-items: start; }
@@ -114,18 +111,22 @@
             padding: 10px; border-radius: 5px; outline: none; font-size: 12px; box-sizing: border-box;
         }
 
-        /* TABLE */
         .table-section { background: var(--card-bg); border-radius: 10px; padding: 10px; border: 1px solid #30363d; }
         table { width: 100%; border-collapse: collapse; font-size: 11px; }
         th { color: var(--neon-blue); text-align: left; padding: 12px 8px; border-bottom: 2px solid #30363d; background: #0d1117; }
         td { padding: 6px 8px; border-bottom: 1px solid #21262d; }
 
-        /* STATUS COLORS */
+        /* STATUS */
         .row-done { color: var(--neon-green) !important; text-shadow: 0 0 10px var(--neon-green) !important; background: rgba(57, 255, 20, 0.05) !important; }
         .row-next-up { color: #fff !important; background: rgba(0, 242, 255, 0.15) !important; animation: blinkBlueNeon 0.6s infinite alternate !important; }
         @keyframes blinkBlueNeon { from { text-shadow: 0 0 5px var(--neon-blue); } to { text-shadow: 0 0 20px var(--neon-blue), 0 0 35px var(--neon-blue); color: var(--neon-blue); } }
 
-        .row-hokidraw { color: var(--neon-red) !important; animation: blinkRedNeon 0.8s infinite alternate !important; }
+        /* HOKIDRAW MERAH KEDIP */
+        .row-hokidraw { 
+            color: var(--neon-red) !important; 
+            animation: blinkRedNeon 0.8s infinite alternate !important; 
+            background: rgba(255, 0, 68, 0.05) !important;
+        }
         @keyframes blinkRedNeon { from { text-shadow: 0 0 5px var(--neon-red); } to { text-shadow: 0 0 20px var(--neon-red), 0 0 30px var(--neon-red); } }
 
         ::-webkit-scrollbar { width: 5px; }
@@ -171,8 +172,8 @@
                     <span id="digital-date">MEMUAT...</span>
                 </div>
                 <div class="input-box-wrapper">
-                    <span class="label-input">ANGKA RESULT :</span>
-                    <input type="text" id="main-input" class="main-input" placeholder="Tempel: SYDNEY 3238" oninput="autoProcess(this.value)">
+                    <span class="label-input">RESULT :</span>
+                    <input type="text" id="main-input" class="main-input" placeholder="Tempel Periode & Pasar di sini..." oninput="autoProcess(this.value)">
                 </div>
                 <div class="post-section">
                     <div style="color:var(--neon-red); margin-bottom:10px; font-size: 12px;">FORMAT POSTINGAN:</div>
@@ -262,8 +263,22 @@
             setTimeout(() => t.classList.remove('show'), 2000);
         }
 
+        // FUNGSI UTAMA JAM DAN RESET HOKIDRAW
         function updateClock() {
             const now = new Date();
+            const mins = now.getMinutes();
+
+            // LOGIKA RESET OTOMATIS: JIKA MENIT SUDAH >= 50
+            if (mins >= 50) {
+                if (doneIDs.includes(1)) {
+                    doneIDs = doneIDs.filter(id => id !== 1); // Hapus Hoki dari list Done
+                    localStorage.setItem('autoDoneIDs', JSON.stringify(doneIDs));
+                    render(); // Update warna tabel seketika
+                    wukongAlert("HOKIDRAW MASUK WAKTU RESET!");
+                }
+            }
+
+            // Tampilkan Jam
             const days = ["MINGGU", "SENIN", "SELASA", "RABU", "KAMIS", "JUM'AT", "SABTU"];
             const months = ["JANUARI", "FEBRUARI", "MARET", "APRIL", "MEI", "JUNI", "JULI", "AGUSTUS", "SEPTEMBER", "OKTOBER", "NOVEMBER", "DESEMBER"];
             let h = now.getHours(), m = now.getMinutes(), s = now.getSeconds();
@@ -272,20 +287,8 @@
             document.getElementById('digital-clock').innerText = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')} ${ampm}`;
             document.getElementById('digital-date').innerText = `${days[now.getDay()]}, ${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
         }
-        setInterval(updateClock, 1000); updateClock();
-
-        // LOGIKA RESET OTOMATIS HOKIDRAW (50 MENIT)
-        function checkHokiReset() {
-            const expire = localStorage.getItem('hoki_timer');
-            if(expire && Date.now() > expire) {
-                doneIDs = doneIDs.filter(id => id !== 1);
-                localStorage.setItem('autoDoneIDs', JSON.stringify(doneIDs));
-                localStorage.removeItem('hoki_timer');
-                render(); // Paksa Update Tampilan
-                wukongAlert("HOKIDRAW RESET OTOMATIS!");
-            }
-        }
-        setInterval(checkHokiReset, 1000); // Cek setiap detik
+        setInterval(updateClock, 1000); 
+        updateClock();
 
         function updateQuote(v) {
             localStorage.setItem('permanentQuote', v);
@@ -302,25 +305,38 @@
             localStorage.setItem('lastInputText', val);
             if(!val) return;
             const upper = val.toUpperCase();
+            let marketNameSearch = "";
+
+            if (upper.includes("PASAR :")) {
+                marketNameSearch = upper.split("PASAR :")[1].trim().split(" ")[0] + " " + (upper.split("PASAR :")[1].trim().split(" ")[1] || "");
+            } else {
+                marketNameSearch = upper.split(/\s+/)[0];
+            }
+
+            const cleanSearch = marketNameSearch.replace(/\s/g, '');
+            let matched = markets.find(m => m.nama.replace(/\s/g, '').includes(cleanSearch));
             const nums = val.match(/\d{4}/g) || [];
-            let matched = markets.find(m => upper.includes(m.nama.split(' ')[0]));
 
             if(matched && nums.length > 0) {
-                if(!doneIDs.includes(matched.id)) {
-                    doneIDs.push(matched.id);
-                    localStorage.setItem('autoDoneIDs', JSON.stringify(doneIDs));
-                    
-                    // Jika yang diproses HokiDraw, set timer 50 menit
-                    if(matched.id === 1) {
-                        const fiftyMin = Date.now() + (50 * 60 * 1000);
-                        localStorage.setItem('hoki_timer', fiftyMin);
+                // Jangan biarkan Hoki jadi Hijau jika sudah masuk menit 50
+                const currentMins = new Date().getMinutes();
+                if(matched.id === 1 && currentMins >= 50) {
+                    wukongAlert("HOKIDRAW RESET AKTIF (MENIT 50+)");
+                } else {
+                    if(!doneIDs.includes(matched.id)) {
+                        doneIDs.push(matched.id);
+                        localStorage.setItem('autoDoneIDs', JSON.stringify(doneIDs));
                     }
                 }
+
+                // Format Postingan
+                const now = new Date();
                 const dateStr = `14 March 2026`; 
                 let post = `Hasil Pengeluaran ${matched.nama}\nHari Ini SABTU, ${dateStr}\n`;
                 if(nums.length === 1) post += `Result : ${nums[0]}\nSHIO : ${getShio(nums[0])}`;
                 else post += `Prize 1 : ${nums[0]}, SHIO : ${getShio(nums[0])}\nPrize 2 : ${nums[1] || '----'}\nPrize 3 : ${nums[2] || '----'}`;
                 post += `\nSelamat Kepada Pemenang, Salam JP Hanya di TogelUP`;
+                
                 document.getElementById('post-display').innerText = post;
                 localStorage.setItem('lastPostContent', post);
                 render();
@@ -330,19 +346,13 @@
         function render() {
             const tbody = document.getElementById('table-body');
             const filtered = activeTab === "ALL" ? markets : markets.filter(m => m.cat === activeTab || m.id === 1);
-            
-            // LOGIKA NEXT UP: Baris pertama yang belum DONE dan bukan ID 1
             const nextUpID = markets.find(m => m.id !== 1 && !doneIDs.includes(m.id))?.id;
 
             tbody.innerHTML = filtered.map((m) => {
                 let cls = "";
-                if(doneIDs.includes(m.id)) {
-                    cls = "row-done";
-                } else if(m.id === 1) {
-                    cls = "row-hokidraw";
-                } else if(m.id === nextUpID) {
-                    cls = "row-next-up";
-                }
+                if(doneIDs.includes(m.id)) cls = "row-done";
+                else if(m.id === 1) cls = "row-hokidraw";
+                else if(m.id === nextUpID) cls = "row-next-up";
                 return `<tr class="${cls}"><td>${m.id}</td><td style="font-weight:900;">${m.nama}</td><td>${m.jadwal}</td><td>${m.buka}</td><td>${m.tutup}</td></tr>`;
             }).join('');
         }
@@ -358,7 +368,6 @@
             localStorage.removeItem('autoDoneIDs');
             localStorage.removeItem('lastInputText');
             localStorage.removeItem('lastPostContent');
-            localStorage.removeItem('hoki_timer');
             doneIDs = [];
             document.getElementById('main-input').value = "";
             document.getElementById('post-display').innerText = "Menunggu input...";
