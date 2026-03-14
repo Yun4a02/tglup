@@ -71,14 +71,13 @@
             position: relative;
             display: flex;
             flex-direction: column;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Animasi halus */
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        /* EFEK MENYALA SAAT DISENTUH KUROR */
         .glass-card:hover {
-            border-color: var(--primary-cyan); /* Garis menyala */
-            box-shadow: 0 0 25px rgba(0, 245, 255, 0.25); /* Cahaya luar */
-            transform: translateY(-8px); /* Sedikit terangkat */
+            border-color: var(--primary-cyan);
+            box-shadow: 0 0 25px rgba(0, 245, 255, 0.25);
+            transform: translateY(-8px);
             background: rgba(3, 15, 24, 0.95);
         }
 
@@ -102,7 +101,7 @@
         }
 
         .glass-card:hover .card-header-label {
-            text-shadow: 0 0 10px var(--primary-cyan); /* Judul label juga ikut menyala */
+            text-shadow: 0 0 10px var(--primary-cyan);
         }
 
         /* --- Input Section --- */
@@ -199,7 +198,7 @@
         }
 
         .glass-card:hover .output-container {
-            border-style: solid; /* Saat card dihover, garis putus berubah jadi solid */
+            border-style: solid;
             background: rgba(1, 6, 10, 0.8);
         }
 
@@ -274,7 +273,19 @@
             </button>
         </div>
 
-        <!-- CARD 3: KATA KATA PREDIKSI -->
+        <!-- MENU 1: CARD 3 - TWITTER & FACEBOOK (TAMBAHAN BARU) -->
+        <div class="glass-card">
+            <div class="card-header-label">
+                <i class="fa-brands fa-facebook-messenger"></i> Twitter & Facebook
+            </div>
+            <div class="action-group">
+                <button class="btn-icon btn-edit" onclick="toggleEdit('box-sosmed', this)"><i class="fa-solid fa-pen"></i> Edit</button>
+                <button class="btn-icon btn-copy" onclick="copyText('box-sosmed')"><i class="fa-solid fa-copy"></i> Copy</button>
+            </div>
+            <div id="box-sosmed" class="output-container" oninput="autoSave('box-sosmed')">Yth Member Setia TogelUP Berikut Syair Togel yang kami sediakan, di syair ini merupakan kumpulan syair-syair dari kode alam yang biasa di anggap nomor jitu dan akurat dalam pasaran togel. Salam JP hanya di TogelUP</div>
+        </div>
+
+        <!-- CARD 4: KATA KATA PREDIKSI -->
         <div class="glass-card">
             <div class="card-header-label">
                 <i class="fa-solid fa-wand-magic-sparkles"></i> Kata Prediksi
@@ -289,7 +300,7 @@
 💰HANYA DI TOGELUP💰</div>
         </div>
 
-        <!-- CARD 4: LINK ALTERNATIF -->
+        <!-- CARD 5: LINK ALTERNATIF -->
         <div class="glass-card">
             <div class="card-header-label">
                 <i class="fa-solid fa-link"></i> Link Alternatif Aman
@@ -315,11 +326,12 @@
     <div id="toast" class="toast">BERHASIL DISALIN!</div>
 
     <script>
-        // JS tetap sama, mempertahankan fungsi simpan otomatis & generate
+        // JS Load Data
         window.onload = function() {
             loadSavedData('box-post');
             loadSavedData('box-prediksi');
             loadSavedData('box-link');
+            loadSavedData('box-sosmed'); // Memuat data Sosmed
             loadInputs();
         };
 
@@ -361,8 +373,7 @@
 
         function copyText(id) {
             const rawText = document.getElementById(id).innerText;
-            const cleanText = rawText.replace(/"/g, "");
-            navigator.clipboard.writeText(cleanText).then(() => {
+            navigator.clipboard.writeText(rawText).then(() => {
                 showToast("Berhasil Disalin!");
             });
         }
@@ -392,7 +403,7 @@
                 document.getElementById('in-nominal').value = "";
                 document.getElementById('box-post').innerText = "Generate data untuk hasil...";
                 localStorage.clear();
-                showToast("Data Reset!");
+                location.reload(); // Refresh untuk mengembalikan teks default
             }
         }
 
