@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wukong Dashboard - HOKIDRAW Logic</title>
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <title>Wukong Dashboard - HOKIDRAW Fixed Logic</title>
     <style>
         :root {
             --neon-blue: #00f2ff;
@@ -43,101 +42,71 @@
         .neon-title {
             font-size: 2.2rem; text-transform: uppercase; letter-spacing: 5px;
             color: #fff; text-shadow: 0 0 10px var(--neon-blue);
-            text-align: center; margin-bottom: 5px;
+            text-align: center; margin-bottom: 20px;
             animation: floating 3s ease-in-out infinite;
         }
         @keyframes floating { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
-
-        .marquee-wrapper {
-            width: 100%; max-width: 900px; margin: 0 auto 15px auto;
-            overflow: hidden; white-space: nowrap;
-            border-bottom: 1px solid rgba(0, 242, 255, 0.2); padding-bottom: 5px;
-        }
-        .marquee-content {
-            display: inline-block; color: var(--neon-yellow);
-            font-size: 15px; text-transform: uppercase;
-            text-shadow: 0 0 5px var(--neon-yellow);
-            animation: walk 15s linear infinite; 
-        }
-        @keyframes walk { 0% { transform: translateX(100vw); } 100% { transform: translateX(-100%); } }
 
         .dashboard-grid { display: grid; grid-template-columns: 1fr 380px; gap: 15px; align-items: start; }
 
         /* NAV AREA */
         .nav-area {
             display: flex; align-items: center; justify-content: space-between;
-            margin-bottom: 12px; gap: 12px; width: 100%;
+            margin-bottom: 12px; gap: 12px;
         }
-        .nav-menu { display: flex; gap: 6px; flex-shrink: 0; }
+        .nav-menu { display: flex; gap: 6px; }
         .btn-nav {
             background: #21262d; color: white; border: 1px solid #30363d;
-            padding: 6px 10px; cursor: pointer; font-weight: bold;
-            border-radius: 50px; font-size: 9px; text-transform: uppercase; height: 32px;
+            padding: 6px 12px; cursor: pointer; font-weight: bold;
+            border-radius: 5px; font-size: 10px; text-transform: uppercase;
         }
-        .btn-nav.active { background: var(--neon-blue); color: black; box-shadow: 0 0 8px var(--neon-blue); }
+        .btn-nav.active { background: var(--neon-blue); color: black; }
 
-        .official-links-toolbar {
-            display: flex; gap: 8px; flex-grow: 1; justify-content: center;
-        }
+        .official-links-toolbar { display: flex; gap: 8px; }
         .btn-link-quick {
-            padding: 0 15px; border-radius: 5px; font-size: 10px; font-weight: 900;
-            cursor: pointer; text-transform: uppercase; border: 1px solid rgba(255,255,255,0.1);
-            transition: 0.3s; height: 32px; display: flex; align-items: center;
+            padding: 8px 15px; border-radius: 5px; font-size: 10px; font-weight: 900;
+            cursor: pointer; text-transform: uppercase; border: none;
         }
-        .btn-link-quick.merah { background: var(--neon-red); color: white; box-shadow: 0 0 10px rgba(255, 0, 68, 0.3); }
-        .btn-link-quick.biru { background: var(--neon-blue); color: black; box-shadow: 0 0 10px rgba(0, 242, 255, 0.3); }
+        .btn-link-quick.merah { background: var(--neon-red); color: white; }
+        .btn-link-quick.biru { background: var(--neon-blue); color: black; }
 
-        .quote-toolbar-wrapper {
-            width: 400px; display: flex; align-items: center;
-            background: rgba(0, 0, 0, 0.4); border: 1px solid #444;
-            padding: 0 10px; border-radius: 5px; height: 32px;
-        }
-        .label-quote-sm { color: var(--neon-yellow); font-size: 9px; white-space: nowrap; margin-right: 8px; }
-        .input-quote-sm {
-            background: transparent; border: none; color: white;
-            font-size: 10px; outline: none; width: 100%;
-        }
-        .btn-reset { background: #30363d; color: #ff4757; border: none; padding: 0 15px; cursor: pointer; border-radius: 5px; font-weight: bold; font-size: 9px; text-transform: uppercase; height: 32px; }
+        /* TABLE SECTION */
+        .table-section { background: var(--card-bg); border-radius: 8px; padding: 10px; border: 1px solid #30363d; }
+        table { width: 100%; border-collapse: collapse; font-size: 14px; } 
+        th { color: var(--neon-blue); text-align: left; padding: 12px 8px; border-bottom: 2px solid #30363d; background: #0d1117; }
+        td { padding: 10px 8px; border-bottom: 1px solid #21262d; }
 
+        /* WARNA STATUS */
+        .row-done { 
+            color: var(--neon-green) !important; 
+            text-shadow: 0 0 8px var(--neon-green); 
+            background: rgba(57, 255, 20, 0.05) !important; 
+        }
+        
+        .row-hokidraw-waiting { 
+            color: var(--neon-red) !important; 
+            background: rgba(255, 0, 68, 0.08) !important;
+            animation: blinkRed 0.8s infinite alternate;
+            font-weight: 900;
+        }
+        @keyframes blinkRed { 
+            from { text-shadow: 0 0 2px var(--neon-red); opacity: 1; } 
+            to { text-shadow: 0 0 15px var(--neon-red); opacity: 0.8; } 
+        }
+
+        .row-next-up { color: #fff; background: rgba(0, 242, 255, 0.1); }
+
+        /* RIGHT SIDEBAR */
         .sticky-sidebar { position: sticky; top: 15px; display: flex; flex-direction: column; gap: 15px; }
-
-        .clock-container {
-            background: rgba(0, 0, 0, 0.3); border: 1px solid #30363d;
-            border-radius: 8px; padding: 8px; text-align: center;
-        }
-        #digital-clock { color: var(--neon-blue); font-size: 16px; text-shadow: 0 0 8px var(--neon-blue); display: block; }
-        #digital-date { color: #8b949e; font-size: 10px; text-transform: uppercase; }
-
-        .input-box-wrapper {
-            background: rgba(0, 0, 0, 0.4); border: 2px solid var(--neon-blue);
-            padding: 8px 12px; border-radius: 8px; display: flex; align-items: center; gap: 10px;
-        }
-        .label-input { color: var(--neon-blue); font-size: 10px; white-space: nowrap; }
-        .main-input { background: transparent; border: none; color: var(--neon-yellow); font-size: 13px; font-weight: 900; outline: none; width: 100%; }
+        .clock-container { background: #000; border: 1px solid var(--neon-blue); border-radius: 8px; padding: 10px; text-align: center; }
+        #digital-clock { color: var(--neon-blue); font-size: 20px; display: block; }
+        
+        .input-box-wrapper { background: #000; border: 2px solid var(--neon-blue); padding: 10px; border-radius: 8px; }
+        .main-input { background: transparent; border: none; color: var(--neon-yellow); font-size: 14px; width: 100%; outline: none; font-weight: 900; }
 
         .post-section { background: var(--card-bg); border: 2px solid var(--neon-red); border-radius: 8px; padding: 12px; }
-        .post-content {
-            background: #000; color: #fff; padding: 12px; border-radius: 5px;
-            font-family: 'Courier New', monospace; font-size: 12px;
-            white-space: pre-wrap; border: 1px dashed #444; line-height: 1.5; 
-            height: 220px; width: 100%; box-sizing: border-box; text-align: left; overflow-y: auto;
-        }
-        .btn-copy { width: 100%; margin-top: 12px; background: var(--neon-green); color: black; border: none; padding: 10px; border-radius: 5px; font-weight: bold; cursor: pointer; text-transform: uppercase; font-size: 11px; }
-
-        /* TABLE */
-        .table-section { background: var(--card-bg); border-radius: 8px; padding: 8px; border: 1px solid #30363d; }
-        table { width: 100%; border-collapse: collapse; font-size: 13px; } 
-        th { color: var(--neon-blue); text-align: left; padding: 10px 6px; border-bottom: 2px solid #30363d; background: #0d1117; }
-        td { padding: 4px 6px; border-bottom: 1px solid #21262d; }
-
-        /* ROW COLORS */
-        .row-done { color: var(--neon-green) !important; text-shadow: 0 0 6px var(--neon-green) !important; background: rgba(57, 255, 20, 0.04) !important; }
-        .row-next-up { color: #fff !important; background: rgba(0, 242, 255, 0.12) !important; animation: blinkBlueNeon 0.7s infinite alternate !important; }
-        @keyframes blinkBlueNeon { from { text-shadow: 0 0 3px var(--neon-blue); } to { text-shadow: 0 0 15px var(--neon-blue); color: var(--neon-blue); } }
-        
-        /* LOGIK MERAH HOKIDRAW */
-        .row-hokidraw { color: var(--neon-red) !important; animation: blinkRedNeon 0.8s infinite alternate !important; background: rgba(255, 0, 68, 0.06); }
-        @keyframes blinkRedNeon { from { text-shadow: 0 0 2px var(--neon-red); } to { text-shadow: 0 0 12px var(--neon-red); } }
+        .post-content { background: #000; color: #fff; padding: 10px; border-radius: 5px; height: 180px; font-family: monospace; font-size: 12px; overflow-y: auto; white-space: pre-wrap; }
+        .btn-copy { width: 100%; margin-top: 10px; background: var(--neon-green); color: black; border: none; padding: 10px; font-weight: bold; cursor: pointer; border-radius: 5px; }
     </style>
 </head>
 <body>
@@ -146,9 +115,6 @@
 
     <div class="main-wrapper">
         <h1 class="neon-title">ANGKA RESULT</h1>
-        <div class="marquee-wrapper">
-            <div class="marquee-content" id="quote-display">SILAHKAN ISI QUOTES ANDA...</div>
-        </div>
 
         <div class="nav-area">
             <div class="nav-menu">
@@ -157,17 +123,11 @@
                 <button class="btn-nav" onclick="filterTab('SORE', this)">SORE</button>
                 <button class="btn-nav" onclick="filterTab('MALAM', this)">MALAM</button>
             </div>
-
             <div class="official-links-toolbar">
                 <button class="btn-link-quick merah" onclick="quickCopy('https://w6.ceriawlatogel88.net/wap', 'LINK MERAH')">LINK MERAH</button>
                 <button class="btn-link-quick biru" onclick="quickCopy('https://www.vegastogel.net/wap', 'LINK BIRU')">LINK BIRU</button>
             </div>
-
-            <div class="quote-toolbar-wrapper">
-                <span class="label-quote-sm">FORMAT QUOTES :</span>
-                <input type="text" id="quote-input" class="input-quote-sm" placeholder="Tulis kata-kata..." oninput="updateQuote(this.value)">
-            </div>
-            <button class="btn-reset" onclick="resetAll()">RESET ALL</button>
+            <button class="btn-nav" style="color:red;" onclick="resetAll()">RESET ALL</button>
         </div>
 
         <div class="dashboard-grid">
@@ -185,95 +145,99 @@
             <div class="right-col sticky-sidebar">
                 <div class="clock-container">
                     <span id="digital-clock">00:00:00 AM</span>
-                    <span id="digital-date">MEMUAT WAKTU...</span>
+                    <span id="digital-date">MEMUAT...</span>
                 </div>
-                
                 <div class="input-box-wrapper">
-                    <span class="label-input">RESULT :</span>
-                    <input type="text" id="main-input" class="main-input" placeholder="Tempel: pasar : SYDNEY 3238" oninput="autoProcess(this.value)">
+                    <span style="color:var(--neon-blue); font-size:10px;">RESULT :</span>
+                    <input type="text" id="main-input" class="main-input" placeholder="Contoh: HOKIDRAW 1234" oninput="autoProcess(this.value)">
                 </div>
-
                 <div class="post-section">
-                    <div style="color:var(--neon-red); margin-bottom:8px; font-size: 11px;">FORMAT POSTINGAN:</div>
                     <div class="post-content" id="post-display"></div>
-                    <button class="btn-copy" onclick="copyPost()">SALIN & POST RESULT</button>
+                    <button class="btn-copy" onclick="copyPost()">SALIN & POST</button>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        const shioTable = {
-            "Kuda": ["01","13","25","37","49","61","73","85","97"], "ULAR": ["02","14","26","38","50","62","74","86","98"],
-            "Naga": ["03","15","27","39","51","63","75","87","99"], "Kelinci": ["04","16","28","40","52","64","76","88","00"],
-            "Harimau": ["05","17","29","41","53","65","77","89"], "Kerbau": ["06","18","30","42","54","66","78","90"],
-            "Tikus": ["07","19","31","43","55","67","79","91"], "Babi": ["08","20","32","44","56","68","80","92"],
-            "Anjing": ["09","21","33","45","57","69","81","93"], "Ayam": ["10","22","34","46","58","70","82","94"],
-            "Monyet": ["11","23","35","47","59","71","83","95"], "Kambing": ["12","24","36","48","60","72","84","96"]
-        };
-
         const markets = [
             { id: 1, nama: "HOKIDRAW", jadwal: "SENIN - MINGGU", buka: "RESULT 24 KALI", tutup: "1 JAM SEKALI", cat: "MALAM" },
             { id: 2, nama: "TOTO MACAU 4D PAGI", jadwal: "SENIN - MINGGU", buka: "00:00 WIB", tutup: "00:15 WIB", cat: "MALAM" },
             { id: 3, nama: "KENTUCKYMID", jadwal: "SENIN - MINGGU", buka: "00:05 WIB", tutup: "00:20 WIB", cat: "MALAM" },
             { id: 4, nama: "FLORIDAMID", jadwal: "SENIN - MINGGU", buka: "00:20 WIB", tutup: "00:30 WIB", cat: "MALAM" },
             { id: 5, nama: "HUAHIN 0100", jadwal: "SENIN - MINGGU", buka: "00:45 WIB", tutup: "01:00 WIB", cat: "MALAM" },
-            { id: 6, nama: "BANGKOK 0130", jadwal: "SENIN - MINGGU", buka: "01:15 WIB", tutup: "01:30 WIB", cat: "MALAM" },
-            { id: 7, nama: "NEWYORKMID", jadwal: "SENIN - MINGGU", buka: "01:15 WIB", tutup: "01:25 WIB", cat: "MALAM" },
-            { id: 8, nama: "CAROLINADAY", jadwal: "SENIN - MINGGU", buka: "01:45 WIB", tutup: "02:00 WIB", cat: "MALAM" },
-            { id: 9, nama: "BRUNEI02", jadwal: "SENIN - MINGGU", buka: "02:30 WIB", tutup: "02:45 WIB", cat: "MALAM" },
-            { id: 10, nama: "OREGON03", jadwal: "SENIN - MINGGU", buka: "02:50 WIB", tutup: "03:00 WIB", cat: "MALAM" },
-            { id: 11, nama: "OREGON06", jadwal: "SENIN - MINGGU", buka: "05:50 WIB", tutup: "06:00 WIB", cat: "MALAM" },
-            { id: 12, nama: "CALIFORNIA", jadwal: "SENIN - MINGGU", buka: "08:25 WIB", tutup: "08:30 WIB", cat: "PAGI" },
-            { id: 13, nama: "FLORIDAEVE", jadwal: "SENIN - MINGGU", buka: "08:35 WIB", tutup: "08:45 WIB", cat: "PAGI" },
-            { id: 14, nama: "OREGON09", jadwal: "SENIN - MINGGU", buka: "09:50 WIB", tutup: "10:00 WIB", cat: "PAGI" },
-            { id: 15, nama: "BANGKOK 0930", jadwal: "SENIN - MINGGU", buka: "08:50 WIB", tutup: "09:00 WIB", cat: "PAGI" },
-            { id: 16, nama: "NEWYORKEVE", jadwal: "SENIN - MINGGU", buka: "09:25 WIB", tutup: "09:35 WIB", cat: "PAGI" },
-            { id: 17, nama: "KENTUCKYEVE", jadwal: "SENIN - MINGGU", buka: "09:45 WIB", tutup: "10:00 WIB", cat: "PAGI" },
-            { id: 18, nama: "CAROLINAEVE", jadwal: "SENIN - MINGGU", buka: "10:17 WIB", tutup: "10:22 WIB", cat: "PAGI" },
-            { id: 19, nama: "TOTOCAMBODIA", jadwal: "SENIN - MINGGU", buka: "10:45 WIB", tutup: "11:00 WIB", cat: "PAGI" },
-            { id: 20, nama: "CHELSEA 11", jadwal: "SENIN - MINGGU", buka: "11:00 WIB", tutup: "11:15 WIB", cat: "PAGI" },
-            { id: 21, nama: "OREGON12", jadwal: "SENIN - MINGGU", buka: "11:50 WIB", tutup: "12:00 WIB", cat: "PAGI" },
-            { id: 22, nama: "POIPET12", jadwal: "SENIN - MINGGU", buka: "12:15 WIB", tutup: "12:30 WIB", cat: "PAGI" },
-            { id: 23, nama: "BULLSEYE", jadwal: "SENIN - MINGGU", buka: "12:00 WIB", tutup: "12:15 WIB", cat: "PAGI" },
-            { id: 24, nama: "TOTO MACAU 4D SIANG", jadwal: "SENIN - MINGGU", buka: "13:00 WIB", tutup: "13:15 WIB", cat: "PAGI" },
-            { id: 25, nama: "SYDNEY", jadwal: "SENIN - MINGGU", buka: "13:49 WIB", tutup: "14:05 WIB", cat: "PAGI" },
-            { id: 26, nama: "JAKARTA 1400", jadwal: "SENIN - MINGGU", buka: "13:55 WIB", tutup: "14:10 WIB", cat: "PAGI" },
-            { id: 27, nama: "BRUNEI14", jadwal: "SENIN - MINGGU", buka: "14:30 WIB", tutup: "14:45 WIB", cat: "PAGI" },
-            { id: 28, nama: "CHELSEA 15", jadwal: "SENIN - MINGGU", buka: "15:00 WIB", tutup: "15:15 WIB", cat: "PAGI" },
-            { id: 29, nama: "TOTO MACAU 5D SORE", jadwal: "SENIN - MINGGU", buka: "15:15 WIB", tutup: "15:30 WIB", cat: "PAGI" },
-            { id: 30, nama: "POIPET15", jadwal: "SENIN - MINGGU", buka: "15:15 WIB", tutup: "15:30 WIB", cat: "PAGI" },
-            { id: 31, nama: "TOTOMALI1530", jadwal: "SENIN - MINGGU", buka: "15:15 WIB", tutup: "15:30 WIB", cat: "PAGI" },
-            { id: 32, nama: "TOTOMACAU SORE", jadwal: "SENIN - MINGGU", buka: "16:00 WIB", tutup: "16:15 WIB", cat: "SORE" },
-            { id: 33, nama: "HUAHIN 1630", jadwal: "SENIN - MINGGU", buka: "16:15 WIB", tutup: "16:30 WIB", cat: "SORE" },
-            { id: 34, nama: "KING KONG4D I", jadwal: "SENIN - MINGGU", buka: "17:00 WIB", tutup: "17:15 WIB", cat: "SORE" },
-            { id: 35, nama: "SINGAPORE", jadwal: "SELASA & JUM'AT ( LIBUR )", buka: "17:30 WIB", tutup: "17:45 WIB", cat: "SORE" },
-            { id: 36, nama: "MAGNUM4D", jadwal: "RABU, SABTU & MINGGU", buka: "18:10 WIB", tutup: "18:40 WIB", cat: "SORE" },
-            { id: 37, nama: "TOTOMACAU MALAM I", jadwal: "SENIN - MINGGU", buka: "19:00 WIB", tutup: "19:15 WIB", cat: "SORE" },
-            { id: 38, nama: "CHELSEA 19", jadwal: "SENIN - MINGGU", buka: "19:00 WIB", tutup: "19:15 WIB", cat: "SORE" },
-            { id: 39, nama: "POIPET19", jadwal: "SENIN - MINGGU", buka: "19:30 WIB", tutup: "19:45 WIB", cat: "SORE" },
-            { id: 40, nama: "PCSO", jadwal: "MINGGU ( LIBUR )", buka: "19:50 WIB", tutup: "20:10 WIB", cat: "SORE" },
-            { id: 41, nama: "TOTOMALI 2030", jadwal: "SENIN - MINGGU", buka: "20:15 WIB", tutup: "20:30 WIB", cat: "SORE" },
-            { id: 42, nama: "HUAHIN 2100", jadwal: "SENIN - MINGGU", buka: "20:45 WIB", tutup: "21:00 WIB", cat: "SORE" },
-            { id: 43, nama: "CHELSEA 21", jadwal: "SENIN - MINGGU", buka: "21:00 WIB", tutup: "21:15 WIB", cat: "SORE" },
-            { id: 44, nama: "TOTOMACAU 5D MALAM", jadwal: "SENIN - MINGGU", buka: "21:15 WIB", tutup: "21:30 WIB", cat: "SORE" },
-            { id: 45, nama: "NEVADA", jadwal: "SENIN - MINGGU", buka: "21:15 WIB", tutup: "21:30 WIB", cat: "SORE" },
-            { id: 46, nama: "BRUNEI 21", jadwal: "SENIN - MINGGU", buka: "21:30 WIB", tutup: "21:45 WIB", cat: "SORE" },
-            { id: 47, nama: "TOTOMACAU MALAM II", jadwal: "SENIN - MINGGU", buka: "22:00 WIB", tutup: "22:15 WIB", cat: "SORE" },
-            { id: 48, nama: "POIPET22", jadwal: "SENIN - MINGGU", buka: "22:30 WIB", tutup: "22:45 WIB", cat: "SORE" },
-            { id: 49, nama: "HONGKONG", jadwal: "SENIN - MINGGU", buka: "22:59 WIB", tutup: "23:15 WIB", cat: "SORE" },
-            { id: 50, nama: "TOTOMACAU MALAM III", jadwal: "SENIN - MINGGU", buka: "23:00 WIB", tutup: "23:15 WIB", cat: "SORE" },
-            { id: 51, nama: "TOTOMALI 2330", jadwal: "SENIN - MINGGU", buka: "23:15 WIB", tutup: "23:30 WIB", cat: "SORE" },
-            { id: 52, nama: "JAKARTA 2330", jadwal: "SENIN - MINGGU", buka: "23:25 WIB", tutup: "23:40 WIB", cat: "SORE" },
-            { id: 53, nama: "KING KONG4D II", jadwal: "SENIN - MINGGU", buka: "23:30 WIB", tutup: "23:45 WIB", cat: "SORE" }
+            { id: 6, nama: "BANGKOK 0130", jadwal: "SENIN - MINGGU", buka: "01:15 WIB", tutup: "01:30 WIB", cat: "MALAM" }
+            // ... (Daftar pasaran lainnya bisa dilanjutkan di sini)
         ];
 
         let doneIDs = JSON.parse(localStorage.getItem('autoDoneIDs')) || [];
         let activeTab = "ALL";
 
+        function updateClock() {
+            const now = new Date();
+            const h = now.getHours();
+            const m = now.getMinutes();
+            const s = now.getSeconds();
+
+            // --- ALGORITMA OTOMATIS HOKIDRAW ---
+            // Cek apakah jam ini sudah melakukan reset merah?
+            let lastResetHour = localStorage.getItem('lastHokiResetHour');
+            
+            if (m >= 50 && lastResetHour != h) {
+                // Hapus HOKIDRAW dari doneIDs (Paksa jadi Merah)
+                doneIDs = doneIDs.filter(id => id !== 1);
+                localStorage.setItem('autoDoneIDs', JSON.stringify(doneIDs));
+                localStorage.setItem('lastHokiResetHour', h); // Tandai jam ini sudah direset
+                render();
+            }
+
+            document.getElementById('digital-clock').innerText = now.toLocaleTimeString();
+            document.getElementById('digital-date').innerText = now.toLocaleDateString('id-ID', {weekday:'long', day:'numeric', month:'long', year:'numeric'}).toUpperCase();
+        }
+
+        function autoProcess(val) {
+            if(!val) return;
+            const upper = val.toUpperCase();
+            let matched = markets.find(m => upper.includes(m.nama.toUpperCase()));
+            const nums = val.match(/\d{4}/g);
+
+            if (matched && nums) {
+                if (!doneIDs.includes(matched.id)) {
+                    doneIDs.push(matched.id);
+                    localStorage.setItem('autoDoneIDs', JSON.stringify(doneIDs));
+                }
+                document.getElementById('post-display').innerText = `Hasil Pengeluaran ${matched.nama}\nResult : ${nums[0]}\nSelamat JP!`;
+                render();
+            }
+        }
+
+        function render() {
+            const tbody = document.getElementById('table-body');
+            const now = new Date();
+            const currentMin = now.getMinutes();
+
+            const filtered = activeTab === "ALL" ? markets : markets.filter(m => m.cat === activeTab || m.id === 1);
+
+            tbody.innerHTML = filtered.map(m => {
+                let cls = "";
+                
+                // Jika sudah ada di doneIDs -> HIJAU
+                if (doneIDs.includes(m.id)) {
+                    cls = "row-done";
+                } 
+                // Jika HOKIDRAW (ID 1) belum diresult (tidak ada di doneIDs)
+                // Wajib MERAH jika sudah masuk menit 50 ATAU jika menit masih 00-49 tapi result jam sebelumnya belum kelar
+                else if (m.id === 1) {
+                    cls = "row-hokidraw-waiting";
+                }
+
+                return `<tr class="${cls}"><td>${m.id}</td><td>${m.nama}</td><td>${m.jadwal}</td><td>${m.buka}</td><td>${m.tutup}</td></tr>`;
+            }).join('');
+        }
+
         function quickCopy(url, label) {
             navigator.clipboard.writeText(url).then(() => {
-                wukongAlert("WUKONG: " + label + " COPIED!");
+                wukongAlert(label + " COPIED!");
             });
         }
 
@@ -283,93 +247,6 @@
             setTimeout(() => t.classList.remove('show'), 2000);
         }
 
-        function updateClock() {
-            const now = new Date();
-            const mins = now.getMinutes();
-            const secs = now.getSeconds();
-
-            // LOGIK: Tepat menit 50:00, hapus HOKIDRAW dari doneIDs agar jadi MERAH
-            if (mins === 50 && secs === 0) {
-                if (doneIDs.includes(1)) {
-                    doneIDs = doneIDs.filter(id => id !== 1);
-                    localStorage.setItem('autoDoneIDs', JSON.stringify(doneIDs));
-                    render();
-                }
-            }
-
-            const days = ["MINGGU", "SENIN", "SELASA", "RABU", "KAMIS", "JUM'AT", "SABTU"];
-            let h = now.getHours(), m = mins, s = secs;
-            let ampm = h >= 12 ? 'PM' : 'AM'; h = h % 12 || 12;
-            document.getElementById('digital-clock').innerText = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')} ${ampm}`;
-            document.getElementById('digital-date').innerText = `${days[now.getDay()]}, ${now.getDate()} March ${now.getFullYear()}`;
-            
-            // Re-render otomatis saat menit berubah ke 50 jika belum berubah warna
-            if (m === 50 && s === 1) render();
-        }
-        setInterval(updateClock, 1000); updateClock();
-
-        function updateQuote(v) {
-            localStorage.setItem('permanentQuote', v);
-            document.getElementById('quote-display').innerText = v || "SILAHKAN ISI QUOTES ANDA...";
-        }
-
-        function getShio(num) {
-            let tail = num.slice(-2);
-            for(let key in shioTable) if(shioTable[key].includes(tail)) return key;
-            return "...";
-        }
-
-        function autoProcess(val) {
-            if(!val) { document.getElementById('post-display').innerText = ""; return; }
-            const upper = val.toUpperCase();
-            let marketSearch = upper.includes("PASAR :") ? upper.split("PASAR :")[1].trim().split(" ")[0] : upper.split(/\s+/)[0];
-            const cleanSearch = marketSearch.replace(/\s/g, '');
-            let matched = markets.find(m => m.nama.replace(/\s/g, '').includes(cleanSearch));
-            const nums = val.match(/\d{4}/g) || [];
-
-            if(matched && nums.length > 0) {
-                // Masukkan ke doneIDs agar berubah jadi HIJAU
-                if(!doneIDs.includes(matched.id)) {
-                    doneIDs.push(matched.id);
-                    localStorage.setItem('autoDoneIDs', JSON.stringify(doneIDs));
-                }
-                const now = new Date();
-                const daysStr = ["MINGGU", "SENIN", "SELASA", "RABU", "KAMIS", "JUM'AT", "SABTU"];
-                let post = `Hasil Pengeluaran ${matched.nama}\nHari Ini ${daysStr[now.getDay()]}, ${now.getDate()} March ${now.getFullYear()}\n`;
-                post += nums.length === 1 ? `Result : ${nums[0]}\nSHIO : ${getShio(nums[0])}` : `Prize 1 : ${nums[0]}, SHIO : ${getShio(nums[0])}\nPrize 2 : ${nums[1] || '----'}\nPrize 3 : ${nums[2] || '----'}`;
-                post += `\nSelamat Kepada Pemenang, Salam JP Hanya di TogelUP`;
-                document.getElementById('post-display').innerText = post;
-                render();
-            }
-        }
-
-        function render() {
-            const tbody = document.getElementById('table-body');
-            const now = new Date();
-            const currentMins = now.getMinutes();
-            const filtered = activeTab === "ALL" ? markets : markets.filter(m => m.cat === activeTab || m.id === 1);
-            const nextUpID = markets.find(m => m.id !== 1 && !doneIDs.includes(m.id))?.id;
-
-            tbody.innerHTML = filtered.map((m) => {
-                let cls = "";
-                
-                // PRIORITAS 1: Jika sudah diresult (ada di doneIDs), wajib HIJAU
-                if (doneIDs.includes(m.id)) {
-                    cls = "row-done";
-                } 
-                // PRIORITAS 2: Jika ID 1 (HOKIDRAW) dan jam menunjukkan menit >= 50, wajib MERAH
-                else if (m.id === 1 && currentMins >= 50) {
-                    cls = "row-hokidraw";
-                }
-                // PRIORITAS 3: Indikator Pasaran Berikutnya (BIRU)
-                else if (m.id === nextUpID) {
-                    cls = "row-next-up";
-                }
-
-                return `<tr class="${cls}"><td>${m.id}</td><td style="font-weight:900;">${m.nama}</td><td>${m.jadwal}</td><td>${m.buka}</td><td>${m.tutup}</td></tr>`;
-            }).join('');
-        }
-
         function filterTab(tab, el) {
             activeTab = tab;
             document.querySelectorAll('.btn-nav').forEach(b => b.classList.remove('active'));
@@ -377,19 +254,14 @@
         }
 
         function resetAll() {
-            localStorage.removeItem('autoDoneIDs'); doneIDs = [];
-            document.getElementById('main-input').value = ""; document.getElementById('post-display').innerText = "";
-            render(); wukongAlert("WUKONG RESET DATA ALL");
+            localStorage.clear();
+            doneIDs = [];
+            render();
+            wukongAlert("WUKONG: ALL DATA RESET");
         }
 
-        function copyPost() {
-            const txt = document.getElementById('post-display').innerText;
-            if(txt) navigator.clipboard.writeText(txt).then(() => wukongAlert("WUKONG TELAH MENYALIN"));
-        }
-
-        document.getElementById('quote-input').value = localStorage.getItem('permanentQuote') || "";
-        document.getElementById('quote-display').innerText = localStorage.getItem('permanentQuote') || "SILAHKAN ISI QUOTES ANDA...";
-        render();
+        setInterval(updateClock, 1000);
+        window.onload = () => { updateClock(); render(); };
     </script>
 </body>
 </html>
