@@ -3,18 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wukong Dashboard - Aligned Side-by-Side</title>
+    <title>Wukong Dashboard - Side Menu Layout</title>
     <style>
         :root {
             --neon-blue: #00f2ff;
             --neon-green: #39ff14;
             --neon-red: #ff0044;
             --neon-yellow: #fff200;
-            --neon-purple: #bc13fe;
-            --bg-site: #0d1117;
-            --card-bg: #161b22;
+            --neon-glow: rgba(0, 251, 255, 0.5);
+            --bg-site: #000c14;
+            --card-bg: #00121a;
             --text-white: #ffffff;
         }
+
+        * { box-sizing: border-box; }
 
         body {
             background-color: var(--bg-site);
@@ -23,7 +25,10 @@
             font-weight: bold;
             margin: 0;
             padding: 15px;
-            overflow-x: hidden;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden; /* Mencegah scroll body utama */
         }
 
         /* WUKONG NOTIFICATION */
@@ -31,31 +36,28 @@
             position: fixed; top: -100px; left: 50%; transform: translateX(-50%);
             background: rgba(0, 0, 0, 0.95); border: 2px solid var(--neon-yellow);
             color: var(--neon-yellow); padding: 12px 35px; border-radius: 50px;
-            font-size: 16px; font-weight: 900; text-transform: uppercase;
-            box-shadow: 0 0 25px rgba(255, 242, 0, 0.5); z-index: 10000;
-            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); pointer-events: none;
+            font-size: 14px; font-weight: 900; text-transform: uppercase;
+            box-shadow: 0 0 20px rgba(255, 242, 0, 0.5); z-index: 10000;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-        #wukong-toast.show { top: 40px; }
-
-        .main-wrapper { max-width: 1600px; margin: 0 auto; }
+        #wukong-toast.show { top: 30px; }
 
         .neon-title {
-            font-size: 2.2rem; text-transform: uppercase; letter-spacing: 5px;
+            font-size: 1.8rem; text-transform: uppercase; letter-spacing: 5px;
             color: #fff; text-shadow: 0 0 10px var(--neon-blue);
-            text-align: center; margin-bottom: 20px;
-            animation: floatingTitle 3s ease-in-out infinite;
+            text-align: center; margin-bottom: 15px; margin-top: 0;
         }
-        @keyframes floatingTitle { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
 
         /* NAV AREA */
         .nav-area {
-            display: flex; align-items: center; justify-content: flex-start;
-            margin-bottom: 12px; gap: 15px;
+            display: flex; align-items: center; gap: 15px;
+            margin-bottom: 15px; background: rgba(0,0,0,0.3);
+            padding: 10px; border-radius: 8px;
         }
         .nav-menu { display: flex; gap: 6px; }
         .btn-nav {
             background: #21262d; color: white; border: 1px solid #30363d;
-            padding: 6px 12px; cursor: pointer; font-weight: bold;
+            padding: 8px 12px; cursor: pointer; font-weight: bold;
             border-radius: 5px; font-size: 10px; text-transform: uppercase;
         }
         .btn-nav.active { background: var(--neon-blue); color: black; box-shadow: 0 0 8px var(--neon-blue); }
@@ -63,136 +65,159 @@
         .official-links-toolbar { display: flex; gap: 8px; }
         .btn-link-quick {
             padding: 8px 15px; border-radius: 5px; font-size: 10px; font-weight: 900;
-            cursor: pointer; text-transform: uppercase; border: none; transition: 0.3s;
+            cursor: pointer; text-transform: uppercase; border: none;
         }
         .btn-link-quick.merah { background: var(--neon-red); color: white; }
         .btn-link-quick.biru { background: var(--neon-blue); color: black; }
 
-        /* TABLE SECTION */
-        .table-section { background: var(--card-bg); border-radius: 8px; padding: 10px; border: 1px solid #30363d; }
-        table { width: 100%; border-collapse: collapse; font-size: 14px; } 
-        th { color: var(--neon-blue); text-align: left; padding: 12px 8px; border-bottom: 2px solid #30363d; background: #0d1117; }
+        /* --- MAIN LAYOUT GRID (TABEL DI KIRI, MENU DI KANAN) --- */
+        .main-container-grid {
+            display: grid;
+            grid-template-columns: 1fr 400px; /* Lebar menu samping 400px */
+            gap: 15px;
+            flex: 1; /* Mengisi sisa layar */
+            min-height: 0;
+        }
+
+        /* TABEL AREA (SCROLLABLE) */
+        .table-section {
+            background: var(--card-bg);
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 10px;
+            overflow-y: auto; /* Aktifkan scroll di tabel saja */
+        }
+        table { width: 100%; border-collapse: collapse; font-size: 13px; } 
+        th { color: var(--neon-blue); text-align: left; padding: 12px 8px; border-bottom: 2px solid #30363d; background: #0d1117; position: sticky; top: 0; }
         td { padding: 8px 8px; border-bottom: 1px solid #21262d; }
 
         /* WARNA STATUS */
         .row-done { color: var(--neon-green) !important; text-shadow: 0 0 8px var(--neon-green); background: rgba(57, 255, 20, 0.05) !important; }
-        .row-hokidraw-waiting { color: var(--neon-red) !important; background: rgba(255, 0, 68, 0.08) !important; animation: blinkRed 0.8s infinite alternate; font-weight: 900; }
+        .row-hokidraw-waiting { color: var(--neon-red) !important; animation: blinkRed 0.8s infinite alternate; font-weight: 900; }
         @keyframes blinkRed { from { text-shadow: 0 0 2px var(--neon-red); opacity: 1; } to { text-shadow: 0 0 15px var(--neon-red); opacity: 0.8; } }
         .row-next-up { color: var(--neon-blue) !important; background: rgba(0, 242, 255, 0.1) !important; animation: blinkBlue 1s infinite alternate; font-weight: 900; }
         @keyframes blinkBlue { from { text-shadow: 0 0 2px var(--neon-blue); opacity: 1; } to { text-shadow: 0 0 18px var(--neon-blue); opacity: 0.7; } }
 
-        /* RIGHT SIDEBAR */
-        .sticky-sidebar { position: sticky; top: 15px; display: flex; flex-direction: column; gap: 15px; }
-        .clock-container { background: #000; border: 1px solid var(--neon-blue); border-radius: 8px; padding: 10px; text-align: center; }
-        #digital-clock { color: var(--neon-blue); font-size: 20px; display: block; font-family: monospace; }
-
-        /* HASIL RESULT SECTION - SIDE BY SIDE LAYOUT */
-        .input-box-wrapper { 
-            background: #000; 
-            border: 2px solid var(--neon-blue); 
-            padding: 15px 12px; 
-            border-radius: 8px;
-            display: flex; /* Aktifkan Flexbox */
-            flex-direction: row; /* Arah Menyamping */
-            align-items: center; /* Sejajar Vertikal */
-            justify-content: space-between;
+        /* SIDEBAR AREA (FIXED) */
+        .sidebar-menu {
+            display: flex;
+            flex-direction: column;
             gap: 15px;
         }
 
-        .label-result-container {
+        .clock-box {
+            background: #000; border: 1px solid var(--neon-blue);
+            border-radius: 8px; padding: 15px; text-align: center;
+        }
+        #digital-clock { color: var(--neon-blue); font-size: 24px; display: block; font-family: monospace; }
+        #digital-date { font-size: 11px; color: #888; text-transform: uppercase; margin-top: 5px; }
+
+        /* HASIL RESULT BOX */
+        .result-input-card {
+            background: #000; border: 2px solid var(--neon-blue);
+            padding: 15px; border-radius: 8px;
+        }
+        
+        .label-float-container {
             display: inline-block;
-            border-bottom: 3px solid var(--neon-blue); /* Garis tebal table header */
+            border-bottom: 3px solid var(--neon-blue);
             padding-bottom: 2px;
-            flex-shrink: 0; /* Mencegah teks tertekuk */
+            margin-bottom: 12px;
             animation: floatingLabel 2s ease-in-out infinite;
         }
-
         @keyframes floatingLabel {
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-5px); }
         }
-
-        .label-text {
-            color: var(--neon-blue); 
-            font-size: 18px; /* Diperbesar agar kelihatan */
-            font-weight: 900; 
-            text-transform: uppercase;
-            text-shadow: 0 0 10px var(--neon-blue);
-            white-space: nowrap;
+        .label-text-big {
+            color: var(--neon-blue); font-size: 18px; font-weight: 900;
+            text-transform: uppercase; text-shadow: 0 0 10px var(--neon-blue);
         }
 
-        .main-input { 
-            background: rgba(255,255,255,0.05); 
-            border: 1px solid #333; 
-            color: var(--neon-yellow); 
-            font-size: 14px; 
-            flex-grow: 1; /* Mengisi sisa ruang */
-            outline: none; 
-            font-weight: 900; 
-            padding: 10px;
-            border-radius: 4px;
+        .main-input-field {
+            width: 100%; background: rgba(255,255,255,0.05);
+            border: 1px solid #333; color: var(--neon-yellow);
+            padding: 12px; border-radius: 5px; outline: none;
+            font-size: 14px; font-weight: 900;
         }
 
-        .post-section { background: var(--card-bg); border: 2px solid var(--neon-red); border-radius: 8px; padding: 12px; }
-        .post-content { background: #000; color: #fff; padding: 10px; border-radius: 5px; height: 180px; font-family: monospace; font-size: 12px; overflow-y: auto; white-space: pre-wrap; border: 1px dashed #444; }
-        .btn-copy { width: 100%; margin-top: 10px; background: var(--neon-green); color: black; border: none; padding: 10px; font-weight: bold; cursor: pointer; border-radius: 5px; text-transform: uppercase; }
+        /* POST FORMAT AREA */
+        .post-card {
+            background: var(--card-bg); border: 2px solid var(--neon-red);
+            border-radius: 8px; padding: 15px; flex: 1; display: flex; flex-direction: column;
+        }
+        .post-display-box {
+            background: #000; color: #fff; padding: 12px; border-radius: 5px;
+            font-family: monospace; font-size: 12px; overflow-y: auto;
+            flex: 1; border: 1px dashed #444; white-space: pre-wrap;
+        }
+        .btn-post-copy {
+            width: 100%; margin-top: 12px; background: var(--neon-green);
+            color: black; border: none; padding: 12px; border-radius: 5px;
+            font-weight: 900; cursor: pointer; text-transform: uppercase;
+        }
+
+        /* SCROLLBAR CUSTOM */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-thumb { background: var(--neon-blue); border-radius: 10px; }
     </style>
 </head>
 <body>
 
     <div id="wukong-toast">WUKONG NOTIFICATION</div>
+    
+    <h1 class="neon-title">ANGKA RESULT</h1>
 
-    <div class="main-wrapper">
-        <h1 class="neon-title">ANGKA RESULT</h1>
-
-        <div class="nav-area">
-            <div class="nav-menu">
-                <button class="btn-nav active" onclick="filterTab('ALL', this)">ALL PASARAN</button>
-                <button class="btn-nav" onclick="filterTab('PAGI', this)">PAGI</button>
-                <button class="btn-nav" onclick="filterTab('SORE', this)">SORE</button>
-                <button class="btn-nav" onclick="filterTab('MALAM', this)">MALAM</button>
-            </div>
-            
-            <div class="official-links-toolbar">
-                <button class="btn-link-quick merah" onclick="quickCopy('https://w6.ceriawlatogel88.net/wap', 'LINK MERAH')">LINK MERAH</button>
-                <button class="btn-link-quick biru" onclick="quickCopy('https://www.vegastogel.net/wap', 'LINK BIRU')">LINK BIRU</button>
-            </div>
-
-            <button class="btn-nav" style="margin-left: auto; color:var(--neon-red); border-color:var(--neon-red);" onclick="resetAll()">RESET ALL</button>
+    <div class="nav-area">
+        <div class="nav-menu">
+            <button class="btn-nav active" onclick="filterTab('ALL', this)">ALL PASARAN</button>
+            <button class="btn-nav" onclick="filterTab('PAGI', this)">PAGI</button>
+            <button class="btn-nav" onclick="filterTab('SORE', this)">SORE</button>
+            <button class="btn-nav" onclick="filterTab('MALAM', this)">MALAM</button>
+        </div>
+        
+        <div class="official-links-toolbar">
+            <button class="btn-link-quick merah" onclick="quickCopy('https://w6.ceriawlatogel88.net/wap', 'LINK MERAH')">LINK MERAH</button>
+            <button class="btn-link-quick biru" onclick="quickCopy('https://www.vegastogel.net/wap', 'LINK BIRU')">LINK BIRU</button>
         </div>
 
-        <div class="dashboard-grid">
-            <div class="left-col">
-                <div class="table-section">
-                    <table>
-                        <thead>
-                            <tr><th>NO</th><th>NAMA PASARAN</th><th>JADWAL</th><th>BUKA</th><th>TUTUP</th></tr>
-                        </thead>
-                        <tbody id="table-body"></tbody>
-                    </table>
-                </div>
+        <button class="btn-nav" style="margin-left:auto; color:var(--neon-red); border-color:var(--neon-red);" onclick="resetAll()">RESET ALL</button>
+    </div>
+
+    <!-- MAIN CONTAINER GRID -->
+    <div class="main-container-grid">
+        
+        <!-- KOLOM KIRI: TABEL PASARAN -->
+        <div class="table-section">
+            <table>
+                <thead>
+                    <tr><th>NO</th><th>NAMA PASARAN</th><th>JADWAL</th><th>BUKA</th><th>TUTUP</th></tr>
+                </thead>
+                <tbody id="table-body"></tbody>
+            </table>
+        </div>
+
+        <!-- KOLOM KANAN: MENU (SESUAI TANDA PANAH ANDA) -->
+        <div class="sidebar-menu">
+            
+            <div class="clock-box">
+                <span id="digital-clock">00:00:00 AM</span>
+                <span id="digital-date">SENIN, 16 MARET 2026</span>
             </div>
 
-            <div class="right-col sticky-sidebar">
-                <div class="clock-container">
-                    <span id="digital-clock">00:00:00 AM</span>
-                    <span id="digital-date" style="font-size: 10px; color: #888;">MEMUAT...</span>
+            <div class="result-input-card">
+                <div class="label-float-container">
+                    <span class="label-text-big">HASIL RESULT :</span>
                 </div>
-                
-                <!-- BAGIAN HASIL RESULT MENYAMPING (SIDE-BY-SIDE) -->
-                <div class="input-box-wrapper">
-                    <div class="label-result-container">
-                        <span class="label-text">HASIL RESULT :</span>
-                    </div>
-                    <input type="text" id="main-input" class="main-input" placeholder="Tempel Periode & Pasar..." oninput="autoProcess(this.value)">
-                </div>
-
-                <div class="post-section">
-                    <div style="color:var(--neon-red); font-size: 10px; margin-bottom: 5px;">FORMAT POSTINGAN:</div>
-                    <div class="post-content" id="post-display"></div>
-                    <button class="btn-copy" onclick="copyPost()">SALIN & POST RESULT</button>
-                </div>
+                <input type="text" id="main-input" class="main-input-field" placeholder="Tempel Periode & Pasar di sini..." oninput="autoProcess(this.value)">
             </div>
+
+            <div class="post-card">
+                <div style="color:var(--neon-red); font-size: 11px; margin-bottom: 8px;">FORMAT POSTINGAN:</div>
+                <div class="post-display-box" id="post-display"></div>
+                <button class="btn-post-copy" onclick="copyPost()">SALIN & POST RESULT</button>
+            </div>
+
         </div>
     </div>
 
@@ -328,7 +353,7 @@
         }
 
         function resetAll() {
-            if(confirm("WUKONG: RESET SEMUA DATA?")) {
+            if(confirm("RESET SEMUA DATA?")) {
                 localStorage.clear();
                 doneIDs = []; render();
                 wukongAlert("ALL DATA RESET");
@@ -338,7 +363,7 @@
         function copyPost() {
             const txt = document.getElementById('post-display').innerText;
             if(!txt) return;
-            navigator.clipboard.writeText(txt).then(() => wukongAlert("WUKONG TELAH MENYALIN"));
+            navigator.clipboard.writeText(txt).then(() => wukongAlert("TELAH MENYALIN"));
         }
 
         setInterval(updateClock, 1000);
