@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wukong Dashboard - Smart Result Format</title>
+    <title>Wukong Dashboard - Aligned Layout & Sweep Calc</title>
     <style>
         :root {
             --neon-blue: #00f2ff;
             --neon-green: #39ff14;
             --neon-red: #ff0044;
             --neon-yellow: #fff200;
+            --neon-purple: #bc13fe;
             --neon-glow: rgba(0, 251, 255, 0.5);
             --bg-site: #000c14;
             --card-bg: #00121a;
@@ -45,7 +46,7 @@
         .neon-title {
             font-size: 1.8rem; text-transform: uppercase; letter-spacing: 5px;
             color: #fff; text-shadow: 0 0 10px var(--neon-blue);
-            text-align: center; margin-bottom: 15px; margin-top: 0;
+            text-align: center; margin-bottom: 15px;
         }
 
         /* NAV AREA */
@@ -73,13 +74,13 @@
         /* MAIN GRID */
         .main-container-grid {
             display: grid;
-            grid-template-columns: 1fr 480px;
+            grid-template-columns: 1fr 450px;
             gap: 15px;
             flex: 1;
             min-height: 0;
         }
 
-        /* TABEL */
+        /* TABEL AREA */
         .table-section {
             background: var(--card-bg);
             border: 1px solid #30363d;
@@ -98,52 +99,40 @@
         .row-next-up { color: var(--neon-blue) !important; background: rgba(0, 242, 255, 0.1) !important; animation: blinkBlue 1s infinite alternate; font-weight: 900; }
         @keyframes blinkBlue { from { text-shadow: 0 0 2px var(--neon-blue); opacity: 1; } to { text-shadow: 0 0 18px var(--neon-blue); opacity: 0.7; } }
 
-        /* SIDEBAR */
-        .sidebar-menu { display: flex; flex-direction: column; gap: 15px; }
+        /* SIDEBAR AREA */
+        .sidebar-menu { display: flex; flex-direction: column; gap: 10px; overflow-y: auto; padding-right: 5px; }
 
-        .clock-box {
-            background: #000; border: 1px solid var(--neon-blue);
-            border-radius: 8px; padding: 10px; text-align: center;
-        }
-        #digital-clock { color: var(--neon-blue); font-size: 24px; display: block; font-family: monospace; }
-        #digital-date { font-size: 11px; color: #888; text-transform: uppercase; margin-top: 5px; }
+        .clock-box { background: #000; border: 1px solid var(--neon-blue); border-radius: 8px; padding: 10px; text-align: center; }
+        #digital-clock { color: var(--neon-blue); font-size: 20px; display: block; font-family: monospace; }
 
-        /* HASIL RESULT BOX */
-        .result-input-card { background: #000; border: 2px solid var(--neon-blue); padding: 15px; border-radius: 8px; }
-        
-        .label-float-container {
-            display: inline-block;
-            border-bottom: 3px solid var(--neon-blue);
-            padding-bottom: 2px;
-            margin-bottom: 12px;
-            animation: floatingLabel 2s ease-in-out infinite;
+        .result-input-card { background: #000; border: 2px solid var(--neon-blue); padding: 12px; border-radius: 8px; }
+        .label-float { 
+            display: inline-block; border-bottom: 3px solid var(--neon-blue); 
+            margin-bottom: 8px; animation: floatingLabel 2s ease-in-out infinite;
         }
-        @keyframes floatingLabel { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
-        
-        .label-text-big { color: var(--neon-blue); font-size: 18px; font-weight: 900; text-transform: uppercase; text-shadow: 0 0 10px var(--neon-blue); }
+        @keyframes floatingLabel { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+        .label-text { color: var(--neon-blue); font-size: 15px; font-weight: 900; text-transform: uppercase; }
 
-        .main-input-field {
-            width: 100%; background: rgba(255,255,255,0.05);
-            border: 1px solid #333; color: var(--neon-yellow);
-            padding: 12px; border-radius: 5px; outline: none;
-            font-size: 14px; font-weight: 900;
-        }
+        .main-input-field { width: 100%; background: rgba(255,255,255,0.05); border: 1px solid #333; color: var(--neon-yellow); padding: 10px; border-radius: 5px; outline: none; font-size: 13px; font-weight: 900; }
 
-        /* POST CARD */
-        .post-card {
-            background: var(--card-bg); border: 2px solid var(--neon-red);
-            border-radius: 8px; padding: 15px; flex: 1; display: flex; flex-direction: column;
+        /* POST CARD - TINGGI DISESUAIKAN GARIS MERAH */
+        .post-card { background: var(--card-bg); border: 2px solid var(--neon-red); border-radius: 8px; padding: 12px; }
+        .post-display-box { 
+            background: #000; color: #fff; padding: 10px; border-radius: 5px; 
+            font-family: 'Courier New', monospace; font-size: 12px; height: 140px; /* Ukuran Sesuai Garis */
+            overflow-y: auto; border: 1px dashed #444; white-space: pre-wrap; line-height: 1.4;
         }
-        .post-display-box {
-            background: #000; color: #fff; padding: 15px; border-radius: 5px;
-            font-family: 'Courier New', monospace; font-size: 13px; overflow-y: auto;
-            flex: 1; border: 1px dashed #444; white-space: pre-wrap; line-height: 1.6;
-        }
-        .btn-post-copy {
-            width: 100%; margin-top: 12px; background: var(--neon-green);
-            color: black; border: none; padding: 12px; border-radius: 5px;
-            font-weight: 900; cursor: pointer; text-transform: uppercase;
-        }
+        .btn-post-copy { width: 100%; margin-top: 8px; background: var(--neon-green); color: black; border: none; padding: 10px; border-radius: 5px; font-weight: 900; cursor: pointer; text-transform: uppercase; font-size: 11px; }
+
+        /* SINGAPORE SWEEP CALCULATOR */
+        .sweep-card { background: var(--card-bg); border: 2px solid var(--neon-purple); border-radius: 8px; padding: 12px; }
+        .sweep-title { color: var(--neon-purple); font-size: 11px; margin-bottom: 8px; text-align: center; text-transform: uppercase; border-bottom: 1px solid #333; padding-bottom: 4px; }
+        .sweep-input { width: 100%; background: #000; border: 1px solid var(--neon-purple); color: var(--neon-yellow); padding: 8px; border-radius: 5px; font-size: 12px; outline: none; margin-bottom: 10px; text-align: center; font-weight: 900; }
+        .ball-container { display: flex; justify-content: center; align-items: center; margin-bottom: 10px; }
+        .ball-sm { width: 32px; height: 32px; background: #222; border: 1px solid #444; color: var(--neon-yellow); font-size: 11px; display: flex; align-items: center; justify-content: center; border-radius: 4px; margin: 0 2px; }
+        .ball-add { margin-left: 15px; border: 1px solid var(--neon-blue); color: var(--neon-blue); background: rgba(0, 242, 255, 0.05); }
+        .sweep-res-box { background: #000; border: 2px solid var(--neon-green); padding: 8px; text-align: center; border-radius: 5px; }
+        .sweep-4d-out { font-size: 26px; color: var(--neon-green); text-shadow: 0 0 10px var(--neon-green); letter-spacing: 5px; font-weight: 900; }
 
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-thumb { background: var(--neon-blue); border-radius: 10px; }
@@ -152,7 +141,6 @@
 <body>
 
     <div id="wukong-toast">WUKONG NOTIFICATION</div>
-    
     <h1 class="neon-title">ANGKA RESULT</h1>
 
     <div class="nav-area">
@@ -162,12 +150,10 @@
             <button class="btn-nav" onclick="filterTab('SORE', this)">SORE</button>
             <button class="btn-nav" onclick="filterTab('MALAM', this)">MALAM</button>
         </div>
-        
         <div class="official-links-toolbar">
             <button class="btn-link-quick merah" onclick="quickCopy('https://w6.ceriawlatogel88.net/wap', 'LINK MERAH')">LINK MERAH</button>
             <button class="btn-link-quick biru" onclick="quickCopy('https://www.vegastogel.net/wap', 'LINK BIRU')">LINK BIRU</button>
         </div>
-
         <button class="btn-nav" style="margin-left:auto; color:var(--neon-red); border-color:var(--neon-red);" onclick="resetAll()">RESET ALL</button>
     </div>
 
@@ -184,20 +170,33 @@
         <div class="sidebar-menu">
             <div class="clock-box">
                 <span id="digital-clock">00:00:00 AM</span>
-                <span id="digital-date">...</span>
+                <span id="digital-date" style="font-size: 10px; color: #888; text-transform: uppercase;">...</span>
             </div>
 
             <div class="result-input-card">
-                <div class="label-float-container">
-                    <span class="label-text-big">HASIL RESULT :</span>
-                </div>
-                <input type="text" id="main-input" class="main-input-field" placeholder="Tempel Periode & Pasar di sini..." oninput="autoProcess(this.value)">
+                <div class="label-float"><span class="label-text">HASIL RESULT :</span></div>
+                <input type="text" id="main-input" class="main-input-field" placeholder="Tempel Periode & Pasar..." oninput="autoProcess(this.value)">
             </div>
 
             <div class="post-card">
-                <div style="color:var(--neon-red); font-size: 11px; margin-bottom: 8px; text-transform: uppercase;">FORMAT POSTINGAN:</div>
+                <div style="color:var(--neon-red); font-size: 10px; margin-bottom: 5px; text-transform: uppercase;">FORMAT POSTINGAN:</div>
                 <div class="post-display-box" id="post-display"></div>
                 <button class="btn-post-copy" onclick="copyPost()">SALIN & POST RESULT</button>
+            </div>
+
+            <!-- RUMUS SINGAPORE SWEEP -->
+            <div class="sweep-card">
+                <div class="sweep-title">RUMUS SINGAPORE SWEEP</div>
+                <input type="text" class="sweep-input" id="sweep-input" placeholder="TEMPEL 7 ANGKA RESULT..." oninput="calcSweep(this.value)">
+                <div class="ball-container">
+                    <div class="ball-sm" id="b1">00</div><div class="ball-sm" id="b2">00</div><div class="ball-sm" id="b3">00</div>
+                    <div class="ball-sm" id="b4">00</div><div class="ball-sm" id="b5">00</div><div class="ball-sm" id="b6">00</div>
+                    <div class="ball-sm ball-add" id="badd">00</div>
+                </div>
+                <div class="sweep-res-box">
+                    <div style="font-size: 9px; color: #888;">ANGKA KELUAR (4D)</div>
+                    <div class="sweep-4d-out" id="sweep-4d-out">0000</div>
+                </div>
             </div>
         </div>
     </div>
@@ -278,6 +277,20 @@
             return "...";
         }
 
+        function calcSweep(val) {
+            const nums = val.match(/\d+/g);
+            if (!nums || nums.length < 7) return;
+            const b = nums.slice(0, 6).map(n => parseInt(n));
+            const add = parseInt(nums[6]);
+            for(let i=0; i<6; i++) document.getElementById(`b${i+1}`).innerText = b[i].toString().padStart(2,'0');
+            document.getElementById('badd').innerText = add.toString().padStart(2,'0');
+            const d1 = (b[1] + b[2]).toString().slice(-1);
+            const d2 = (b[3] + b[4]).toString().slice(-1);
+            const sumB = b.reduce((a, b) => a + b, 0);
+            const last2 = ((sumB * 2) - b[0] - b[5] + add).toString().slice(-2).padStart(2,'0');
+            document.getElementById('sweep-4d-out').innerText = d1 + d2 + last2;
+        }
+
         function updateClock() {
             const now = new Date();
             const h = now.getHours();
@@ -290,55 +303,32 @@
                 render();
             }
             document.getElementById('digital-clock').innerText = now.toLocaleTimeString('id-ID');
-            const options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
-            document.getElementById('digital-date').innerText = now.toLocaleDateString('id-ID', options).toUpperCase();
+            document.getElementById('digital-date').innerText = now.toLocaleDateString('id-ID', {weekday:'long', day:'numeric', month:'long', year:'numeric'}).toUpperCase();
         }
 
         function autoProcess(val) {
             const display = document.getElementById('post-display');
             if(!val) { display.innerText = ""; return; }
-            
             const upperText = val.toUpperCase();
-            
-            // 1. Cari Market yang Cocok
-            let matched = markets.find(m => {
-                let normalizedMarket = m.nama.toUpperCase().replace(/\s+/g, '');
-                let normalizedInput = upperText.replace(/\s+/g, '');
-                return normalizedInput.includes(normalizedMarket);
-            });
-
+            let matched = markets.find(m => upperText.replace(/\s+/g, '').includes(m.nama.toUpperCase().replace(/\s+/g, '')));
             if (matched) {
-                // 2. Bersihkan teks dari nama market agar angka pasaran tidak terbaca sebagai result
-                let cleanText = upperText.replace(matched.nama.toUpperCase(), "");
-                // 3. Ambil semua angka yang terdiri dari 4 atau 5 digit
-                const nums = cleanText.match(/\d{4,5}/g);
-
-                if (nums) {
+                let tempText = upperText.replace(matched.nama.toUpperCase(), "");
+                const nums = tempText.match(/\d{4,5}/g);
+                if (nums && nums.length > 0) {
                     if (!doneIDs.includes(matched.id)) {
                         doneIDs.push(matched.id);
                         localStorage.setItem('autoDoneIDs', JSON.stringify(doneIDs));
                     }
-
                     const now = new Date();
                     const dayStr = now.toLocaleDateString('id-ID', { weekday: 'long' }).toUpperCase();
                     const dateStr = now.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
-
                     let post = `Hasil Pengeluaran ${matched.nama}\n`;
                     post += `Hari Ini ${dayStr} , ${dateStr}\n`;
-
                     if (nums.length >= 3) {
-                        // FORMAT PRIZE 1, 2, 3
-                        post += `Prize 1 : ${nums[0]} , SHIO : ${getShio(nums[0])}\n`;
-                        post += `Prize 2 : ${nums[1]}\n`;
-                        post += `Prize 3 : ${nums[2]}\n`;
+                        post += `Prize 1 : ${nums[0]}, SHIO : ${getShio(nums[0])}\nPrize 2 : ${nums[1]}\nPrize 3 : ${nums[2]}\n`;
                     } else {
-                        // FORMAT 4D ATAU 5D
-                        let resultNum = nums[0];
-                        post += `Result : ${resultNum}\n`;
-                        // Jika 5D, Shio tetap diambil dari 2 digit belakang
-                        post += `SHIO : ${getShio(resultNum.slice(-4))}\n`;
+                        post += `Result : ${nums[0]}\nSHIO : ${getShio(nums[0])}\n`;
                     }
-
                     post += `Selamat Kepada Pemenang, Salam JP Hanya di TogelUP`;
                     display.innerText = post;
                     render();
@@ -351,48 +341,20 @@
             const filtered = activeTab === "ALL" ? markets : markets.filter(m => m.cat === activeTab || m.id === 1);
             const nextUpMarket = markets.find(m => m.id !== 1 && !doneIDs.includes(m.id));
             const nextUpID = nextUpMarket ? nextUpMarket.id : null;
-
             tbody.innerHTML = filtered.map(m => {
                 let cls = "";
                 if (doneIDs.includes(m.id)) cls = "row-done";
                 else if (m.id === 1) cls = "row-hokidraw-waiting";
                 else if (m.id === nextUpID) cls = "row-next-up";
-
                 return `<tr class="${cls}"><td>${m.id}</td><td style="font-weight:900;">${m.nama}</td><td>${m.jadwal}</td><td>${m.buka}</td><td>${m.tutup}</td></tr>`;
             }).join('');
         }
 
-        function quickCopy(url, label) {
-            navigator.clipboard.writeText(url).then(() => wukongAlert(label + " COPIED!"));
-        }
-
-        function wukongAlert(msg) {
-            const t = document.getElementById('wukong-toast');
-            t.innerText = msg; t.classList.add('show');
-            setTimeout(() => t.classList.remove('show'), 2000);
-        }
-
-        function filterTab(tab, el) {
-            activeTab = tab;
-            document.querySelectorAll('.btn-nav').forEach(b => b.classList.remove('active'));
-            el.classList.add('active'); render();
-        }
-
-        function resetAll() {
-            if(confirm("RESET SEMUA DATA?")) {
-                localStorage.clear();
-                doneIDs = []; render();
-                document.getElementById('main-input').value = "";
-                document.getElementById('post-display').innerText = "";
-                wukongAlert("ALL DATA RESET");
-            }
-        }
-
-        function copyPost() {
-            const txt = document.getElementById('post-display').innerText;
-            if(!txt) return;
-            navigator.clipboard.writeText(txt).then(() => wukongAlert("TELAH MENYALIN"));
-        }
+        function quickCopy(url, label) { navigator.clipboard.writeText(url).then(() => wukongAlert(label + " COPIED!")); }
+        function wukongAlert(msg) { const t = document.getElementById('wukong-toast'); t.innerText = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2000); }
+        function filterTab(tab, el) { activeTab = tab; document.querySelectorAll('.btn-nav').forEach(b => b.classList.remove('active')); el.classList.add('active'); render(); }
+        function resetAll() { if(confirm("RESET SEMUA DATA?")) { localStorage.clear(); doneIDs = []; render(); document.getElementById('main-input').value = ""; document.getElementById('post-display').innerText = ""; wukongAlert("ALL DATA RESET"); } }
+        function copyPost() { const txt = document.getElementById('post-display').innerText; if(!txt) return; navigator.clipboard.writeText(txt).then(() => wukongAlert("TELAH MENYALIN")); }
 
         setInterval(updateClock, 1000);
         window.onload = () => { updateClock(); render(); };
