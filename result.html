@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wukong Dashboard - Side Menu Layout</title>
+    <title>Wukong Dashboard - Auto Format Result</title>
     <style>
         :root {
             --neon-blue: #00f2ff;
@@ -28,10 +28,10 @@
             height: 100vh;
             display: flex;
             flex-direction: column;
-            overflow: hidden; /* Mencegah scroll body utama */
+            overflow: hidden;
         }
 
-        /* WUKONG NOTIFICATION */
+        /* NOTIFIKASI */
         #wukong-toast {
             position: fixed; top: -100px; left: 50%; transform: translateX(-50%);
             background: rgba(0, 0, 0, 0.95); border: 2px solid var(--neon-yellow);
@@ -57,7 +57,7 @@
         .nav-menu { display: flex; gap: 6px; }
         .btn-nav {
             background: #21262d; color: white; border: 1px solid #30363d;
-            padding: 8px 12px; cursor: pointer; font-weight: bold;
+            padding: 6px 12px; cursor: pointer; font-weight: bold;
             border-radius: 5px; font-size: 10px; text-transform: uppercase;
         }
         .btn-nav.active { background: var(--neon-blue); color: black; box-shadow: 0 0 8px var(--neon-blue); }
@@ -70,25 +70,25 @@
         .btn-link-quick.merah { background: var(--neon-red); color: white; }
         .btn-link-quick.biru { background: var(--neon-blue); color: black; }
 
-        /* --- MAIN LAYOUT GRID (TABEL DI KIRI, MENU DI KANAN) --- */
+        /* MAIN GRID */
         .main-container-grid {
             display: grid;
-            grid-template-columns: 1fr 400px; /* Lebar menu samping 400px */
+            grid-template-columns: 1fr 450px;
             gap: 15px;
-            flex: 1; /* Mengisi sisa layar */
+            flex: 1;
             min-height: 0;
         }
 
-        /* TABEL AREA (SCROLLABLE) */
+        /* TABEL */
         .table-section {
             background: var(--card-bg);
             border: 1px solid #30363d;
             border-radius: 8px;
             padding: 10px;
-            overflow-y: auto; /* Aktifkan scroll di tabel saja */
+            overflow-y: auto;
         }
         table { width: 100%; border-collapse: collapse; font-size: 13px; } 
-        th { color: var(--neon-blue); text-align: left; padding: 12px 8px; border-bottom: 2px solid #30363d; background: #0d1117; position: sticky; top: 0; }
+        th { color: var(--neon-blue); text-align: left; padding: 12px 8px; border-bottom: 2px solid #30363d; background: #0d1117; position: sticky; top: 0; z-index: 10; }
         td { padding: 8px 8px; border-bottom: 1px solid #21262d; }
 
         /* WARNA STATUS */
@@ -98,12 +98,8 @@
         .row-next-up { color: var(--neon-blue) !important; background: rgba(0, 242, 255, 0.1) !important; animation: blinkBlue 1s infinite alternate; font-weight: 900; }
         @keyframes blinkBlue { from { text-shadow: 0 0 2px var(--neon-blue); opacity: 1; } to { text-shadow: 0 0 18px var(--neon-blue); opacity: 0.7; } }
 
-        /* SIDEBAR AREA (FIXED) */
-        .sidebar-menu {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
+        /* SIDEBAR */
+        .sidebar-menu { display: flex; flex-direction: column; gap: 15px; }
 
         .clock-box {
             background: #000; border: 1px solid var(--neon-blue);
@@ -113,10 +109,7 @@
         #digital-date { font-size: 11px; color: #888; text-transform: uppercase; margin-top: 5px; }
 
         /* HASIL RESULT BOX */
-        .result-input-card {
-            background: #000; border: 2px solid var(--neon-blue);
-            padding: 15px; border-radius: 8px;
-        }
+        .result-input-card { background: #000; border: 2px solid var(--neon-blue); padding: 15px; border-radius: 8px; }
         
         .label-float-container {
             display: inline-block;
@@ -125,14 +118,9 @@
             margin-bottom: 12px;
             animation: floatingLabel 2s ease-in-out infinite;
         }
-        @keyframes floatingLabel {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-5px); }
-        }
-        .label-text-big {
-            color: var(--neon-blue); font-size: 18px; font-weight: 900;
-            text-transform: uppercase; text-shadow: 0 0 10px var(--neon-blue);
-        }
+        @keyframes floatingLabel { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+        
+        .label-text-big { color: var(--neon-blue); font-size: 18px; font-weight: 900; text-transform: uppercase; text-shadow: 0 0 10px var(--neon-blue); }
 
         .main-input-field {
             width: 100%; background: rgba(255,255,255,0.05);
@@ -141,15 +129,15 @@
             font-size: 14px; font-weight: 900;
         }
 
-        /* POST FORMAT AREA */
+        /* POST CARD */
         .post-card {
             background: var(--card-bg); border: 2px solid var(--neon-red);
             border-radius: 8px; padding: 15px; flex: 1; display: flex; flex-direction: column;
         }
         .post-display-box {
             background: #000; color: #fff; padding: 12px; border-radius: 5px;
-            font-family: monospace; font-size: 12px; overflow-y: auto;
-            flex: 1; border: 1px dashed #444; white-space: pre-wrap;
+            font-family: 'Courier New', monospace; font-size: 13px; overflow-y: auto;
+            flex: 1; border: 1px dashed #444; white-space: pre-wrap; line-height: 1.6;
         }
         .btn-post-copy {
             width: 100%; margin-top: 12px; background: var(--neon-green);
@@ -157,7 +145,6 @@
             font-weight: 900; cursor: pointer; text-transform: uppercase;
         }
 
-        /* SCROLLBAR CUSTOM */
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-thumb { background: var(--neon-blue); border-radius: 10px; }
     </style>
@@ -184,10 +171,7 @@
         <button class="btn-nav" style="margin-left:auto; color:var(--neon-red); border-color:var(--neon-red);" onclick="resetAll()">RESET ALL</button>
     </div>
 
-    <!-- MAIN CONTAINER GRID -->
     <div class="main-container-grid">
-        
-        <!-- KOLOM KIRI: TABEL PASARAN -->
         <div class="table-section">
             <table>
                 <thead>
@@ -197,12 +181,10 @@
             </table>
         </div>
 
-        <!-- KOLOM KANAN: MENU (SESUAI TANDA PANAH ANDA) -->
         <div class="sidebar-menu">
-            
             <div class="clock-box">
                 <span id="digital-clock">00:00:00 AM</span>
-                <span id="digital-date">SENIN, 16 MARET 2026</span>
+                <span id="digital-date">...</span>
             </div>
 
             <div class="result-input-card">
@@ -213,15 +195,24 @@
             </div>
 
             <div class="post-card">
-                <div style="color:var(--neon-red); font-size: 11px; margin-bottom: 8px;">FORMAT POSTINGAN:</div>
+                <div style="color:var(--neon-red); font-size: 11px; margin-bottom: 8px; text-transform: uppercase;">FORMAT POSTINGAN:</div>
                 <div class="post-display-box" id="post-display"></div>
                 <button class="btn-post-copy" onclick="copyPost()">SALIN & POST RESULT</button>
             </div>
-
         </div>
     </div>
 
     <script>
+        // DATA SHIO 2026 (Year of the Horse)
+        const shioTable = {
+            "Kuda": ["01","13","25","37","49","61","73","85","97"], "Ular": ["02","14","26","38","50","62","74","86","98"],
+            "Naga": ["03","15","27","39","51","63","75","87","99"], "Kelinci": ["04","16","28","40","52","64","76","88","00"],
+            "Harimau": ["05","17","29","41","53","65","77","89"], "Kerbau": ["06","18","30","42","54","66","78","90"],
+            "Tikus": ["07","19","31","43","55","67","79","91"], "Babi": ["08","20","32","44","56","68","80","92"],
+            "Anjing": ["09","21","33","45","57","69","81","93"], "Ayam": ["10","22","34","46","58","70","82","94"],
+            "Monyet": ["11","23","35","47","59","71","83","95"], "Kambing": ["12","24","36","48","60","72","84","96"]
+        };
+
         const markets = [
             { id: 1, nama: "HOKIDRAW", jadwal: "SENIN - MINGGU", buka: "RESULT 24 KALI", tutup: "1 JAM SEKALI", cat: "MALAM" },
             { id: 2, nama: "TOTO MACAU 4D PAGI", jadwal: "SENIN - MINGGU", buka: "00:00 WIB", tutup: "00:15 WIB", cat: "MALAM" },
@@ -281,11 +272,16 @@
         let doneIDs = JSON.parse(localStorage.getItem('autoDoneIDs')) || [];
         let activeTab = "ALL";
 
+        function getShio(num) {
+            let tail = num.slice(-2);
+            for(let key in shioTable) if(shioTable[key].includes(tail)) return key;
+            return "...";
+        }
+
         function updateClock() {
             const now = new Date();
             const h = now.getHours();
             const m = now.getMinutes();
-
             let lastResetHour = localStorage.getItem('lastHokiResetHour');
             if (m >= 50 && lastResetHour != h) {
                 doneIDs = doneIDs.filter(id => id !== 1);
@@ -293,23 +289,45 @@
                 localStorage.setItem('lastHokiResetHour', h);
                 render();
             }
-
-            document.getElementById('digital-clock').innerText = now.toLocaleTimeString();
-            document.getElementById('digital-date').innerText = now.toLocaleDateString('id-ID', {weekday:'long', day:'numeric', month:'long', year:'numeric'}).toUpperCase();
+            document.getElementById('digital-clock').innerText = now.toLocaleTimeString('id-ID');
+            const options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
+            document.getElementById('digital-date').innerText = now.toLocaleDateString('id-ID', options).toUpperCase();
         }
 
         function autoProcess(val) {
-            if(!val) return;
+            const display = document.getElementById('post-display');
+            if(!val) { display.innerText = ""; return; }
+            
             const upper = val.toUpperCase();
             let matched = markets.find(m => upper.includes(m.nama.toUpperCase()));
-            const nums = val.match(/\d{4}/g);
+            const nums = val.match(/\d{4,5}/g); // Deteksi 4 atau 5 angka
 
             if (matched && nums) {
                 if (!doneIDs.includes(matched.id)) {
                     doneIDs.push(matched.id);
                     localStorage.setItem('autoDoneIDs', JSON.stringify(doneIDs));
                 }
-                document.getElementById('post-display').innerText = `Hasil Pengeluaran ${matched.nama}\nResult : ${nums[0]}\nSelamat JP!`;
+
+                const now = new Date();
+                const dayStr = now.toLocaleDateString('id-ID', { weekday: 'long' }).toUpperCase();
+                const dateStr = now.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+
+                let post = `Hasil Pengeluaran ${matched.nama}\n`;
+                post += `Hari Ini ${dayStr} , ${dateStr}\n`;
+
+                if (nums.length >= 3) {
+                    // FORMAT PRIZE 1, 2, 3
+                    post += `Prize 1 : ${nums[0]} , SHIO : ${getShio(nums[0])}\n`;
+                    post += `Prize 2 : ${nums[1]}\n`;
+                    post += `Prize 3 : ${nums[2]}\n`;
+                } else {
+                    // FORMAT 4D ATAU 5D
+                    post += `Result : ${nums[0]}\n`;
+                    post += `SHIO : ${getShio(nums[0])}\n`;
+                }
+
+                post += `Selamat Kepada Pemenang, Salam JP Hanya di TogelUP`;
+                display.innerText = post;
                 render();
             }
         }
@@ -326,13 +344,7 @@
                 else if (m.id === 1) cls = "row-hokidraw-waiting";
                 else if (m.id === nextUpID) cls = "row-next-up";
 
-                return `<tr class="${cls}">
-                    <td>${m.id}</td>
-                    <td style="font-weight:900;">${m.nama}</td>
-                    <td>${m.jadwal}</td>
-                    <td>${m.buka}</td>
-                    <td>${m.tutup}</td>
-                </tr>`;
+                return `<tr class="${cls}"><td>${m.id}</td><td style="font-weight:900;">${m.nama}</td><td>${m.jadwal}</td><td>${m.buka}</td><td>${m.tutup}</td></tr>`;
             }).join('');
         }
 
@@ -356,6 +368,8 @@
             if(confirm("RESET SEMUA DATA?")) {
                 localStorage.clear();
                 doneIDs = []; render();
+                document.getElementById('main-input').value = "";
+                document.getElementById('post-display').innerText = "";
                 wukongAlert("ALL DATA RESET");
             }
         }
