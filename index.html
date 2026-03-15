@@ -243,23 +243,27 @@
         </div>
 
         <ul class="menu-container">
+            <!-- 1. DASHBOARD RESULT -->
             <li class="menu-item">
-                <a href="prediksi.html" onclick="changePage('prediksi.html', this)" target="mainFrame" class="menu-link">
-                    <span class="icon">🔥</span> PREDIKSI UP
+                <a href="result.html" onclick="changePage('result.html', this)" target="mainFrame" class="menu-link">
+                    <span class="icon">🏆</span> DASHBOARD RESULT
                 </a>
             </li>
 
+            <!-- 2. POSTINGAN (DENGAN PREDIKSI UP DI DALAMNYA) -->
             <li class="menu-item has-submenu">
                 <div class="menu-link" onclick="toggleSubmenu(this)">
                     <span class="icon">📁</span> POSTINGAN <span class="arrow">▼</span>
                 </div>
                 <ul class="submenu">
+                    <li class="submenu-item"><a href="prediksi.html" target="mainFrame" onclick="setActiveSub(this)">🔥 PREDIKSI UP</a></li>
                     <li class="submenu-item"><a href="katakata.html" target="mainFrame" onclick="setActiveSub(this)">💬 KATA KATA</a></li>
                     <li class="submenu-item"><a href="syair.html" target="mainFrame" onclick="setActiveSub(this)">📜 SYAIR</a></li>
                     <li class="submenu-item"><a href="kemenangan.html" target="mainFrame" onclick="setActiveSub(this)">💰 KEMENANGAN</a></li>
                 </ul>
             </li>
 
+            <!-- 3. DATA REPORTAN (DENGAN DAILY REPORT & PEMINJAMAN) -->
             <li class="menu-item has-submenu">
                 <div class="menu-link" onclick="toggleSubmenu(this)">
                     <span class="icon">📊</span> DATA REPORTAN <span class="arrow">▼</span>
@@ -267,20 +271,13 @@
                 <ul class="submenu">
                     <li class="submenu-item"><a href="reportan_slot.html" target="mainFrame" onclick="setActiveSub(this)">🎰 REPORTAN SLOT</a></li>
                     <li class="submenu-item"><a href="sc-vip.html" target="mainFrame" onclick="setActiveSub(this)">📊 SC VIP</a></li>
-                    <li class="submenu-item"><a href="report_vip.html" target="mainFrame" onclick="setActiveSub(this)">📈 REPORT VIP</a></li>
+                    <li class="submenu-item"><a href="report_vip.html" target="mainFrame" onclick="setActiveSub(this)">📈 DAILY REPORT VIP</a></li>
                     <li class="submenu-item"><a href="pencairan_vip.html" target="mainFrame" onclick="setActiveSub(this)">💵 CAIR VIP</a></li>
                     <li class="submenu-item"><a href="sc_selisih_vip.html" target="mainFrame" onclick="setActiveSub(this)">📑 SC SELISIH VIP</a></li>
                     <li class="submenu-item"><a href="rate_usdt.html" target="mainFrame" onclick="setActiveSub(this)">💲 RATE USDT</a></li>
-                    
-                    <!-- Menu CEK BOT diganti menjadi DAILY REPORT -->
+                    <li class="submenu-item"><a href="sc_peminjaman.html" target="mainFrame" onclick="setActiveSub(this)">📄 SC PEMINJAMAN</a></li>
                     <li class="submenu-item"><a href="daily_report.html" target="mainFrame" onclick="setActiveSub(this)">🤖 DAILY REPORT</a></li>
                 </ul>
-            </li>
-
-            <li class="menu-item">
-                <a href="sc_peminjaman.html" onclick="changePage('sc_peminjaman.html', this)" target="mainFrame" class="menu-link">
-                    <span class="icon">📑</span> SC PEMINJAMAN
-                </a>
             </li>
         </ul>
 
@@ -289,7 +286,7 @@
     </nav>
 
     <main class="content-area">
-        <iframe id="mainFrame" src="prediksi.html" name="mainFrame"></iframe>
+        <iframe id="mainFrame" src="result.html" name="mainFrame"></iframe>
     </main>
 
     <script>
