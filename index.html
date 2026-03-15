@@ -68,6 +68,7 @@
             display: inline-block;
         }
 
+        /* Style Jam Real-Time */
         .realtime-clock {
             margin-top: 15px;
             font-size: 14px;
@@ -170,7 +171,7 @@
         }
 
         .has-submenu.open .submenu {
-            max-height: 1000px;
+            max-height: 800px;
             padding: 10px 0;
         }
 
@@ -221,11 +222,13 @@
             background: rgba(0, 0, 0, 0.2);
         }
 
+        /* Style Neon Blue untuk Nama Wukong */
         .neon-blue {
             color: var(--neon-aqua);
             text-shadow: 0 0 8px var(--neon-glow), 0 0 15px var(--neon-glow);
             font-weight: 900;
         }
+
     </style>
 </head>
 <body>
@@ -235,31 +238,28 @@
             <div class="dashboard-text">
                 DASHBOARD<br>WUKONG
             </div>
+            <!-- TEMPAT JAM REAL-TIME -->
             <div id="clock" class="realtime-clock">Memuat Waktu...</div>
         </div>
 
         <ul class="menu-container">
-            <!-- MENU 1: DASHBOARD RESULT (PALING ATAS) -->
             <li class="menu-item">
-                <a href="result.html" onclick="changePage('result.html', this)" target="mainFrame" class="menu-link">
-                    <span class="icon">🏆</span> DASHBOARD RESULT
+                <a href="prediksi.html" onclick="changePage('prediksi.html', this)" target="mainFrame" class="menu-link">
+                    <span class="icon">🔥</span> PREDIKSI UP
                 </a>
             </li>
 
-            <!-- MENU 2: POSTINGAN (DROPDOWN) -->
             <li class="menu-item has-submenu">
                 <div class="menu-link" onclick="toggleSubmenu(this)">
                     <span class="icon">📁</span> POSTINGAN <span class="arrow">▼</span>
                 </div>
                 <ul class="submenu">
-                    <li class="submenu-item"><a href="prediksi.html" target="mainFrame" onclick="setActiveSub(this)">🔥 PREDIKSI UP</a></li>
                     <li class="submenu-item"><a href="katakata.html" target="mainFrame" onclick="setActiveSub(this)">💬 KATA KATA</a></li>
                     <li class="submenu-item"><a href="syair.html" target="mainFrame" onclick="setActiveSub(this)">📜 SYAIR</a></li>
                     <li class="submenu-item"><a href="kemenangan.html" target="mainFrame" onclick="setActiveSub(this)">💰 KEMENANGAN</a></li>
                 </ul>
             </li>
 
-            <!-- MENU 3: DATA REPORTAN (DROPDOWN) -->
             <li class="menu-item has-submenu">
                 <div class="menu-link" onclick="toggleSubmenu(this)">
                     <span class="icon">📊</span> DATA REPORTAN <span class="arrow">▼</span>
@@ -271,20 +271,29 @@
                     <li class="submenu-item"><a href="pencairan_vip.html" target="mainFrame" onclick="setActiveSub(this)">💵 CAIR VIP</a></li>
                     <li class="submenu-item"><a href="sc_selisih_vip.html" target="mainFrame" onclick="setActiveSub(this)">📑 SC SELISIH VIP</a></li>
                     <li class="submenu-item"><a href="rate_usdt.html" target="mainFrame" onclick="setActiveSub(this)">💲 RATE USDT</a></li>
-                    <li class="submenu-item"><a href="sc_peminjaman.html" target="mainFrame" onclick="setActiveSub(this)">📄 SC PEMINJAMAN</a></li>
-                    <li class="submenu-item"><a href="cek_bot.html" target="mainFrame" onclick="setActiveSub(this)">🤖 CEK BOT TELEGRAM</a></li>
+                    
+                    <!-- Menu CEK BOT diganti menjadi DAILY REPORT -->
+                    <li class="submenu-item"><a href="daily_report.html" target="mainFrame" onclick="setActiveSub(this)">🤖 DAILY REPORT</a></li>
                 </ul>
+            </li>
+
+            <li class="menu-item">
+                <a href="sc_peminjaman.html" onclick="changePage('sc_peminjaman.html', this)" target="mainFrame" class="menu-link">
+                    <span class="icon">📑</span> SC PEMINJAMAN
+                </a>
             </li>
         </ul>
 
+        <!-- FOOTER YANG DIUBAH -->
         <div class="footer-tag">Official System Security •  <span class="neon-blue"> by Wukong</span></div>
     </nav>
 
     <main class="content-area">
-        <iframe id="mainFrame" src="result.html" name="mainFrame"></iframe>
+        <iframe id="mainFrame" src="prediksi.html" name="mainFrame"></iframe>
     </main>
 
     <script>
+        // FUNGSI JAM REAL-TIME (Bahasa Indonesia)
         function updateClock() {
             const now = new Date();
             const days = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
@@ -295,6 +304,7 @@
             const monthName = months[now.getMonth()];
             const year = now.getFullYear();
             
+            // Tambahkan Nol jika angka satuan
             const hours = String(now.getHours()).padStart(2, '0');
             const minutes = String(now.getMinutes()).padStart(2, '0');
             const seconds = String(now.getSeconds()).padStart(2, '0');
@@ -304,13 +314,15 @@
         }
 
         setInterval(updateClock, 1000);
-        updateClock();
+        updateClock(); // Jalankan langsung saat load
 
+        // Fungsi Dropdown
         function toggleSubmenu(element) {
             const parent = element.parentElement;
             parent.classList.toggle('open');
         }
 
+        // Fungsi Link Menu Utama
         function changePage(pageUrl, element) {
             localStorage.setItem('lastOpenedPage', pageUrl);
             updateActiveState(element);
@@ -319,6 +331,7 @@
             });
         }
 
+        // Fungsi Link Sub-menu
         function setActiveSub(element) {
             const pageUrl = element.getAttribute('href');
             localStorage.setItem('lastOpenedPage', pageUrl);
