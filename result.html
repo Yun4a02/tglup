@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wukong Dashboard - HOKIDRAW Fixed Logic</title>
+    <title>Wukong Dashboard - Full Data & Fixed Logic</title>
     <style>
         :root {
             --neon-blue: #00f2ff;
@@ -60,21 +60,22 @@
             padding: 6px 12px; cursor: pointer; font-weight: bold;
             border-radius: 5px; font-size: 10px; text-transform: uppercase;
         }
-        .btn-nav.active { background: var(--neon-blue); color: black; }
+        .btn-nav.active { background: var(--neon-blue); color: black; box-shadow: 0 0 8px var(--neon-blue); }
 
         .official-links-toolbar { display: flex; gap: 8px; }
         .btn-link-quick {
             padding: 8px 15px; border-radius: 5px; font-size: 10px; font-weight: 900;
-            cursor: pointer; text-transform: uppercase; border: none;
+            cursor: pointer; text-transform: uppercase; border: none; transition: 0.3s;
         }
         .btn-link-quick.merah { background: var(--neon-red); color: white; }
         .btn-link-quick.biru { background: var(--neon-blue); color: black; }
+        .btn-link-quick:hover { transform: scale(1.05); }
 
         /* TABLE SECTION */
         .table-section { background: var(--card-bg); border-radius: 8px; padding: 10px; border: 1px solid #30363d; }
         table { width: 100%; border-collapse: collapse; font-size: 14px; } 
         th { color: var(--neon-blue); text-align: left; padding: 12px 8px; border-bottom: 2px solid #30363d; background: #0d1117; }
-        td { padding: 10px 8px; border-bottom: 1px solid #21262d; }
+        td { padding: 8px 8px; border-bottom: 1px solid #21262d; }
 
         /* WARNA STATUS */
         .row-done { 
@@ -94,19 +95,19 @@
             to { text-shadow: 0 0 15px var(--neon-red); opacity: 0.8; } 
         }
 
-        .row-next-up { color: #fff; background: rgba(0, 242, 255, 0.1); }
+        .row-next-up { color: #fff; background: rgba(0, 242, 255, 0.08); }
 
         /* RIGHT SIDEBAR */
         .sticky-sidebar { position: sticky; top: 15px; display: flex; flex-direction: column; gap: 15px; }
         .clock-container { background: #000; border: 1px solid var(--neon-blue); border-radius: 8px; padding: 10px; text-align: center; }
-        #digital-clock { color: var(--neon-blue); font-size: 20px; display: block; }
+        #digital-clock { color: var(--neon-blue); font-size: 20px; display: block; font-family: monospace; }
         
         .input-box-wrapper { background: #000; border: 2px solid var(--neon-blue); padding: 10px; border-radius: 8px; }
         .main-input { background: transparent; border: none; color: var(--neon-yellow); font-size: 14px; width: 100%; outline: none; font-weight: 900; }
 
         .post-section { background: var(--card-bg); border: 2px solid var(--neon-red); border-radius: 8px; padding: 12px; }
-        .post-content { background: #000; color: #fff; padding: 10px; border-radius: 5px; height: 180px; font-family: monospace; font-size: 12px; overflow-y: auto; white-space: pre-wrap; }
-        .btn-copy { width: 100%; margin-top: 10px; background: var(--neon-green); color: black; border: none; padding: 10px; font-weight: bold; cursor: pointer; border-radius: 5px; }
+        .post-content { background: #000; color: #fff; padding: 10px; border-radius: 5px; height: 180px; font-family: monospace; font-size: 12px; overflow-y: auto; white-space: pre-wrap; border: 1px dashed #444; }
+        .btn-copy { width: 100%; margin-top: 10px; background: var(--neon-green); color: black; border: none; padding: 10px; font-weight: bold; cursor: pointer; border-radius: 5px; text-transform: uppercase; }
     </style>
 </head>
 <body>
@@ -123,11 +124,13 @@
                 <button class="btn-nav" onclick="filterTab('SORE', this)">SORE</button>
                 <button class="btn-nav" onclick="filterTab('MALAM', this)">MALAM</button>
             </div>
+            
             <div class="official-links-toolbar">
                 <button class="btn-link-quick merah" onclick="quickCopy('https://w6.ceriawlatogel88.net/wap', 'LINK MERAH')">LINK MERAH</button>
                 <button class="btn-link-quick biru" onclick="quickCopy('https://www.vegastogel.net/wap', 'LINK BIRU')">LINK BIRU</button>
             </div>
-            <button class="btn-nav" style="color:red;" onclick="resetAll()">RESET ALL</button>
+
+            <button class="btn-nav" style="color:var(--neon-red); border-color:var(--neon-red);" onclick="resetAll()">RESET ALL</button>
         </div>
 
         <div class="dashboard-grid">
@@ -145,15 +148,16 @@
             <div class="right-col sticky-sidebar">
                 <div class="clock-container">
                     <span id="digital-clock">00:00:00 AM</span>
-                    <span id="digital-date">MEMUAT...</span>
+                    <span id="digital-date" style="font-size: 10px; color: #888;">MEMUAT...</span>
                 </div>
                 <div class="input-box-wrapper">
-                    <span style="color:var(--neon-blue); font-size:10px;">RESULT :</span>
-                    <input type="text" id="main-input" class="main-input" placeholder="Contoh: HOKIDRAW 1234" oninput="autoProcess(this.value)">
+                    <span style="color:var(--neon-blue); font-size:10px; font-weight: 900;">RESULT :</span>
+                    <input type="text" id="main-input" class="main-input" placeholder="Tempel Periode & Pasar..." oninput="autoProcess(this.value)">
                 </div>
                 <div class="post-section">
+                    <div style="color:var(--neon-red); font-size: 10px; margin-bottom: 5px;">FORMAT POSTINGAN:</div>
                     <div class="post-content" id="post-display"></div>
-                    <button class="btn-copy" onclick="copyPost()">SALIN & POST</button>
+                    <button class="btn-copy" onclick="copyPost()">SALIN & POST RESULT</button>
                 </div>
             </div>
         </div>
@@ -166,8 +170,54 @@
             { id: 3, nama: "KENTUCKYMID", jadwal: "SENIN - MINGGU", buka: "00:05 WIB", tutup: "00:20 WIB", cat: "MALAM" },
             { id: 4, nama: "FLORIDAMID", jadwal: "SENIN - MINGGU", buka: "00:20 WIB", tutup: "00:30 WIB", cat: "MALAM" },
             { id: 5, nama: "HUAHIN 0100", jadwal: "SENIN - MINGGU", buka: "00:45 WIB", tutup: "01:00 WIB", cat: "MALAM" },
-            { id: 6, nama: "BANGKOK 0130", jadwal: "SENIN - MINGGU", buka: "01:15 WIB", tutup: "01:30 WIB", cat: "MALAM" }
-            // ... (Daftar pasaran lainnya bisa dilanjutkan di sini)
+            { id: 6, nama: "BANGKOK 0130", jadwal: "SENIN - MINGGU", buka: "01:15 WIB", tutup: "01:30 WIB", cat: "MALAM" },
+            { id: 7, nama: "NEWYORKMID", jadwal: "SENIN - MINGGU", buka: "01:15 WIB", tutup: "01:25 WIB", cat: "MALAM" },
+            { id: 8, nama: "CAROLINADAY", jadwal: "SENIN - MINGGU", buka: "01:45 WIB", tutup: "02:00 WIB", cat: "MALAM" },
+            { id: 9, nama: "BRUNEI02", jadwal: "SENIN - MINGGU", buka: "02:30 WIB", tutup: "02:45 WIB", cat: "MALAM" },
+            { id: 10, nama: "OREGON03", jadwal: "SENIN - MINGGU", buka: "02:50 WIB", tutup: "03:00 WIB", cat: "MALAM" },
+            { id: 11, nama: "OREGON06", jadwal: "SENIN - MINGGU", buka: "05:50 WIB", tutup: "06:00 WIB", cat: "MALAM" },
+            { id: 12, nama: "CALIFORNIA", jadwal: "SENIN - MINGGU", buka: "08:25 WIB", tutup: "08:30 WIB", cat: "PAGI" },
+            { id: 13, nama: "FLORIDAEVE", jadwal: "SENIN - MINGGU", buka: "08:35 WIB", tutup: "08:45 WIB", cat: "PAGI" },
+            { id: 14, nama: "OREGON09", jadwal: "SENIN - MINGGU", buka: "09:50 WIB", tutup: "10:00 WIB", cat: "PAGI" },
+            { id: 15, nama: "BANGKOK 0930", jadwal: "SENIN - MINGGU", buka: "08:50 WIB", tutup: "09:00 WIB", cat: "PAGI" },
+            { id: 16, nama: "NEWYORKEVE", jadwal: "SENIN - MINGGU", buka: "09:25 WIB", tutup: "09:35 WIB", cat: "PAGI" },
+            { id: 17, nama: "KENTUCKYEVE", jadwal: "SENIN - MINGGU", buka: "09:45 WIB", tutup: "10:00 WIB", cat: "PAGI" },
+            { id: 18, nama: "CAROLINAEVE", jadwal: "SENIN - MINGGU", buka: "10:17 WIB", tutup: "10:22 WIB", cat: "PAGI" },
+            { id: 19, nama: "TOTOCAMBODIA", jadwal: "SENIN - MINGGU", buka: "10:45 WIB", tutup: "11:00 WIB", cat: "PAGI" },
+            { id: 20, nama: "CHELSEA 11", jadwal: "SENIN - MINGGU", buka: "11:00 WIB", tutup: "11:15 WIB", cat: "PAGI" },
+            { id: 21, nama: "OREGON12", jadwal: "SENIN - MINGGU", buka: "11:50 WIB", tutup: "12:00 WIB", cat: "PAGI" },
+            { id: 22, nama: "POIPET12", jadwal: "SENIN - MINGGU", buka: "12:15 WIB", tutup: "12:30 WIB", cat: "PAGI" },
+            { id: 23, nama: "BULLSEYE", jadwal: "SENIN - MINGGU", buka: "12:00 WIB", tutup: "12:15 WIB", cat: "PAGI" },
+            { id: 24, nama: "TOTO MACAU 4D SIANG", jadwal: "SENIN - MINGGU", buka: "13:00 WIB", tutup: "13:15 WIB", cat: "PAGI" },
+            { id: 25, nama: "SYDNEY", jadwal: "SENIN - MINGGU", buka: "13:49 WIB", tutup: "14:05 WIB", cat: "PAGI" },
+            { id: 26, nama: "JAKARTA 1400", jadwal: "SENIN - MINGGU", buka: "13:55 WIB", tutup: "14:10 WIB", cat: "PAGI" },
+            { id: 27, nama: "BRUNEI14", jadwal: "SENIN - MINGGU", buka: "14:30 WIB", tutup: "14:45 WIB", cat: "PAGI" },
+            { id: 28, nama: "CHELSEA 15", jadwal: "SENIN - MINGGU", buka: "15:00 WIB", tutup: "15:15 WIB", cat: "PAGI" },
+            { id: 29, nama: "TOTO MACAU 5D SORE", jadwal: "SENIN - MINGGU", buka: "15:15 WIB", tutup: "15:30 WIB", cat: "PAGI" },
+            { id: 30, nama: "POIPET15", jadwal: "SENIN - MINGGU", buka: "15:15 WIB", tutup: "15:30 WIB", cat: "PAGI" },
+            { id: 31, nama: "TOTOMALI1530", jadwal: "SENIN - MINGGU", buka: "15:15 WIB", tutup: "15:30 WIB", cat: "PAGI" },
+            { id: 32, nama: "TOTOMACAU SORE", jadwal: "SENIN - MINGGU", buka: "16:00 WIB", tutup: "16:15 WIB", cat: "SORE" },
+            { id: 33, nama: "HUAHIN 1630", jadwal: "SENIN - MINGGU", buka: "16:15 WIB", tutup: "16:30 WIB", cat: "SORE" },
+            { id: 34, nama: "KING KONG4D I", jadwal: "SENIN - MINGGU", buka: "17:00 WIB", tutup: "17:15 WIB", cat: "SORE" },
+            { id: 35, nama: "SINGAPORE", jadwal: "SELASA & JUM'AT ( LIBUR )", buka: "17:30 WIB", tutup: "17:45 WIB", cat: "SORE" },
+            { id: 36, nama: "MAGNUM4D", jadwal: "RABU, SABTU & MINGGU", buka: "18:10 WIB", tutup: "18:40 WIB", cat: "SORE" },
+            { id: 37, nama: "TOTOMACAU MALAM I", jadwal: "SENIN - MINGGU", buka: "19:00 WIB", tutup: "19:15 WIB", cat: "SORE" },
+            { id: 38, nama: "CHELSEA 19", jadwal: "SENIN - MINGGU", buka: "19:00 WIB", tutup: "19:15 WIB", cat: "SORE" },
+            { id: 39, nama: "POIPET19", jadwal: "SENIN - MINGGU", buka: "19:30 WIB", tutup: "19:45 WIB", cat: "SORE" },
+            { id: 40, nama: "PCSO", jadwal: "MINGGU ( LIBUR )", buka: "19:50 WIB", tutup: "20:10 WIB", cat: "SORE" },
+            { id: 41, nama: "TOTOMALI 2030", jadwal: "SENIN - MINGGU", buka: "20:15 WIB", tutup: "20:30 WIB", cat: "SORE" },
+            { id: 42, nama: "HUAHIN 2100", jadwal: "SENIN - MINGGU", buka: "20:45 WIB", tutup: "21:00 WIB", cat: "SORE" },
+            { id: 43, nama: "CHELSEA 21", jadwal: "SENIN - MINGGU", buka: "21:00 WIB", tutup: "21:15 WIB", cat: "SORE" },
+            { id: 44, nama: "TOTOMACAU 5D MALAM", jadwal: "SENIN - MINGGU", buka: "21:15 WIB", tutup: "21:30 WIB", cat: "SORE" },
+            { id: 45, nama: "NEVADA", jadwal: "SENIN - MINGGU", buka: "21:15 WIB", tutup: "21:30 WIB", cat: "SORE" },
+            { id: 46, nama: "BRUNEI 21", jadwal: "SENIN - MINGGU", buka: "21:30 WIB", tutup: "21:45 WIB", cat: "SORE" },
+            { id: 47, nama: "TOTOMACAU MALAM II", jadwal: "SENIN - MINGGU", buka: "22:00 WIB", tutup: "22:15 WIB", cat: "SORE" },
+            { id: 48, nama: "POIPET22", jadwal: "SENIN - MINGGU", buka: "22:30 WIB", tutup: "22:45 WIB", cat: "SORE" },
+            { id: 49, nama: "HONGKONG", jadwal: "SENIN - MINGGU", buka: "22:59 WIB", tutup: "23:15 WIB", cat: "SORE" },
+            { id: 50, nama: "TOTOMACAU MALAM III", jadwal: "SENIN - MINGGU", buka: "23:00 WIB", tutup: "23:15 WIB", cat: "SORE" },
+            { id: 51, nama: "TOTOMALI 2330", jadwal: "SENIN - MINGGU", buka: "23:15 WIB", tutup: "23:30 WIB", cat: "SORE" },
+            { id: 52, nama: "JAKARTA 2330", jadwal: "SENIN - MINGGU", buka: "23:25 WIB", tutup: "23:40 WIB", cat: "SORE" },
+            { id: 53, nama: "KING KONG4D II", jadwal: "SENIN - MINGGU", buka: "23:30 WIB", tutup: "23:45 WIB", cat: "SORE" }
         ];
 
         let doneIDs = JSON.parse(localStorage.getItem('autoDoneIDs')) || [];
@@ -177,17 +227,13 @@
             const now = new Date();
             const h = now.getHours();
             const m = now.getMinutes();
-            const s = now.getSeconds();
 
-            // --- ALGORITMA OTOMATIS HOKIDRAW ---
-            // Cek apakah jam ini sudah melakukan reset merah?
+            // LOGIKA HOKIDRAW MENIT 50
             let lastResetHour = localStorage.getItem('lastHokiResetHour');
-            
             if (m >= 50 && lastResetHour != h) {
-                // Hapus HOKIDRAW dari doneIDs (Paksa jadi Merah)
-                doneIDs = doneIDs.filter(id => id !== 1);
+                doneIDs = doneIDs.filter(id => id !== 1); // Reset ID 1 jadi MERAH
                 localStorage.setItem('autoDoneIDs', JSON.stringify(doneIDs));
-                localStorage.setItem('lastHokiResetHour', h); // Tandai jam ini sudah direset
+                localStorage.setItem('lastHokiResetHour', h);
                 render();
             }
 
@@ -213,32 +259,25 @@
 
         function render() {
             const tbody = document.getElementById('table-body');
-            const now = new Date();
-            const currentMin = now.getMinutes();
-
             const filtered = activeTab === "ALL" ? markets : markets.filter(m => m.cat === activeTab || m.id === 1);
 
             tbody.innerHTML = filtered.map(m => {
                 let cls = "";
-                
-                // Jika sudah ada di doneIDs -> HIJAU
-                if (doneIDs.includes(m.id)) {
-                    cls = "row-done";
-                } 
-                // Jika HOKIDRAW (ID 1) belum diresult (tidak ada di doneIDs)
-                // Wajib MERAH jika sudah masuk menit 50 ATAU jika menit masih 00-49 tapi result jam sebelumnya belum kelar
-                else if (m.id === 1) {
-                    cls = "row-hokidraw-waiting";
-                }
+                if (doneIDs.includes(m.id)) cls = "row-done";
+                else if (m.id === 1) cls = "row-hokidraw-waiting";
 
-                return `<tr class="${cls}"><td>${m.id}</td><td>${m.nama}</td><td>${m.jadwal}</td><td>${m.buka}</td><td>${m.tutup}</td></tr>`;
+                return `<tr class="${cls}">
+                    <td>${m.id}</td>
+                    <td style="font-weight:900;">${m.nama}</td>
+                    <td>${m.jadwal}</td>
+                    <td>${m.buka}</td>
+                    <td>${m.tutup}</td>
+                </tr>`;
             }).join('');
         }
 
         function quickCopy(url, label) {
-            navigator.clipboard.writeText(url).then(() => {
-                wukongAlert(label + " COPIED!");
-            });
+            navigator.clipboard.writeText(url).then(() => wukongAlert(label + " COPIED!"));
         }
 
         function wukongAlert(msg) {
@@ -254,10 +293,11 @@
         }
 
         function resetAll() {
-            localStorage.clear();
-            doneIDs = [];
-            render();
-            wukongAlert("WUKONG: ALL DATA RESET");
+            if(confirm("WUKONG: RESET SEMUA DATA?")) {
+                localStorage.clear();
+                doneIDs = []; render();
+                wukongAlert("ALL DATA RESET");
+            }
         }
 
         setInterval(updateClock, 1000);
