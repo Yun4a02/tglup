@@ -243,13 +243,6 @@
         </div>
 
         <ul class="menu-container">
-            <!-- MENU BARU DI ATAS PREDIKSI UP -->
-            <li class="menu-item">
-                <a href="result.html" onclick="changePage('result.html', this)" target="mainFrame" class="menu-link">
-                    <span class="icon">📊</span> DASHBOARD RESULT
-                </a>
-            </li>
-
             <li class="menu-item">
                 <a href="prediksi.html" onclick="changePage('prediksi.html', this)" target="mainFrame" class="menu-link">
                     <span class="icon">🔥</span> PREDIKSI UP
@@ -281,6 +274,16 @@
                 </ul>
             </li>
 
+            <!-- MENU BARU: CEK BOT TELEGRAM -->
+            <li class="menu-item has-submenu">
+                <div class="menu-link" onclick="toggleSubmenu(this)">
+                    <span class="icon">🤖</span> BOT TELEGRAM <span class="arrow">▼</span>
+                </div>
+                <ul class="submenu">
+                    <li class="submenu-item"><a href="cek_bot.html" target="mainFrame" onclick="setActiveSub(this)">🤖 CEK BOT TELEGRAM</a></li>
+                </ul>
+            </li>
+
             <li class="menu-item">
                 <a href="sc_peminjaman.html" onclick="changePage('sc_peminjaman.html', this)" target="mainFrame" class="menu-link">
                     <span class="icon">📑</span> SC PEMINJAMAN
@@ -293,7 +296,6 @@
     </nav>
 
     <main class="content-area">
-        <!-- Default Frame diubah ke result.html jika ingin itu yang tampil pertama kali -->
         <iframe id="mainFrame" src="prediksi.html" name="mainFrame"></iframe>
     </main>
 
@@ -319,13 +321,15 @@
         }
 
         setInterval(updateClock, 1000);
-        updateClock(); 
+        updateClock(); // Jalankan langsung saat load
 
+        // Fungsi Dropdown
         function toggleSubmenu(element) {
             const parent = element.parentElement;
             parent.classList.toggle('open');
         }
 
+        // Fungsi Link Menu Utama
         function changePage(pageUrl, element) {
             localStorage.setItem('lastOpenedPage', pageUrl);
             updateActiveState(element);
@@ -334,6 +338,7 @@
             });
         }
 
+        // Fungsi Link Sub-menu
         function setActiveSub(element) {
             const pageUrl = element.getAttribute('href');
             localStorage.setItem('lastOpenedPage', pageUrl);
