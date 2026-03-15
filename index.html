@@ -68,7 +68,6 @@
             display: inline-block;
         }
 
-        /* Style Jam Real-Time */
         .realtime-clock {
             margin-top: 15px;
             font-size: 14px;
@@ -171,7 +170,7 @@
         }
 
         .has-submenu.open .submenu {
-            max-height: 800px;
+            max-height: 900px;
             padding: 10px 0;
         }
 
@@ -222,7 +221,6 @@
             background: rgba(0, 0, 0, 0.2);
         }
 
-        /* Style Neon Blue untuk Nama Wukong */
         .neon-blue {
             color: var(--neon-aqua);
             text-shadow: 0 0 8px var(--neon-glow), 0 0 15px var(--neon-glow);
@@ -238,7 +236,6 @@
             <div class="dashboard-text">
                 DASHBOARD<br>WUKONG
             </div>
-            <!-- TEMPAT JAM REAL-TIME -->
             <div id="clock" class="realtime-clock">Memuat Waktu...</div>
         </div>
 
@@ -250,7 +247,7 @@
                 </a>
             </li>
 
-            <!-- 2. POSTINGAN (DENGAN PREDIKSI UP DI DALAMNYA) -->
+            <!-- 2. POSTINGAN -->
             <li class="menu-item has-submenu">
                 <div class="menu-link" onclick="toggleSubmenu(this)">
                     <span class="icon">📁</span> POSTINGAN <span class="arrow">▼</span>
@@ -263,7 +260,7 @@
                 </ul>
             </li>
 
-            <!-- 3. DATA REPORTAN (DENGAN DAILY REPORT & PEMINJAMAN) -->
+            <!-- 3. DATA REPORTAN -->
             <li class="menu-item has-submenu">
                 <div class="menu-link" onclick="toggleSubmenu(this)">
                     <span class="icon">📊</span> DATA REPORTAN <span class="arrow">▼</span>
@@ -271,17 +268,19 @@
                 <ul class="submenu">
                     <li class="submenu-item"><a href="reportan_slot.html" target="mainFrame" onclick="setActiveSub(this)">🎰 REPORTAN SLOT</a></li>
                     <li class="submenu-item"><a href="sc-vip.html" target="mainFrame" onclick="setActiveSub(this)">📊 SC VIP</a></li>
-                    <li class="submenu-item"><a href="report_vip.html" target="mainFrame" onclick="setActiveSub(this)">📈 DAILY REPORT VIP</a></li>
+                    <li class="submenu-item"><a href="report_vip.html" target="mainFrame" onclick="setActiveSub(this)">📈 REPORT VIP</a></li>
                     <li class="submenu-item"><a href="pencairan_vip.html" target="mainFrame" onclick="setActiveSub(this)">💵 CAIR VIP</a></li>
                     <li class="submenu-item"><a href="sc_selisih_vip.html" target="mainFrame" onclick="setActiveSub(this)">📑 SC SELISIH VIP</a></li>
                     <li class="submenu-item"><a href="rate_usdt.html" target="mainFrame" onclick="setActiveSub(this)">💲 RATE USDT</a></li>
                     <li class="submenu-item"><a href="sc_peminjaman.html" target="mainFrame" onclick="setActiveSub(this)">📄 SC PEMINJAMAN</a></li>
-                    <li class="submenu-item"><a href="daily_report.html" target="mainFrame" onclick="setActiveSub(this)">🤖 DAILY REPORT</a></li>
+                    
+                    <!-- MENU REPORT HARIAN & VIP -->
+                    <li class="submenu-item"><a href="daily_report.html" target="mainFrame" onclick="setActiveSub(this)">🤖 DAILY REPORT HARIAN</a></li>
+                    <li class="submenu-item"><a href="daily_report_vip.html" target="mainFrame" onclick="setActiveSub(this)">💎 DAILY REPORT VIP</a></li>
                 </ul>
             </li>
         </ul>
 
-        <!-- FOOTER YANG DIUBAH -->
         <div class="footer-tag">Official System Security •  <span class="neon-blue"> by Wukong</span></div>
     </nav>
 
@@ -290,7 +289,6 @@
     </main>
 
     <script>
-        // FUNGSI JAM REAL-TIME (Bahasa Indonesia)
         function updateClock() {
             const now = new Date();
             const days = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
@@ -301,7 +299,6 @@
             const monthName = months[now.getMonth()];
             const year = now.getFullYear();
             
-            // Tambahkan Nol jika angka satuan
             const hours = String(now.getHours()).padStart(2, '0');
             const minutes = String(now.getMinutes()).padStart(2, '0');
             const seconds = String(now.getSeconds()).padStart(2, '0');
@@ -311,15 +308,13 @@
         }
 
         setInterval(updateClock, 1000);
-        updateClock(); // Jalankan langsung saat load
+        updateClock();
 
-        // Fungsi Dropdown
         function toggleSubmenu(element) {
             const parent = element.parentElement;
             parent.classList.toggle('open');
         }
 
-        // Fungsi Link Menu Utama
         function changePage(pageUrl, element) {
             localStorage.setItem('lastOpenedPage', pageUrl);
             updateActiveState(element);
@@ -328,7 +323,6 @@
             });
         }
 
-        // Fungsi Link Sub-menu
         function setActiveSub(element) {
             const pageUrl = element.getAttribute('href');
             localStorage.setItem('lastOpenedPage', pageUrl);
