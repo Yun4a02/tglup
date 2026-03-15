@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wukong Dashboard - Final Result</title>
+    <title>Wukong Dashboard - Aligned Side-by-Side</title>
     <style>
         :root {
             --neon-blue: #00f2ff;
@@ -86,36 +86,39 @@
         .clock-container { background: #000; border: 1px solid var(--neon-blue); border-radius: 8px; padding: 10px; text-align: center; }
         #digital-clock { color: var(--neon-blue); font-size: 20px; display: block; font-family: monospace; }
 
-        /* HASIL RESULT SECTION CUSTOM */
+        /* HASIL RESULT SECTION - SIDE BY SIDE LAYOUT */
         .input-box-wrapper { 
             background: #000; 
             border: 2px solid var(--neon-blue); 
-            padding: 15px 10px; 
+            padding: 15px 12px; 
             border-radius: 8px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
+            display: flex; /* Aktifkan Flexbox */
+            flex-direction: row; /* Arah Menyamping */
+            align-items: center; /* Sejajar Vertikal */
+            justify-content: space-between;
+            gap: 15px;
         }
 
         .label-result-container {
             display: inline-block;
-            border-bottom: 2px solid var(--neon-blue); /* Garis table untuk judul */
-            padding-bottom: 4px;
-            align-self: flex-start;
-            animation: floatingLabel 2s ease-in-out infinite; /* Animasi Melayang */
+            border-bottom: 3px solid var(--neon-blue); /* Garis tebal table header */
+            padding-bottom: 2px;
+            flex-shrink: 0; /* Mencegah teks tertekuk */
+            animation: floatingLabel 2s ease-in-out infinite;
         }
 
         @keyframes floatingLabel {
             0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-4px); }
+            50% { transform: translateY(-5px); }
         }
 
         .label-text {
             color: var(--neon-blue); 
-            font-size: 16px; /* Ukuran diperbesar */
+            font-size: 18px; /* Diperbesar agar kelihatan */
             font-weight: 900; 
             text-transform: uppercase;
-            text-shadow: 0 0 8px var(--neon-blue);
+            text-shadow: 0 0 10px var(--neon-blue);
+            white-space: nowrap;
         }
 
         .main-input { 
@@ -123,10 +126,10 @@
             border: 1px solid #333; 
             color: var(--neon-yellow); 
             font-size: 14px; 
-            width: 100%; 
+            flex-grow: 1; /* Mengisi sisa ruang */
             outline: none; 
             font-weight: 900; 
-            padding: 8px;
+            padding: 10px;
             border-radius: 4px;
         }
 
@@ -176,7 +179,7 @@
                     <span id="digital-date" style="font-size: 10px; color: #888;">MEMUAT...</span>
                 </div>
                 
-                <!-- BAGIAN HASIL RESULT DENGAN JUDUL MELAYANG & GARIS -->
+                <!-- BAGIAN HASIL RESULT MENYAMPING (SIDE-BY-SIDE) -->
                 <div class="input-box-wrapper">
                     <div class="label-result-container">
                         <span class="label-text">HASIL RESULT :</span>
