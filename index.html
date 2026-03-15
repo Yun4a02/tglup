@@ -68,7 +68,6 @@
             display: inline-block;
         }
 
-        /* Style Jam Real-Time */
         .realtime-clock {
             margin-top: 15px;
             font-size: 14px;
@@ -171,7 +170,7 @@
         }
 
         .has-submenu.open .submenu {
-            max-height: 1000px; /* Diperbesar agar muat banyak menu */
+            max-height: 1000px;
             padding: 10px 0;
         }
 
@@ -227,7 +226,6 @@
             text-shadow: 0 0 8px var(--neon-glow), 0 0 15px var(--neon-glow);
             font-weight: 900;
         }
-
     </style>
 </head>
 <body>
@@ -241,7 +239,14 @@
         </div>
 
         <ul class="menu-container">
-            <!-- DROPDOWN POSTINGAN -->
+            <!-- MENU 1: DASHBOARD RESULT (PALING ATAS) -->
+            <li class="menu-item">
+                <a href="result.html" onclick="changePage('result.html', this)" target="mainFrame" class="menu-link">
+                    <span class="icon">🏆</span> DASHBOARD RESULT
+                </a>
+            </li>
+
+            <!-- MENU 2: POSTINGAN (DROPDOWN) -->
             <li class="menu-item has-submenu">
                 <div class="menu-link" onclick="toggleSubmenu(this)">
                     <span class="icon">📁</span> POSTINGAN <span class="arrow">▼</span>
@@ -254,7 +259,7 @@
                 </ul>
             </li>
 
-            <!-- DROPDOWN DATA REPORTAN -->
+            <!-- MENU 3: DATA REPORTAN (DROPDOWN) -->
             <li class="menu-item has-submenu">
                 <div class="menu-link" onclick="toggleSubmenu(this)">
                     <span class="icon">📊</span> DATA REPORTAN <span class="arrow">▼</span>
@@ -276,7 +281,7 @@
     </nav>
 
     <main class="content-area">
-        <iframe id="mainFrame" src="prediksi.html" name="mainFrame"></iframe>
+        <iframe id="mainFrame" src="result.html" name="mainFrame"></iframe>
     </main>
 
     <script>
@@ -349,12 +354,8 @@
                     }
                 });
             } else {
-                // Default active state if no cache
-                const firstSub = document.querySelector('.submenu-item a');
-                if(firstSub) {
-                    updateActiveState(firstSub);
-                    firstSub.closest('.has-submenu').classList.add('open');
-                }
+                const firstLink = document.querySelector('.menu-link');
+                if(firstLink) firstLink.classList.add('active');
             }
         };
     </script>
