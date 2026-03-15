@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wukong Dashboard - Auto Next Up Blue</title>
+    <title>Wukong Dashboard - Aligned Final</title>
     <style>
         :root {
             --neon-blue: #00f2ff;
@@ -51,8 +51,8 @@
 
         /* NAV AREA */
         .nav-area {
-            display: flex; align-items: center; justify-content: space-between;
-            margin-bottom: 12px; gap: 12px;
+            display: flex; align-items: center; justify-content: flex-start; /* Mengatur urutan dari kiri */
+            margin-bottom: 12px; gap: 15px;
         }
         .nav-menu { display: flex; gap: 6px; }
         .btn-nav {
@@ -62,7 +62,7 @@
         }
         .btn-nav.active { background: var(--neon-blue); color: black; box-shadow: 0 0 8px var(--neon-blue); }
 
-        /* LINKS */
+        /* LINKS TOOLBAR POSISI BARU */
         .official-links-toolbar { display: flex; gap: 8px; }
         .btn-link-quick {
             padding: 8px 15px; border-radius: 5px; font-size: 10px; font-weight: 900;
@@ -70,6 +70,7 @@
         }
         .btn-link-quick.merah { background: var(--neon-red); color: white; }
         .btn-link-quick.biru { background: var(--neon-blue); color: black; }
+        .btn-link-quick:hover { transform: scale(1.05); }
 
         /* TABLE SECTION */
         .table-section { background: var(--card-bg); border-radius: 8px; padding: 10px; border: 1px solid #30363d; }
@@ -77,15 +78,13 @@
         th { color: var(--neon-blue); text-align: left; padding: 12px 8px; border-bottom: 2px solid #30363d; background: #0d1117; }
         td { padding: 8px 8px; border-bottom: 1px solid #21262d; }
 
-        /* --- WARNA STATUS --- */
-        /* 1. HIJAU (SUDAH RESULT) */
+        /* WARNA STATUS */
         .row-done { 
             color: var(--neon-green) !important; 
             text-shadow: 0 0 8px var(--neon-green); 
             background: rgba(57, 255, 20, 0.05) !important; 
         }
         
-        /* 2. MERAH (HOKIDRAW MENIT 50) */
         .row-hokidraw-waiting { 
             color: var(--neon-red) !important; 
             background: rgba(255, 0, 68, 0.08) !important;
@@ -97,17 +96,7 @@
             to { text-shadow: 0 0 15px var(--neon-red); opacity: 0.8; } 
         }
 
-        /* 3. BIRU NEON (TARGET BERIKUTNYA) */
-        .row-next-up { 
-            color: var(--neon-blue) !important; 
-            background: rgba(0, 242, 255, 0.1) !important;
-            animation: blinkBlue 1s infinite alternate;
-            font-weight: 900;
-        }
-        @keyframes blinkBlue {
-            from { text-shadow: 0 0 2px var(--neon-blue); opacity: 1; }
-            to { text-shadow: 0 0 18px var(--neon-blue); opacity: 0.7; }
-        }
+        .row-next-up { color: #fff; background: rgba(0, 242, 255, 0.08); }
 
         /* RIGHT SIDEBAR */
         .sticky-sidebar { position: sticky; top: 15px; display: flex; flex-direction: column; gap: 15px; }
@@ -137,12 +126,14 @@
                 <button class="btn-nav" onclick="filterTab('MALAM', this)">MALAM</button>
             </div>
             
+            <!-- TOMBOL LINK PINDAH KE SINI (SESUAI TANDA MERAH ANDA) -->
             <div class="official-links-toolbar">
                 <button class="btn-link-quick merah" onclick="quickCopy('https://w6.ceriawlatogel88.net/wap', 'LINK MERAH')">LINK MERAH</button>
                 <button class="btn-link-quick biru" onclick="quickCopy('https://www.vegastogel.net/wap', 'LINK BIRU')">LINK BIRU</button>
             </div>
 
-            <button class="btn-nav" style="color:var(--neon-red); border-color:var(--neon-red);" onclick="resetAll()">RESET ALL</button>
+            <!-- RESET ALL DI POJOK KANAN -->
+            <button class="btn-nav" style="margin-left: auto; color:var(--neon-red); border-color:var(--neon-red);" onclick="resetAll()">RESET ALL</button>
         </div>
 
         <div class="dashboard-grid">
@@ -162,10 +153,13 @@
                     <span id="digital-clock">00:00:00 AM</span>
                     <span id="digital-date" style="font-size: 10px; color: #888;">MEMUAT...</span>
                 </div>
+                
+                <!-- LABEL BERUBAH MENJADI HASIL RESULT : -->
                 <div class="input-box-wrapper">
-                    <span style="color:var(--neon-blue); font-size:10px; font-weight: 900;">RESULT :</span>
+                    <span style="color:var(--neon-blue); font-size:10px; font-weight: 900; white-space: nowrap;">HASIL RESULT :</span>
                     <input type="text" id="main-input" class="main-input" placeholder="Tempel Periode & Pasar..." oninput="autoProcess(this.value)">
                 </div>
+
                 <div class="post-section">
                     <div style="color:var(--neon-red); font-size: 10px; margin-bottom: 5px;">FORMAT POSTINGAN:</div>
                     <div class="post-content" id="post-display"></div>
@@ -240,7 +234,6 @@
             const h = now.getHours();
             const m = now.getMinutes();
 
-            // LOGIKA HOKIDRAW MENIT 50
             let lastResetHour = localStorage.getItem('lastHokiResetHour');
             if (m >= 50 && lastResetHour != h) {
                 doneIDs = doneIDs.filter(id => id !== 1);
@@ -272,21 +265,14 @@
         function render() {
             const tbody = document.getElementById('table-body');
             const filtered = activeTab === "ALL" ? markets : markets.filter(m => m.cat === activeTab || m.id === 1);
-
-            // LOGIKA NEXT UP: Mencari pasaran pertama (selain ID 1) yang belum hijau
             const nextUpMarket = markets.find(m => m.id !== 1 && !doneIDs.includes(m.id));
             const nextUpID = nextUpMarket ? nextUpMarket.id : null;
 
             tbody.innerHTML = filtered.map(m => {
                 let cls = "";
-                
-                if (doneIDs.includes(m.id)) {
-                    cls = "row-done"; // HIJAU
-                } else if (m.id === 1) {
-                    cls = "row-hokidraw-waiting"; // MERAH (Logic Khusus Hoki)
-                } else if (m.id === nextUpID) {
-                    cls = "row-next-up"; // BIRU NEON (Logic Next Up)
-                }
+                if (doneIDs.includes(m.id)) cls = "row-done";
+                else if (m.id === 1) cls = "row-hokidraw-waiting";
+                else if (m.id === nextUpID) cls = "row-next-up";
 
                 return `<tr class="${cls}">
                     <td>${m.id}</td>
