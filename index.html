@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard WUKONG - GOLDEN COMMAND</title>
+    <title>Dashboard WUKONG </title>
     <link rel="icon" type="image/png" href="https://i.imgur.com/pDQOisi.png">
     
     <!-- Google Fonts -->
@@ -15,20 +15,16 @@
             --bg-dark: #0f0f0f; 
             --sidebar-bg: #151515; 
             --neon-gold: #d4af37; 
-            --gold-glow: rgba(212, 175, 55, 0.6);
+            --gold-glow: rgba(212, 175, 55, 0.6); 
             --neon-red: #ff3c00;
             --red-glow: rgba(255, 60, 0, 0.5);
             --border-ui: rgba(212, 175, 55, 0.15);
             --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            --luxury-gold: #d4af37;
         }
 
-        /* --- CORE RESET & ANTI-LAG --- */
-        * { 
-            margin: 0; padding: 0; box-sizing: border-box; 
-            font-weight: 900 !important; 
-            -webkit-font-smoothing: antialiased;
-            transform: translateZ(0); 
-        }
+        /* --- CORE RESET --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-weight: 900 !important; -webkit-font-smoothing: antialiased; }
 
         body {
             display: flex; width: 100vw; height: 100vh;
@@ -38,9 +34,14 @@
             overflow: hidden; color: white;
         }
 
-        /* --- CUSTOM SCROLLBAR --- */
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-thumb { background: var(--neon-gold); border-radius: 10px; }
+        /* --- TOAST BOX --- */
+        #toastBox { 
+            position: fixed; top: -100px; left: 50%; transform: translateX(-50%); 
+            z-index: 100001; transition: top 0.5s; 
+            background: #000; border: 2px solid var(--luxury-gold); padding: 12px 35px; 
+            border-radius: 50px; box-shadow: 0 0 30px var(--gold-glow); 
+            color: var(--luxury-gold); font-family: 'Orbitron'; font-size: 13px;
+        }
 
         /* --- SIDEBAR --- */
         .sidebar {
@@ -52,22 +53,60 @@
             flex-shrink: 0;
         }
 
-        .header-title { padding: 40px 10px; text-align: center; border-bottom: 1px solid var(--border-ui); }
+        .header-title { padding: 30px 10px 20px; text-align: center; border-bottom: 1px solid var(--border-ui); }
 
-        /* --- LETTER BY LETTER FLICKER --- */
+        /* --- NEON FLICKER ANIMATION (LETTER BY LETTER) --- */
         @keyframes charFlicker {
-            0%, 19.999%, 22%, 62.999%, 64%, 64.999%, 70%, 100% { opacity: 1; text-shadow: 0 0 10px var(--gold-glow), 0 0 20px var(--neon-gold); }
-            20%, 21.999%, 63%, 63.999%, 65%, 69.999% { opacity: 0.4; text-shadow: none; }
+            0%, 19.999%, 22%, 62.999%, 64%, 64.999%, 70%, 100% { 
+                opacity: 1; text-shadow: 0 0 10px var(--gold-glow), 0 0 20px var(--neon-gold); color: var(--luxury-gold);
+            }
+            20%, 21.999%, 63%, 63.999%, 65%, 69.999% { 
+                opacity: 0.4; text-shadow: none; color: #555;
+            }
         }
 
-        .dashboard-text { font-family: 'Orbitron', sans-serif; font-size: 22px; color: var(--neon-gold); text-transform: uppercase; letter-spacing: 4px; line-height: 1.3; }
-        .dashboard-text span { display: inline-block; animation: charFlicker 5s infinite; }
-        .dashboard-text span:nth-child(1) { animation-delay: 0.1s; } .dashboard-text span:nth-child(2) { animation-delay: 0.5s; }
-        .dashboard-text span:nth-child(3) { animation-delay: 1.2s; } .dashboard-text span:nth-child(4) { animation-delay: 0.8s; }
-        .dashboard-text span:nth-child(5) { animation-delay: 2.1s; } .dashboard-text span:nth-child(6) { animation-delay: 0.3s; }
-        .dashboard-text span:nth-child(7) { animation-delay: 1.5s; } .dashboard-text span:nth-child(8) { animation-delay: 0.7s; }
+        .dashboard-text { font-family: 'Orbitron', sans-serif; font-size: 24px; text-transform: uppercase; letter-spacing: 5px; line-height: 1.4; margin-bottom: 15px; }
+        .dashboard-text span { display: inline-block; animation: charFlicker 5s infinite linear; }
+        .dashboard-text span:nth-child(2) { animation-delay: 0.2s; }
+        .dashboard-text span:nth-child(3) { animation-delay: 0.4s; }
+        .dashboard-text span:nth-child(4) { animation-delay: 1s; }
+        .dashboard-text span:nth-child(6) { animation-delay: 0.3s; }
+        .dashboard-text span:nth-child(8) { animation-delay: 0.7s; }
 
-        .realtime-clock { margin-top: 15px; font-size: 15px; color: #fff; letter-spacing: 1px; text-transform: uppercase; opacity: 0.8; }
+        /* --- ALARM BOX --- */
+        .upcoming-alarm-info {
+            margin: 10px auto; padding: 12px 15px;
+            background: linear-gradient(90deg, rgba(212, 175, 55, 0.1), transparent);
+            border: 1px solid var(--border-ui); border-left: 5px solid var(--luxury-gold);
+            border-radius: 8px; display: inline-block; text-align: left; width: 90%; cursor: pointer; transition: 0.3s;
+        }
+        .upcoming-label { font-family: 'Rajdhani'; font-size: 10px; color: #888; letter-spacing: 2px; text-transform: uppercase; }
+        .upcoming-time { font-family: 'Orbitron'; font-size: 17px; color: var(--luxury-gold); text-shadow: 0 0 10px var(--gold-glow); margin-top: 3px; }
+
+        .realtime-clock { margin-top: 5px; font-size: 14px; color: #fff; letter-spacing: 1px; text-transform: uppercase; opacity: 0.8; }
+
+        /* --- FLOATING COUNTDOWN CORNER --- */
+        .floating-countdown-container {
+            position: fixed; top: 20px; right: 20px; z-index: 9998;
+            display: flex; flex-direction: column; gap: 10px;
+            animation: hoverFloat 4s ease-in-out infinite;
+        }
+        @keyframes hoverFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        
+        .countdown-item { 
+            display: flex; align-items: center; justify-content: space-between; gap: 15px;
+            padding: 10px 15px; background: rgba(0, 0, 0, 0.85); 
+            border: 1px solid var(--luxury-gold); border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5), inset 0 0 15px var(--gold-glow);
+            backdrop-filter: blur(10px); min-width: 260px;
+        }
+        .countdown-text { 
+            font-family: 'Orbitron'; font-size: 11px; color: var(--luxury-gold); 
+            text-transform: uppercase; letter-spacing: 1px; 
+            animation: charFlicker 5s infinite linear; flex-grow: 1; text-align: left;
+        }
+        .btn-emoji-edit { background: transparent; border: none; cursor: pointer; font-size: 16px; filter: grayscale(1); transition: 0.2s; }
+        .btn-emoji-edit:hover { filter: grayscale(0); transform: scale(1.2); }
 
         /* --- MENU SYSTEM --- */
         .menu-container { list-style: none; padding: 15px; overflow-y: auto; flex-grow: 1; }
@@ -76,114 +115,145 @@
             text-decoration: none; color: #fff; display: flex; align-items: center; padding: 16px 20px;
             border-radius: 12px; font-size: 15px; letter-spacing: 1.2px; text-transform: uppercase;
             background: rgba(255,255,255,0.03); border: 1px solid var(--border-ui); 
-            transition: var(--transition); cursor: pointer; user-select: none;
+            transition: var(--transition); cursor: pointer;
         }
-        .menu-link:hover, .menu-link.active { color: #000; background: var(--neon-gold); border-color: #fff; box-shadow: 0 0 25px var(--gold-glow); transform: translateX(10px); }
-        .menu-link .icon { margin-right: 15px; font-size: 22px; }
-        .arrow { margin-left: auto; font-size: 12px; }
-        .has-submenu.open .arrow { transform: rotate(180deg); }
-        .submenu { list-style: none; max-height: 0; overflow: hidden; transition: max-height 0.4s ease; background: rgba(0, 0, 0, 0.4); border-left: 3px solid var(--neon-gold); margin-left: 25px; border-radius: 0 0 12px 12px; }
+        .menu-link:hover, .menu-link.active { color: #000; background: var(--luxury-gold); border-color: #fff; box-shadow: 0 0 20px var(--gold-glow); transform: translateX(10px); }
+        .menu-link .icon { margin-right: 15px; font-size: 20px; }
+        .arrow { margin-left: auto; font-size: 12px; transition: 0.3s; color: var(--luxury-gold); }
+        .has-submenu.open .arrow { transform: rotate(180deg); color: #000; }
+        .submenu { list-style: none; max-height: 0; overflow: hidden; transition: max-height 0.4s ease; background: rgba(0, 0, 0, 0.4); border-left: 3px solid var(--luxury-gold); margin-left: 25px; border-radius: 0 0 12px 12px; }
         .has-submenu.open .submenu { max-height: 1200px; padding: 10px 0; }
         .submenu-item a { text-decoration: none; color: #777; display: block; padding: 12px 25px; font-size: 14px; transition: 0.2s; text-transform: uppercase; }
-        .submenu-item a:hover { color: var(--neon-gold); padding-left: 35px; background: rgba(212, 175, 55, 0.08); }
+        .submenu-item a:hover { color: var(--luxury-gold); padding-left: 35px; }
+
+        /* --- FOOTER TAG --- */
+        .footer-tag { 
+            padding: 15px 20px; text-align: left; background: #000; 
+            border-top: 1px solid var(--border-ui); letter-spacing: 1px; 
+            font-family: Orbitron; text-transform: uppercase;
+            display: flex; align-items: center; gap: 5px;
+            font-size: 9px; color: #666; white-space: nowrap;
+        }
+        .neon-wukong-footer { color: var(--luxury-gold); text-shadow: 0 0 10px var(--gold-glow); }
 
         /* --- FLOATING PANELS --- */
-        .floating-panel {
-            position: fixed; top: 90px; width: 380px;
-            background: rgba(15, 15, 15, 0.98); border: 2px solid var(--neon-gold);
-            border-radius: 20px; z-index: 999; backdrop-filter: blur(20px);
-            display: none; flex-direction: column; box-shadow: 0 0 50px rgba(0, 0, 0, 0.9);
+        .floating-panel { 
+            position: fixed; top: 60px; width: 380px; 
+            background: #0a0a0a; border: 2px solid var(--luxury-gold); 
+            border-radius: 15px; z-index: 9999; display: none; 
+            flex-direction: column; box-shadow: 0 10px 50px rgba(0,0,0,0.9); 
         }
-        #setupPanel { left: calc(var(--sidebar-width) + 20px); }
-        #registryPanel { left: calc(var(--sidebar-width) + 415px); max-height: 75vh; width: 480px; }
-
-        .panel-header { padding: 18px 20px; background: rgba(212, 175, 55, 0.1); border-bottom: 2px solid var(--neon-gold); display: flex; justify-content: space-between; align-items: center; border-radius: 18px 18px 0 0; }
-        .panel-header h2 { font-family: 'Orbitron'; font-size: 13px; color: var(--neon-gold); letter-spacing: 2px; }
-        .close-btn { cursor: pointer; color: var(--neon-red); font-size: 25px; }
-        .panel-body { padding: 20px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: var(--neon-gold) transparent; }
-
-        /* Inputs */
-        .cyber-input { background: #000; border: 1px solid #333; border-radius: 12px; padding: 18px; color: var(--neon-gold); font-family: Orbitron; width: 100%; text-align: center; outline: none; margin-bottom: 15px; border-left: 6px solid var(--neon-gold); font-size: 14px; }
-        .unit-box { width: 85px; height: 80px; background: #000; border: 2px solid #222; border-radius: 12px; color: var(--neon-gold); font-family: 'Orbitron'; font-size: 42px; text-align: center; outline: none; text-shadow: 0 0 10px var(--gold-glow); transition: 0.3s; }
+        #setupPanel { left: 320px; }
+        #registryPanel { left: 720px; width: 350px; }
         
-        .ampm-switch { display: flex; background: #000; border: 1px solid #333; border-radius: 8px; padding: 4px; margin: 10px auto 0; width: fit-content; }
-        .ap-btn { padding: 8px 18px; border: none; background: transparent; color: #444; font-family: 'Orbitron'; font-size: 12px; cursor: pointer; border-radius: 6px; }
-        .ap-btn.active { background: var(--neon-gold); color: #000; box-shadow: 0 0 15px var(--gold-glow); }
-
-        .day-bt { padding: 12px 0; background: #000; border: 1px solid #222; color: #555; font-family: Orbitron; font-size: 10px; text-align: center; border-radius: 8px; cursor: pointer; }
-        .day-bt.active { background: var(--neon-gold); color: #000; border-color: #fff; box-shadow: 0 0 15px var(--gold-glow); }
-        .btn-neon-main { width: 100%; padding: 18px; border-radius: 10px; border: none; background: var(--neon-red); color: #fff; font-family: Orbitron; font-size: 14px; box-shadow: 0 0 25px var(--red-glow); cursor: pointer; margin-top: 10px; }
-
-        /* --- RAPID REGISTRY DATABASE --- */
-        .reg-card { 
-            display: flex; align-items: center; justify-content: space-between; 
-            padding: 15px; background: rgba(0,0,0,0.3); border: 1px solid rgba(212, 175, 55, 0.1); 
-            border-radius: 12px; margin-bottom: 12px; transition: 0.3s;
+        .date-setup-panel { 
+            right: 300px; 
+            left: auto; top: 20px; width: 320px; 
+            box-shadow: 0 0 40px var(--gold-glow);
         }
-        .reg-card:hover { border-color: var(--neon-gold); background: rgba(212, 175, 55, 0.05); }
 
-        .reg-name-group { flex: 1; min-width: 0; }
-        .reg-name { 
-            font-size: 14px; color: var(--neon-gold); font-family: 'Orbitron'; 
-            text-shadow: 0 0 10px var(--gold-glow); animation: charFlicker 4s infinite linear;
-            overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-bottom: 3px;
-        }
-        .reg-time { font-family: 'Orbitron'; font-size: 18px; color: #fff; text-shadow: 0 0 5px var(--gold-glow); }
-        
-        .reg-actions { display: flex; gap: 8px; margin-left: 15px; }
-        .btn-act { padding: 8px 12px; font-size: 10px; border-radius: 6px; border: none; cursor: pointer; font-family: Orbitron; font-weight: bold; transition: 0.2s; }
+        .panel-header { padding: 15px 20px; border-bottom: 1px solid var(--border-ui); display: flex; justify-content: space-between; align-items: center; }
+        .panel-header h2 { font-family: 'Orbitron'; font-size: 12px; color: var(--luxury-gold); letter-spacing: 2px; }
+        .close-btn { cursor: pointer; color: var(--neon-red); font-size: 22px; }
+        .panel-body { padding: 20px; overflow-y: auto; }
 
-        .btn-open-db { width: 100%; margin-top: 15px; background: transparent; border: none; color: var(--neon-gold); font-family: Orbitron; cursor: pointer; font-size: 11px; text-decoration: underline; letter-spacing: 2px; animation: charFlicker 4s infinite linear; }
+        .cyber-input { background: #000; border: 1px solid #333; border-radius: 8px; padding: 15px; color: #fff; font-family: Orbitron; width: 100%; text-align: center; outline: none; margin-bottom: 15px; border-left: 5px solid var(--luxury-gold); font-size: 12px; }
+        .time-box-container { background: #000; border: 1px solid #222; border-radius: 12px; padding: 20px; margin-bottom: 15px; display: flex; flex-direction: column; align-items: center; }
+        .unit-box { width: 75px; height: 65px; background: #111; border: 1px solid #333; border-radius: 10px; color: var(--luxury-gold); font-family: 'Orbitron'; font-size: 35px; text-align: center; outline: none; text-shadow: 0 0 15px var(--gold-glow); }
+        .ap-btn { padding: 8px 18px; border: none; background: transparent; color: #444; font-family: 'Orbitron'; font-size: 11px; cursor: pointer; border-radius: 6px; }
+        .ap-btn.active { background: var(--luxury-gold); color: #000; box-shadow: 0 0 10px var(--gold-glow); }
+        .day-bt { padding: 10px 0; background: #000; border: 1px solid #222; color: #555; font-family: Orbitron; font-size: 9px; text-align: center; border-radius: 6px; cursor: pointer; }
+        .day-bt.active { background: #111; color: var(--luxury-gold); border-color: var(--luxury-gold); box-shadow: 0 0 10px var(--gold-glow); }
+        .btn-neon-main { width: 100%; padding: 18px; border-radius: 10px; border: none; background: #ff3c00; color: #fff; font-family: Orbitron; font-size: 13px; cursor: pointer; margin-top: 10px; text-transform: uppercase; box-shadow: 0 0 20px var(--red-glow); }
 
-        /* --- NEON CALLING POPUP --- */
-        .neon-popup-overlay { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 500px; background: rgba(15, 15, 15, 0.98); border: 3px solid var(--neon-gold); border-radius: 15px; z-index: 10000; display: none; flex-direction: column; box-shadow: 0 0 100px rgba(212, 175, 55, 0.4); animation: zoomInPopup 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); overflow: hidden; backdrop-filter: blur(30px); text-align: center; }
-        @keyframes zoomInPopup { from { opacity: 0; scale: 0.5; transform: translate(-50%, -50%) rotate(-5deg); } to { opacity: 1; scale: 1; transform: translate(-50%, -50%) rotate(0deg); } }
-        
-        .pop-head { padding: 30px; border-bottom: 2px solid var(--neon-gold); background: rgba(212, 175, 55, 0.05); }
-        .pop-head h1 { font-family: 'Orbitron'; font-size: 26px; color: var(--neon-gold); letter-spacing: 6px; text-transform: uppercase; animation: charFlicker 3s infinite linear; }
-        .pop-table { width: 100%; border-collapse: collapse; background: #000; }
-        .pop-table td { padding: 45px 20px; text-align: center; }
-        .pop-act-text { font-family: 'Orbitron'; font-size: 48px; color: #fff; text-transform: uppercase; letter-spacing: 5px; text-shadow: 0 0 20px var(--gold-glow); animation: charFlicker 2s infinite; }
-        .pop-foot { display: flex; height: 90px; }
-        .btn-pop { flex: 1; border: none; cursor: pointer; font-family: Orbitron; font-size: 16px; transition: 0.3s; font-weight: 900; }
+        .reg-card { background: transparent; padding: 12px 0; border-bottom: 1px solid #222; margin-bottom: 5px; }
+        .reg-name { font-family: 'Orbitron'; font-size: 12px; color: #fff; text-transform: uppercase; margin-bottom: 4px; }
+        .reg-time { font-family: 'Orbitron'; font-size: 14px; color: var(--luxury-gold); margin-bottom: 8px; }
+        .reg-actions { display: flex; gap: 8px; }
+        .btn-act { background: #fff; color: #000; border: none; padding: 3px 10px; font-size: 10px; font-family: Orbitron; cursor: pointer; border-radius: 2px; }
 
-        #toastBox { position: fixed; top: -100px; left: 50%; transform: translateX(-50%); z-index: 10001; transition: 0.5s; background: #000; border: 2px solid var(--neon-gold); padding: 15px 40px; border-radius: 50px; box-shadow: 0 0 30px var(--gold-glow); color: var(--neon-gold); font-family: Orbitron; font-size: 14px; }
-        
-        .footer-tag { padding: 25px; text-align: center; font-size: 12px; color: #555; border-top: 1px solid var(--border-ui); background: #000; letter-spacing: 1px; }
-        .neon-wukong { color: var(--neon-gold); text-shadow: 0 0 10px var(--neon-gold), 0 0 20px var(--neon-gold); font-weight: 900; }
+        /* --- POPUP ALARM --- */
+        .neon-popup-overlay { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 550px; background: #000; border: 4px solid var(--luxury-gold); border-radius: 25px; z-index: 100000; display: none; flex-direction: column; text-align: center; box-shadow: 0 0 100px var(--gold-glow); }
+        .pop-head { padding: 35px 20px; border-bottom: 3px solid var(--luxury-gold); background: rgba(212, 175, 55, 0.05); }
+        .pop-head h1 { font-family: 'Orbitron'; font-size: 28px; color: var(--luxury-gold); text-transform: uppercase; }
+        .pop-act-text { font-family: 'Orbitron'; font-size: 42px; color: #fff; padding: 60px 20px; text-transform: uppercase; line-height: 1.2; word-wrap: break-word; text-shadow: 0 0 20px var(--gold-glow); }
+        .pop-foot { display: flex; height: 100px; border-top: 2px solid rgba(212, 175, 55, 0.3); }
+        .btn-pop { flex: 1; border: none; font-family: 'Orbitron'; font-size: 18px; cursor: pointer; text-transform: uppercase; font-weight: 900 !important; }
 
-        .content-area { flex-grow: 1; height: 100vh; background: #000; position: relative; z-index: 1; }
+        .content-area { flex-grow: 1; height: 100vh; background: #000; position: relative; }
         iframe { width: 100%; height: 100%; border: none; }
     </style>
 </head>
 <body>
 
-    <div id="toastBox">GOLDEN SYSTEM ONLINE</div>
+    <div id="toastBox">WUKONG SYSTEM ONLINE</div>
     <input type="file" id="audioExplorer" accept="audio/*" style="display:none">
+    <audio id="audioAlarm"></audio>
 
-    <!-- CALLING POPUP -->
-    <div id="callingPopup" class="neon-popup-overlay">
-        <div class="pop-head"><h1>ALARM CALLING WUKONG</h1></div>
-        <table class="pop-table">
-            <tr><td><div id="callingActionName" class="pop-act-text">MANDIRI</div></td></tr>
-        </table>
-        <div class="pop-foot">
-            <button onclick="stopCurrentAlarm()" class="btn-pop" style="background:var(--neon-gold); color:#000;">OK - DISMISS</button>
-            <button onclick="snoozeCurrentAlarm()" class="btn-pop" style="background:#000; color:var(--neon-gold); border-left:2px solid var(--neon-gold);">HOLD 5 MENIT</button>
+    <!-- FLOATING COUNTDOWN BOX (TOP RIGHT) -->
+    <div class="floating-countdown-container">
+        <div class="countdown-item">
+            <div id="leaveText" class="countdown-text">CUTI BELUM DI SET</div>
+            <button onclick="toggleDateSetup('leavePanel')" class="btn-emoji-edit">⚙️</button>
+        </div>
+        <div class="countdown-item">
+            <div id="wifeText" class="countdown-text">ULTAH ISTRI ❤️</div>
+            <button onclick="toggleDateSetup('wifePanel')" class="btn-emoji-edit">⚙️</button>
+        </div>
+        <div class="countdown-item">
+            <div id="childText" class="countdown-text">ULTAH ANAK 👼</div>
+            <button onclick="toggleDateSetup('childPanel')" class="btn-emoji-edit">⚙️</button>
         </div>
     </div>
 
-    <!-- ALARM SETUP -->
+    <!-- CALLING POPUP -->
+    <div id="callingPopup" class="neon-popup-overlay">
+        <div class="pop-head"><h1 id="flickerTitle">
+            <span>D</span><span>A</span><span>S</span><span>H</span><span>B</span><span>O</span><span>A</span><span>R</span><span>D</span><br>
+            <span>W</span><span>U</span><span>K</span><span>O</span><span>N</span><span>G</span><span>&nbsp;</span>
+            <span>C</span><span>A</span><span>L</span><span>L</span><span>I</span><span>N</span><span>G</span><span>&nbsp;</span>
+            <span>.</span><span>.</span><span>.</span><span>.</span><span>⚠️</span>
+        </h1></div>
+        <div id="callingActionName" class="pop-act-text">ACTION NAME</div>
+        <div class="pop-foot">
+            <button onclick="stopCurrentAlarm()" class="btn-pop" style="background:var(--luxury-gold); color:#000;">OK</button>
+            <button onclick="snoozeCurrentAlarm()" class="btn-pop" style="background:#000; color:var(--luxury-gold); border-left:3px solid var(--luxury-gold);">FREEZE 5 MENIT</button>
+        </div>
+    </div>
+
+    <!-- DATE SETUP PANELS -->
+    <div id="leavePanel" class="floating-panel date-setup-panel">
+        <div class="panel-header"><h2>SET JADWAL CUTI</h2><span onclick="toggleDateSetup('leavePanel')" class="close-btn">×</span></div>
+        <div class="panel-body">
+            <input type="date" id="leaveDateInput" class="cyber-input">
+            <button onclick="saveSpecialDate('leave')" class="btn-neon-main">INITIALIZE CUTI</button>
+        </div>
+    </div>
+    <div id="wifePanel" class="floating-panel date-setup-panel">
+        <div class="panel-header"><h2>SET ULTAH ISTRI</h2><span onclick="toggleDateSetup('wifePanel')" class="close-btn">×</span></div>
+        <div class="panel-body">
+            <input type="date" id="wifeDateInput" class="cyber-input">
+            <button onclick="saveSpecialDate('wife')" class="btn-neon-main">SAVE ANNIVERSARY</button>
+        </div>
+    </div>
+    <div id="childPanel" class="floating-panel date-setup-panel">
+        <div class="panel-header"><h2>SET ULTAH ANAK</h2><span onclick="toggleDateSetup('childPanel')" class="close-btn">×</span></div>
+        <div class="panel-body">
+            <input type="date" id="childDateInput" class="cyber-input">
+            <button onclick="saveSpecialDate('child')" class="btn-neon-main">SAVE BIRTHDAY</button>
+        </div>
+    </div>
+
+    <!-- COMMAND CENTER PANEL -->
     <div id="setupPanel" class="floating-panel">
         <div class="panel-header"><h2>COMMAND CENTER</h2><span onclick="toggleSetup()" class="close-btn">×</span></div>
         <div class="panel-body">
             <input type="hidden" id="editId" value="">
             <input type="text" id="inpName" placeholder="ENTER ACTION NAME..." class="cyber-input">
-
-            <div style="background:#000; border:1px solid #222; border-radius:15px; padding:15px;">
-                <div style="display:flex; justify-content:center; align-items:center; gap:10px; margin-bottom:10px;">
+            <div class="time-box-container">
+                <div style="display:flex; align-items:center; gap:10px;">
                     <input type="text" id="hh" class="unit-box" placeholder="00" maxlength="2">
-                    <span style="font-family:Orbitron; font-size:40px; color:#fff;">:</span>
+                    <span style="font-family:Orbitron; font-size:30px; color:#fff;">:</span>
                     <input type="text" id="mm" class="unit-box" placeholder="00" maxlength="2">
                 </div>
                 <div class="ampm-switch">
@@ -191,34 +261,23 @@
                     <button id="pm" class="ap-btn" onclick="setAMPM('PM')">PM</button>
                 </div>
             </div>
-
-            <div style="display:flex; gap:10px; margin-top:20px;">
-                <button class="day-bt" style="flex:1; border-color:var(--neon-gold); color:var(--neon-gold)" onclick="setQuickDay('today')">HARI INI</button>
-                <button class="day-bt" style="flex:1; border-color:var(--neon-gold); color:var(--neon-gold)" onclick="setQuickDay('tomorrow')">BESOK</button>
-            </div>
-
-            <select id="inpSound" onchange="handleSoundSelect()" style="background:#000; color:#fff; padding:15px; border:1px solid #333; border-radius:12px; width:100%; font-family:Rajdhani; font-size:15px; cursor:pointer; margin-top:15px;">
+            <select id="inpSound" onchange="handleSoundSelect()" style="background:#000; color:#fff; padding:15px; border:1px solid #333; border-radius:8px; width:100%; font-family:Rajdhani; margin-bottom:15px; outline:none; cursor:pointer;">
                 <option value="https://actions.google.com/sounds/v1/alarms/digital_watch_alarm_long.ogg">Classic Gold Tone</option>
                 <optgroup label="Registry" id="customSoundsGroup"></optgroup>
-                <option value="ADD_CUSTOM" style="color:var(--neon-gold);">[ + ] UPLOAD AUDIO FILE</option>
+                <option value="ADD_CUSTOM">[ + ] UPLOAD AUDIO FILE</option>
             </select>
-
-            <div style="display:flex; flex-direction:column; gap:8px; margin:20px 0;">
-                <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:8px;">
-                    <div class="day-bt" data-day="1">SEN</div><div class="day-bt" data-day="2">SEL</div><div class="day-bt" data-day="3">RAB</div><div class="day-bt" data-day="4">KAM</div>
-                </div>
-                <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:8px; width:85%; margin:0 auto;">
-                    <div class="day-bt" data-day="5">JUM</div><div class="day-bt" data-day="6">SAB</div><div class="day-bt" data-day="0">MGG</div>
-                </div>
-                <div class="day-bt" style="background:rgba(212, 175, 55, 0.1); color:#fff; margin-top:5px;" onclick="selectAllDays()">SELECT ALL DAYS</div>
+            <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:5px; margin-bottom:5px;">
+                <div class="day-bt" data-day="1">SEN</div><div class="day-bt" data-day="2">SEL</div><div class="day-bt" data-day="3">RAB</div><div class="day-bt" data-day="4">KAM</div>
             </div>
-
+            <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:5px; width:75%; margin:0 auto 10px;">
+                <div class="day-bt" data-day="5">JUM</div><div class="day-bt" data-day="6">SAB</div><div class="day-bt" data-day="0">MGG</div>
+            </div>
+            <button class="day-bt" style="width:100%; background:rgba(255,255,255,0.05); color:#fff; margin-bottom:15px;" onclick="selectAllDays()">SELECT ALL DAYS</button>
             <button onclick="saveAlarm()" class="btn-neon-main">INITIALIZE COMMAND</button>
-            <button onclick="toggleRegistry()" class="btn-open-db">OPEN ALARM REGISTRY DATABASE</button>
+            <button onclick="toggleRegistry()" style="background:transparent; border:none; color:#fff; font-family:Orbitron; cursor:pointer; font-size:11px; text-decoration:underline; margin-top:15px; display:block;">OPEN ALARM REGISTRY DATABASE</button>
         </div>
     </div>
 
-    <!-- REGISTRY DATABASE -->
     <div id="registryPanel" class="floating-panel">
         <div class="panel-header"><h2>ALARM REGISTRY DATABASE</h2><span onclick="toggleRegistry()" class="close-btn">×</span></div>
         <div class="panel-body" id="regBody"></div>
@@ -227,14 +286,20 @@
     <!-- SIDEBAR -->
     <nav class="sidebar">
         <div class="header-title">
-            <div class="dashboard-text">
+            <div class="dashboard-text" id="mainTitle">
                 <span>D</span><span>A</span><span>S</span><span>H</span><span>B</span><span>O</span><span>A</span><span>R</span><span>D</span><br>
                 <span>W</span><span>U</span><span>K</span><span>O</span><span>N</span><span>G</span>
             </div>
+            
+            <div class="upcoming-alarm-info" id="alarmCommandBox" onclick="toggleSetup()">
+                <div class="upcoming-label">ALARM WUKONG ⏰</div>
+                <div id="nextAlarmDisplay" class="upcoming-time">OFFLINE</div>
+            </div>
+
             <div id="clock" class="realtime-clock">...</div>
         </div>
+
         <ul class="menu-container">
-            <li class="menu-item"><div class="menu-link" onclick="toggleSetup()"><span class="icon">⏰</span> ALARM WUKONG</div></li>
             <li class="menu-item"><a href="result.html" onclick="changePage('result.html', this)" target="mainFrame" class="menu-link"><span class="icon">🏆</span> DASHBOARD RESULT</a></li>
             <li class="menu-item has-submenu">
                 <div class="menu-link" onclick="toggleSubmenu(this)"><span class="icon">📁</span> POSTINGAN <span class="arrow">▼</span></div>
@@ -258,7 +323,7 @@
                 </ul>
             </li>
         </ul>
-        <div class="footer-tag">DASHBOARD PROFESIONAL BY <span class="neon-wukong">WUKONG</span></div>
+        <div class="footer-tag">DASHBOARD PROFESIONAL BY <span class="neon-wukong-footer">WUKONG</span></div>
     </nav>
 
     <main class="content-area"><iframe id="mainFrame" src="prediksi.html" name="mainFrame"></iframe></main>
@@ -266,9 +331,67 @@
     <script>
         let alarmList = JSON.parse(localStorage.getItem('wukongAlarms')) || [];
         let customSounds = []; let activeDays = []; let snoozeTime = null; let selAMPM = 'AM';
+        let currentActiveAlarm = null; 
 
         function toggleSetup() { document.getElementById('setupPanel').style.display = document.getElementById('setupPanel').style.display === 'flex' ? 'none' : 'flex'; }
         function toggleRegistry() { const p = document.getElementById('registryPanel'); p.style.display = p.style.display === 'flex' ? 'none' : 'flex'; if(p.style.display === 'flex') renderRegistry(); }
+        function toggleDateSetup(id) { document.getElementById(id).style.display = document.getElementById(id).style.display === 'flex' ? 'none' : 'flex'; }
+        
+        function saveSpecialDate(type) {
+            const input = document.getElementById(type + 'DateInput');
+            if(!input.value) return showToast("SELECT DATE!");
+            localStorage.setItem('wukong_' + type, input.value);
+            updateAllCountdowns(); toggleDateSetup(type + 'Panel'); showToast("DATE INITIALIZED");
+        }
+
+        function calculateDays(targetDateStr) {
+            if(!targetDateStr) return null;
+            const target = new Date(targetDateStr); target.setHours(0,0,0,0);
+            const now = new Date(); now.setHours(0,0,0,0);
+            return Math.ceil((target - now) / (1000 * 60 * 60 * 24));
+        }
+
+        function updateAllCountdowns() {
+            const leaveDate = localStorage.getItem('wukong_leave');
+            const wifeDate = localStorage.getItem('wukong_wife');
+            const childDate = localStorage.getItem('wukong_child');
+
+            const leaveDays = calculateDays(leaveDate);
+            const wifeDays = calculateDays(wifeDate);
+            const childDays = calculateDays(childDate);
+
+            // SPECIAL LOGIC FOR CUTI
+            if(!leaveDate) {
+                document.getElementById('leaveText').innerText = "CUTI BELUM DI SET";
+            } else {
+                if(leaveDays > 0) document.getElementById('leaveText').innerText = `${leaveDays} HARI LAGI CUTI`;
+                else if(leaveDays === 0) document.getElementById('leaveText').innerText = `HARI INI CUTI!`;
+                else document.getElementById('leaveText').innerText = "MASA CUTI BERLALU";
+            }
+
+            // Logic for others
+            if(!wifeDate) document.getElementById('wifeText').innerText = "ULTAH ISTRI ❤️";
+            else document.getElementById('wifeText').innerText = wifeDays >= 0 ? `${wifeDays} HARI ULTAH ISTRI ❤️` : "ULTAH ISTRI BERLALU ❤️";
+
+            if(!childDate) document.getElementById('childText').innerText = "ULTAH ANAK 👼";
+            else document.getElementById('childText').innerText = childDays >= 0 ? `${childDays} HARI ULTAH ANAK 👼` : "ULTAH ANAK BERLALU 👼";
+        }
+
+        function updateNextAlarmDisplay() {
+            const now = new Date(); const currentDay = now.getDay(); const currentTime = now.getHours() * 60 + now.getMinutes();
+            let nextAlarm = null; let minDiff = Infinity;
+            alarmList.forEach(a => {
+                if (a.days.includes(currentDay)) {
+                    const [h, m] = a.time.split(':').map(Number); const alarmMinutes = h * 60 + m;
+                    const diff = alarmMinutes - currentTime; if (diff > 0 && diff < minDiff) { minDiff = diff; nextAlarm = a; }
+                }
+            });
+            const display = document.getElementById('nextAlarmDisplay');
+            if (nextAlarm) {
+                let [h, m] = nextAlarm.time.split(':').map(Number); let ampm = h >= 12 ? 'PM' : 'AM'; let h12 = h % 12 || 12;
+                display.innerText = `${h12.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')} ${ampm}`;
+            } else { display.innerText = "OFFLINE"; }
+        }
 
         const fileExplorer = document.getElementById('audioExplorer');
         fileExplorer.onchange = function(e) {
@@ -276,7 +399,7 @@
             if(file) {
                 const url = URL.createObjectURL(file);
                 customSounds.push({ name: file.name.substring(0,12)+"...", url: url });
-                loadCustomSounds(); document.getElementById('inpSound').value = url; showToast("AUDIO LOADED");
+                loadCustomSounds(); document.getElementById('inpSound').value = url;
             }
         }
         function loadCustomSounds() { const g = document.getElementById('customSoundsGroup'); g.innerHTML = ""; customSounds.forEach(s => { const o = document.createElement('option'); o.value = s.url; o.innerText = `Custom: ${s.name}`; g.appendChild(o); }); }
@@ -296,20 +419,24 @@
             btn.onclick = function() { this.classList.toggle('active'); const d = parseInt(this.dataset.day); if(this.classList.contains('active')) activeDays.push(d); else activeDays = activeDays.filter(x => x !== d); }
         });
         function selectAllDays() { activeDays = [0,1,2,3,4,5,6]; document.querySelectorAll('.day-bt[data-day]').forEach(b => b.classList.add('active')); }
-        function setQuickDay(t) { document.querySelectorAll('.day-bt[data-day]').forEach(b => b.classList.remove('active')); activeDays = []; const now = new Date(); let d = t === 'today' ? now.getDay() : (now.getDay() + 1) % 7; const btn = document.querySelector(`.day-bt[data-day="${d}"]`); if(btn) { btn.classList.add('active'); activeDays.push(d); } }
 
         function saveAlarm() {
-            const name = document.getElementById('inpName').value;
             let h = parseInt(document.getElementById('hh').value) || 0;
             let m = parseInt(document.getElementById('mm').value) || 0;
-            if(!name || activeDays.length === 0) return showToast("DATA INCOMPLETE");
             if(selAMPM === 'PM' && h < 12) h += 12; if(selAMPM === 'AM' && h === 12) h = 0;
             const time24 = `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}`;
             const editId = document.getElementById('editId').value;
-            if(editId) { const idx = alarmList.findIndex(a => a.id == editId); alarmList[idx] = { id: editId, name, time: time24, sound: document.getElementById('inpSound').value, days: [...activeDays] }; }
-            else alarmList.push({ id: Date.now(), name, time: time24, sound: document.getElementById('inpSound').value, days: [...activeDays] });
+            if(editId) {
+                const idx = alarmList.findIndex(a => a.id == editId);
+                if(idx !== -1) { alarmList[idx].time = time24; showToast("TIME UPDATED"); }
+            } else {
+                const name = document.getElementById('inpName').value;
+                if(!name || activeDays.length === 0) return showToast("DATA INCOMPLETE");
+                alarmList.push({ id: Date.now(), name, time: time24, sound: document.getElementById('inpSound').value, days: [...activeDays] });
+                showToast("ALARM SYNCED");
+            }
             localStorage.setItem('wukongAlarms', JSON.stringify(alarmList));
-            resetForm(); renderRegistry(); showToast("ALARM SYNCED");
+            resetForm(); renderRegistry(); updateNextAlarmDisplay();
         }
 
         function resetForm() { document.getElementById('inpName').value = ""; document.getElementById('hh').value = ""; document.getElementById('mm').value = ""; document.getElementById('editId').value = ""; activeDays = []; document.querySelectorAll('.day-bt[data-day]').forEach(b => b.classList.remove('active')); }
@@ -317,55 +444,66 @@
         function renderRegistry() {
             const container = document.getElementById('regBody'); container.innerHTML = "";
             alarmList.forEach(a => {
-                container.innerHTML += `<div class="reg-card">
-                    <div class="reg-name-group">
-                        <div class="reg-name">${a.name}</div>
-                        <div class="reg-time">${a.time}</div>
-                    </div>
-                    <div class="reg-actions">
-                        <button onclick="editAlarm(${a.id})" class="btn-act btn-edit">EDIT</button>
-                        <button onclick="deleteAlarm(${a.id})" class="btn-act btn-del">DEL</button>
-                    </div>
-                </div>`;
+                let [h, m] = a.time.split(':').map(Number); let ampm = h >= 12 ? 'PM' : 'AM'; let h12 = h % 12 || 12;
+                let displayTime = `${h12.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')} ${ampm}`;
+                container.innerHTML += `<div class="reg-card"><div class="reg-name">${a.name}</div><div class="reg-time">${displayTime}</div><div class="reg-actions"><button onclick="editAlarm(${a.id})" class="btn-act">EDIT</button><button onclick="deleteAlarm(${a.id})" class="btn-act">DEL</button></div></div>`;
             });
         }
 
-        function deleteAlarm(id) { alarmList = alarmList.filter(a => a.id != id); localStorage.setItem('wukongAlarms', JSON.stringify(alarmList)); renderRegistry(); }
+        function deleteAlarm(id) { alarmList = alarmList.filter(a => a.id != id); localStorage.setItem('wukongAlarms', JSON.stringify(alarmList)); renderRegistry(); updateNextAlarmDisplay(); }
         function editAlarm(id) {
-            const a = alarmList.find(x => x.id == id); document.getElementById('inpName').value = a.name; 
+            const a = alarmList.find(x => x.id == id);
             let [h, m] = a.time.split(':').map(Number); let mode = h >= 12 ? 'PM' : 'AM'; let h12 = h % 12 || 12;
             document.getElementById('hh').value = h12.toString().padStart(2,'0'); document.getElementById('mm').value = m.toString().padStart(2,'0');
-            setAMPM(mode); document.getElementById('editId').value = a.id;
-            activeDays = [...a.days]; document.querySelectorAll('.day-bt[data-day]').forEach(b => { if(activeDays.includes(parseInt(b.dataset.day))) b.classList.add('active'); else b.classList.remove('active'); });
+            setAMPM(mode); document.getElementById('editId').value = a.id; document.getElementById('inpName').value = a.name;
+            document.getElementById('setupPanel').style.display = 'flex';
         }
 
         function checkAlarms() {
             const now = new Date(); const ct = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
-            if(snoozeTime && now >= snoozeTime) { triggerPop("SNOOZE OVER!", null); snoozeTime = null; return; }
-            alarmList.forEach(a => { if(a.time === ct && a.days.includes(now.getDay())) { if(window.lastTrig !== ct + a.id) { triggerPop(a.name, a.sound); window.lastTrig = ct + a.id; } } });
+            if(snoozeTime && now >= snoozeTime) { if(currentActiveAlarm) triggerPop(currentActiveAlarm.name, currentActiveAlarm.sound); snoozeTime = null; return; }
+            alarmList.forEach(a => { if(a.time === ct && a.days.includes(now.getDay())) { if(window.lastTrig !== ct + a.id) { currentActiveAlarm = a; triggerPop(a.name, a.sound); window.lastTrig = ct + a.id; } } });
         }
-        function triggerPop(n, s) { document.getElementById('callingActionName').innerText = n; const audio = document.getElementById('audioAlarm'); document.getElementById('audioSrc').src = s || document.getElementById('inpSound').value; audio.load(); audio.play(); document.getElementById('callingPopup').style.display = 'flex'; }
-        function stopCurrentAlarm() { document.getElementById('callingPopup').style.display = 'none'; document.getElementById('audioAlarm').pause(); snoozeTime = null; }
-        function snoozeCurrentAlarm() { document.getElementById('callingPopup').style.display = 'none'; document.getElementById('audioAlarm').pause(); snoozeTime = new Date(new Date().getTime() + 5 * 60000); }
-        function previewSound() { const a = document.getElementById('audioAlarm'); document.getElementById('audioSrc').src = document.getElementById('inpSound').value; a.load(); a.play(); setTimeout(() => { if(document.getElementById('callingPopup').style.display !== 'flex') a.pause(); }, 2000); }
-        function showToast(m) { const c = document.getElementById('toastBox'); c.innerText = m; c.style.top = "30px"; setTimeout(() => { c.style.top = "-100px"; }, 3000); }
+
+        function triggerPop(n, s) { 
+            document.getElementById('callingActionName').innerText = n; const audio = document.getElementById('audioAlarm'); 
+            audio.src = s || document.getElementById('inpSound').value; audio.volume = 0.5; audio.loop = true; audio.load(); audio.play().catch(e => {}); 
+            document.getElementById('callingPopup').style.display = 'flex'; 
+        }
+
+        function stopCurrentAlarm() { const audio = document.getElementById('audioAlarm'); document.getElementById('callingPopup').style.display = 'none'; audio.pause(); audio.loop = false; updateNextAlarmDisplay(); }
+        function snoozeCurrentAlarm() { const audio = document.getElementById('audioAlarm'); document.getElementById('callingPopup').style.display = 'none'; audio.pause(); snoozeTime = new Date(new Date().getTime() + 5 * 60000); }
+        function previewSound() { const a = document.getElementById('audioAlarm'); a.src = document.getElementById('inpSound').value; a.volume = 0.5; a.loop = false; a.load(); a.play().catch(e => {}); setTimeout(() => { if(document.getElementById('callingPopup').style.display !== 'flex') a.pause(); }, 4000); }
+        
+        function showToast(m) { 
+            const c = document.getElementById('toastBox'); c.innerText = m; c.style.top = "30px"; 
+            setTimeout(() => { c.style.top = "-100px"; }, 3000); 
+        }
 
         function updateClock() {
             const n = new Date(); const ds = ["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"]; const ms = ["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
             document.getElementById('clock').innerHTML = `${ds[n.getDay()]}, ${n.getDate()} ${ms[n.getMonth()]} ${n.getFullYear()}<br>${String(n.getHours()).padStart(2,'0')}:${String(n.getMinutes()).padStart(2,'0')}:${String(n.getSeconds()).padStart(2,'0')}`;
-            checkAlarms();
+            checkAlarms(); updateAllCountdowns(); updateNextAlarmDisplay();
         }
         setInterval(updateClock, 1000); updateClock();
 
         function toggleSubmenu(e) { e.parentElement.classList.toggle('open'); }
-        function changePage(u, el) { localStorage.setItem('lastOpenedPage', u); updateActiveState(el); document.querySelectorAll('.has-submenu').forEach(i => { if(i !== el.parentElement) i.classList.remove('open'); }); }
+        function changePage(u, el) { localStorage.setItem('lastOpenedPage', u); updateActiveState(el); }
         function setActiveSub(el) { localStorage.setItem('lastOpenedPage', el.getAttribute('href')); updateActiveState(el); }
         function updateActiveState(el) {
-            document.querySelectorAll('.menu-link, .submenu-item a').forEach(i => i.classList.remove('active', 'active-sub'));
+            document.querySelectorAll('.menu-link, .submenu-item a').forEach(i => i.classList.remove('active'));
             if (el.classList.contains('menu-link')) el.classList.add('active');
-            else { el.classList.add('active-sub'); let p = el.closest('.has-submenu').querySelector('.menu-link'); if(p) p.classList.add('active'); }
+            else { el.classList.add('active'); let p = el.closest('.has-submenu').querySelector('.menu-link'); if(p) p.classList.add('active'); }
         }
-        window.onload = function() { loadCustomSounds(); const l = localStorage.getItem('lastOpenedPage'); if (l) { document.getElementById('mainFrame').src = l; document.querySelectorAll('.menu-link, .submenu-item a').forEach(link => { if (link.getAttribute('href') === l) { updateActiveState(link); link.closest('.has-submenu')?.classList.add('open'); } }); } };
+        window.onload = function() { 
+            updateAllCountdowns(); updateNextAlarmDisplay(); loadCustomSounds(); 
+            const l = localStorage.getItem('lastOpenedPage'); 
+            if (l) {
+                document.getElementById('mainFrame').src = l;
+                document.querySelectorAll('.menu-link, .submenu-item a').forEach(link => { if (link.getAttribute('href') === l) updateActiveState(link); });
+            }
+            showToast("WUKONG SYSTEM ONLINE");
+        };
     </script>
 </body>
 </html>
