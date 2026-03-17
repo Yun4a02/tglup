@@ -83,6 +83,10 @@
         .upcoming-label { font-family: 'Rajdhani'; font-size: 10px; color: #888; letter-spacing: 2px; text-transform: uppercase; }
         .upcoming-time { font-family: 'Orbitron'; font-size: 17px; color: var(--luxury-gold); text-shadow: 0 0 10px var(--gold-glow); margin-top: 3px; }
 
+        /* Update Status Warna Alarm */
+        .status-offline { color: #ff3c00 !important; text-shadow: 0 0 10px rgba(255, 60, 0, 0.8) !important; }
+        .status-online { color: #39ff14 !important; text-shadow: 0 0 10px rgba(57, 255, 20, 0.8) !important; }
+
         .realtime-clock { margin-top: 5px; font-size: 14px; color: #fff; letter-spacing: 1px; text-transform: uppercase; opacity: 0.8; }
 
         /* --- FLOATING COUNTDOWN CORNER --- */
@@ -293,7 +297,7 @@
             
             <div class="upcoming-alarm-info" id="alarmCommandBox" onclick="toggleSetup()">
                 <div class="upcoming-label">ALARM WUKONG ⏰</div>
-                <div id="nextAlarmDisplay" class="upcoming-time">OFFLINE</div>
+                <div id="nextAlarmDisplay" class="upcoming-time status-offline">OFFLINE</div>
             </div>
 
             <div id="clock" class="realtime-clock">...</div>
@@ -390,7 +394,13 @@
             if (nextAlarm) {
                 let [h, m] = nextAlarm.time.split(':').map(Number); let ampm = h >= 12 ? 'PM' : 'AM'; let h12 = h % 12 || 12;
                 display.innerText = `${h12.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')} ${ampm}`;
-            } else { display.innerText = "OFFLINE"; }
+                display.classList.remove('status-offline');
+                display.classList.add('status-online');
+            } else { 
+                display.innerText = "OFFLINE"; 
+                display.classList.remove('status-online');
+                display.classList.add('status-offline');
+            }
         }
 
         const fileExplorer = document.getElementById('audioExplorer');
