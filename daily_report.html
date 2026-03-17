@@ -4,20 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Daily Report System - WUKONG</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Rajdhani:wght@600;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-dark: #000c14;
-            --sidebar-bg: #00121a;
-            --neon-aqua: #00fbff;
-            --neon-glow: rgba(0, 251, 255, 0.5);
+            --bg-dark: #0f0f0f; /* Abu-abu Gelap */
+            --card-bg: #1a1a1a; 
+            --neon-gold: #d4af37; /* Emas Metallic */
+            --gold-glow: rgba(212, 175, 55, 0.6);
+            --neon-red: #ff3c00;
+            --red-glow: rgba(255, 60, 0, 0.5);
             --text-main: #e0e6ed;
         }
 
-        * { box-sizing: border-box; }
+        /* --- ANTI-LAG & BOLD RESET --- */
+        * { 
+            box-sizing: border-box; 
+            font-weight: 900 !important; 
+            -webkit-font-smoothing: antialiased;
+        }
 
         body {
             background-color: var(--bg-dark);
+            background-image: radial-gradient(circle at 50% 50%, #1e1e1e 0%, #0f0f0f 100%);
             color: white;
             font-family: 'Rajdhani', sans-serif;
             margin: 0;
@@ -28,21 +36,37 @@
             overflow: hidden;
         }
 
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); text-shadow: 0 0 15px var(--neon-glow); }
-            50% { transform: translateY(-10px); text-shadow: 0 10px 25px var(--neon-glow); }
+        /* --- LETTER BY LETTER FLICKER ANIMATION --- */
+        @keyframes charFlicker {
+            0%, 19.999%, 22%, 62.999%, 64%, 64.999%, 70%, 100% {
+                opacity: 1; text-shadow: 0 0 10px var(--gold-glow), 0 0 20px var(--neon-gold);
+            }
+            20%, 21.999%, 63%, 63.999%, 65%, 69.999% {
+                opacity: 0.4; text-shadow: none;
+            }
         }
 
         .main-header-title {
             font-family: 'Orbitron', sans-serif;
-            color: var(--neon-aqua);
-            font-size: 24px;
-            letter-spacing: 4px;
+            color: var(--neon-gold);
+            font-size: 26px;
+            letter-spacing: 5px;
             text-align: center;
-            margin: 10px 0 15px 0;
+            margin: 15px 0 20px 0;
             text-transform: uppercase;
-            animation: float 4s ease-in-out infinite;
         }
+
+        .main-header-title span {
+            display: inline-block;
+            animation: charFlicker 5s infinite;
+        }
+        /* Penundaan acak untuk tiap huruf */
+        .main-header-title span:nth-child(1) { animation-delay: 0.1s; }
+        .main-header-title span:nth-child(3) { animation-delay: 0.5s; }
+        .main-header-title span:nth-child(5) { animation-delay: 1.2s; }
+        .main-header-title span:nth-child(7) { animation-delay: 0.8s; }
+        .main-header-title span:nth-child(9) { animation-delay: 2.1s; }
+        .main-header-title span:nth-child(11) { animation-delay: 0.3s; }
 
         .main-grid {
             display: grid;
@@ -54,134 +78,132 @@
         }
 
         .card {
-            background: var(--sidebar-bg);
-            border: 1px solid rgba(0, 251, 255, 0.2);
+            background: var(--card-bg);
+            border: 2px solid var(--neon-gold);
             padding: 15px;
-            border-radius: 12px;
+            border-radius: 15px;
             display: flex;
             flex-direction: column;
-            box-shadow: 0 0 20px rgba(0,0,0,0.5);
-            height: 100%; /* Memastikan kartu memenuhi grid */
+            box-shadow: 0 0 30px rgba(0,0,0,0.6);
+            height: 100%;
+            backdrop-filter: blur(10px);
         }
 
         h2 {
             font-family: 'Orbitron', sans-serif;
-            color: var(--neon-aqua);
+            color: var(--neon-gold);
             font-size: 13px;
-            margin-bottom: 12px;
+            margin-bottom: 15px;
             text-align: center;
             text-transform: uppercase;
-            background: rgba(0, 251, 255, 0.07);
-            padding: 8px;
-            border-radius: 4px;
-            border: 1px solid rgba(0, 251, 255, 0.1);
+            background: rgba(212, 175, 55, 0.1);
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid var(--border-ui);
+            text-shadow: 0 0 5px var(--gold-glow);
         }
 
-        /* --- BUTTON GROUP DI ATAS --- */
-        .btn-group-top {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 12px;
-        }
+        /* --- BUTTON GROUP --- */
+        .btn-group-top { display: flex; gap: 8px; margin-bottom: 12px; }
 
         .btn {
             flex: 1;
-            padding: 10px;
+            padding: 12px;
             border: none;
-            border-radius: 4px;
+            border-radius: 6px;
             font-family: 'Orbitron', sans-serif;
-            font-weight: bold;
             cursor: pointer;
             font-size: 11px;
-            transition: 0.2s;
+            transition: 0.3s;
+            text-transform: uppercase;
         }
-        .btn-copy { background: var(--neon-aqua); color: black; }
-        .btn-reset { background: #ff3e3e; color: white; }
-        .btn:hover { opacity: 0.8; transform: translateY(-2px); }
+        .btn-copy { 
+            background: var(--neon-gold); 
+            color: black; 
+            box-shadow: 0 0 15px var(--gold-glow);
+        }
+        .btn-reset { 
+            background: var(--neon-red); 
+            color: white; 
+            box-shadow: 0 0 15px var(--red-glow);
+        }
+        .btn:hover { filter: brightness(1.2); transform: translateY(-3px); }
 
-        /* --- PERBAIKAN TINGGI OTOMATIS (FLEX) --- */
         .scroll-input {
-            flex: 1; /* Mengisi sisa ruang secara otomatis */
+            flex: 1;
             overflow-y: auto;
             padding-right: 10px;
-            padding-bottom: 20px; /* Jarak agar input terakhir tidak terpotong */
         }
 
-        .preview-box-individual {
+        .preview-box-individual, .preview-box-rekapan {
             flex: 1;
             background: #000;
-            padding: 12px;
-            border-radius: 6px;
-            border-left: 3px solid var(--neon-aqua);
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #333;
+            border-left: 4px solid var(--neon-gold);
             white-space: pre-wrap;
             font-family: 'Courier New', monospace;
             font-size: 13px;
-            line-height: 1.4;
+            line-height: 1.5;
             overflow-y: auto;
-            border: 1px solid #222;
+            color: #fff;
         }
 
         .textarea-rekapan {
-            height: 60%; /* Ukuran proporsional */
+            height: 50%;
             width: 100%;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(0, 251, 255, 0.2);
-            padding: 10px;
+            background: #000;
+            border: 1px solid #333;
+            padding: 12px;
             color: white;
-            border-radius: 6px;
+            border-radius: 8px;
             outline: none;
             font-size: 13px;
             resize: none;
             margin-bottom: 10px;
-        }
-
-        .preview-box-rekapan {
-            flex: 1;
-            background: #050505;
-            padding: 10px;
-            border-radius: 6px;
-            white-space: pre-wrap;
-            font-family: 'Courier New', monospace;
-            font-size: 11px;
-            overflow-y: auto;
-            border: 1px solid #333;
+            border-bottom: 3px solid var(--neon-gold);
         }
 
         /* SCROLLBAR STYLE */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: rgba(255,255,255,0.02); }
-        ::-webkit-scrollbar-thumb { background: var(--neon-aqua); border-radius: 10px; box-shadow: 0 0 5px var(--neon-glow); }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-thumb { background: var(--neon-gold); border-radius: 10px; }
 
-        .input-wrapper { margin-bottom: 10px; }
-        label { display: block; font-size: 11px; color: var(--neon-aqua); margin-bottom: 4px; font-weight: bold; text-transform: uppercase; }
+        label { display: block; font-size: 11px; color: var(--neon-gold); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px; }
         
         input {
             width: 100%;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(0, 251, 255, 0.2);
-            padding: 10px;
+            background: #000;
+            border: 1px solid #333;
+            padding: 12px;
             color: white;
-            border-radius: 4px;
+            border-radius: 6px;
             outline: none;
             font-size: 13px;
+            margin-bottom: 12px;
             transition: 0.3s;
         }
-        input:focus { border-color: var(--neon-aqua); background: rgba(0, 251, 255, 0.08); }
+        input:focus { border-color: var(--neon-gold); box-shadow: 0 0 10px var(--gold-glow); }
 
         .shift-container { display: flex; gap: 5px; margin-bottom: 15px; }
         .shift-btn {
-            flex: 1; padding: 10px; border: 1px solid var(--neon-aqua);
-            background: transparent; color: var(--neon-aqua);
-            cursor: pointer; font-weight: bold; border-radius: 4px;
+            flex: 1; padding: 10px; border: 1px solid var(--neon-gold);
+            background: transparent; color: var(--neon-gold);
+            cursor: pointer; border-radius: 6px;
             font-size: 10px; font-family: 'Orbitron';
+            transition: 0.3s;
         }
-        .shift-btn.active { background: var(--neon-aqua); color: black; box-shadow: 0 0 10px var(--neon-glow); }
+        .shift-btn.active { background: var(--neon-gold); color: black; box-shadow: 0 0 15px var(--gold-glow); }
 
     </style>
 </head>
 <body>
 
-    <div class="main-header-title">DAILY REPORT SYSTEM</div>
+    <div class="main-header-title">
+        <span>D</span><span>A</span><span>I</span><span>L</span><span>Y</span> &nbsp; 
+        <span>R</span><span>E</span><span>P</span><span>O</span><span>R</span><span>T</span> &nbsp; 
+        <span>S</span><span>Y</span><span>S</span><span>T</span><span>E</span><span>M</span>
+    </div>
 
     <div class="main-grid">
         <!-- KOLOM 1: INPUT DATA -->
@@ -251,7 +273,6 @@
 
         function updateReport() {
             const report = `Info : Togelup\nPerihal : Pengecekan Bot Telegram\nStaff : ${currentStaff}\nTanggal : ${getIndoDate()}\n\nLink daftar : ${document.getElementById('in_daftar').value}\nLink alternatif : ${document.getElementById('in_alt').value}\nlivechat : ${document.getElementById('in_live').value}\nfacebook : ${document.getElementById('in_fb').value}\nwhatsapp : ${document.getElementById('in_wa').value}\nRTP : ${document.getElementById('in_rtp').value}\nPromo & Bonus : ${document.getElementById('in_promo').value}\nPrediksi : ${document.getElementById('in_prediksi').value}`;
-
             document.getElementById('reportResult').innerText = report;
         }
 
@@ -269,7 +290,6 @@
             elem.select();
             document.execCommand('copy');
             document.body.removeChild(elem);
-            alert("Berhasil disalin!");
         }
 
         function resetIndividual() {
