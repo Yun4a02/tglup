@@ -3,18 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bank Data Extractor Pro - Postingan UP</title>
+    <title>Bank Data Peminjaman & Utang </title>
     
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            --bg-dark: #000c14;
-            --card-bg: #00121a;
-            --neon-aqua: #00fbff;
-            --neon-glow: rgba(0, 251, 255, 0.4);
-            --border: rgba(0, 251, 255, 0.2);
+            /* THEME GOLDEN LUXURY */
+            --bg-dark: #0a0a0a;
+            --card-bg: #141414;
+            --gold-primary: #d4af37;
+            --gold-light: #f9e29c;
+            --gold-dark: #aa8439;
+            --gold-glow: rgba(212, 175, 55, 0.5);
+            --border: rgba(212, 175, 55, 0.2);
             --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
@@ -39,15 +42,32 @@
             box-shadow: 0 15px 50px rgba(0, 0, 0, 0.8);
         }
 
+        /* JUDUL DENGAN NEON FLICKER */
         h2 {
             font-family: 'Orbitron', sans-serif;
-            color: var(--neon-aqua);
+            color: var(--gold-primary);
             text-align: center;
             text-transform: uppercase;
             letter-spacing: 3px;
             margin-bottom: 25px;
             font-size: 24px;
-            text-shadow: 0 0 15px var(--neon-glow);
+            border-bottom: none;
+        }
+
+        .flicker-char {
+            display: inline-block;
+            animation: neonFlicker 3s linear infinite;
+        }
+
+        @keyframes neonFlicker {
+            0%, 19.999%, 22%, 62.999%, 64%, 64.999%, 70%, 100% {
+                opacity: 1;
+                text-shadow: 0 0 10px var(--gold-primary), 0 0 20px var(--gold-dark);
+            }
+            20%, 21.999%, 63%, 63.999%, 65%, 69.999% {
+                opacity: 0.4;
+                text-shadow: none;
+            }
         }
 
         .input-grid {
@@ -64,7 +84,7 @@
 
         label {
             font-family: 'Orbitron', sans-serif;
-            font-size: 13px; color: var(--neon-aqua);
+            font-size: 13px; color: var(--gold-primary);
             font-weight: 700; letter-spacing: 1px;
         }
 
@@ -80,8 +100,8 @@
         }
 
         textarea:focus {
-            border-color: var(--neon-aqua);
-            box-shadow: 0 0 15px rgba(0, 251, 255, 0.1);
+            border-color: var(--gold-primary);
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.1);
         }
 
         .btn-group {
@@ -115,16 +135,16 @@
         }
 
         .col-header {
-            background: rgba(0, 251, 255, 0.1);
+            background: rgba(212, 175, 55, 0.1);
             padding: 12px; text-align: center;
-            color: var(--neon-aqua); font-weight: 700;
+            color: var(--gold-primary); font-weight: 700;
             border-bottom: 1px solid var(--border);
             font-size: 11px; display: flex;
             justify-content: space-between; align-items: center;
         }
 
-        .copy-emoji { cursor: pointer; font-size: 18px; transition: 0.2s; }
-        .copy-emoji:hover { transform: scale(1.3); }
+        .copy-emoji { cursor: pointer; font-size: 18px; transition: 0.2s; color: var(--gold-primary); }
+        .copy-emoji:hover { transform: scale(1.3); filter: brightness(1.2); }
 
         .item-list {
             padding: 5px; font-family: 'Consolas', monospace; font-size: 14px;
@@ -137,21 +157,21 @@
             white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
         }
 
-        /* Tampilan Visual Total di Tabel */
+        /* Tampilan Visual Total */
         .total-box-visual {
             padding: 12px 10px;
             color: #f1c40f; 
             font-weight: 800;
-            border-top: 2px solid var(--neon-aqua);
-            background: rgba(0, 251, 255, 0.05);
+            border-top: 2px solid var(--gold-primary);
+            background: rgba(212, 175, 55, 0.05);
             text-transform: uppercase;
             font-size: 13px;
         }
 
         /* --- SUMMARY AREA --- */
         .full-report-section {
-            background: rgba(0, 251, 255, 0.02);
-            border: 1px dashed var(--neon-aqua);
+            background: rgba(212, 175, 55, 0.02);
+            border: 1px dashed var(--gold-primary);
             border-radius: 15px; padding: 20px;
         }
 
@@ -162,7 +182,7 @@
 
         .full-report-header h3 {
             font-family: 'Orbitron', sans-serif;
-            font-size: 14px; color: var(--neon-aqua);
+            font-size: 14px; color: var(--gold-primary);
         }
 
         #fullReportArea {
@@ -179,7 +199,7 @@
         .toast {
             position: fixed; bottom: 30px;
             left: 50%; transform: translateX(-50%);
-            background: var(--neon-aqua); color: #000;
+            background: var(--gold-primary); color: #000;
             padding: 10px 30px; border-radius: 50px;
             font-weight: 800; font-size: 12px;
             display: none; z-index: 9999;
@@ -189,7 +209,7 @@
 <body>
 
 <div class="container">
-    <h2>Bank Data Extractor</h2>
+    <h2 id="main-title">Bank Data Peminjaman & Utang</h2>
 
     <div class="input-grid">
         <div class="input-group">
@@ -223,7 +243,6 @@
         <div class="result-col">
             <div class="col-header">NOMINAL <span class="copy-emoji" onclick="copyColumn('colAmount')">📋</span></div>
             <div id="colAmount" class="item-list"></div>
-            <!-- Total Visual (Hanya Pajangan di Tabel) -->
             <div id="visualTotalNominal" class="total-box-visual" style="display:none;"></div>
         </div>
         <div class="result-col">
@@ -245,11 +264,32 @@
 <div id="toast" class="toast">BERHASIL DISALIN!</div>
 
 <script>
+    // FUNGSI NEON FLICKER PER HURUF
+    function applyNeonFlicker(elementId) {
+        const el = document.getElementById(elementId);
+        const text = el.innerText;
+        el.innerHTML = '';
+        text.split('').forEach(char => {
+            const span = document.createElement('span');
+            if (char === ' ') {
+                span.innerHTML = '&nbsp;';
+            } else {
+                span.innerText = char;
+            }
+            span.className = 'flicker-char';
+            span.style.animationDelay = (Math.random() * 5) + 's';
+            el.appendChild(span);
+        });
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+        applyNeonFlicker('main-title');
+    });
+
     function processData() {
         const rawReport = document.getElementById('inputText').value;
         const rawLinks = document.getElementById('inputLampiran').value;
         
-        // Reset Tabel
         ['colBank', 'colName', 'colNumber', 'colAmount', 'colLink'].forEach(id => document.getElementById(id).innerHTML = "");
         
         let totalSum = 0;
@@ -295,7 +335,6 @@
             }
         });
 
-        // 1. Tampilkan Total Visual di bawah Tabel Nominal (Hanya Pajangan)
         const totalBox = document.getElementById('visualTotalNominal');
         if (totalSum > 0) {
             totalBox.style.display = "block";
@@ -304,18 +343,14 @@
             totalBox.style.display = "none";
         }
 
-        // 2. Update Hasil Laporan Gabungan (DENGAN TOTAL)
         const areaGabungan = document.getElementById('fullReportArea');
         if (!rawReport.trim() && !rawLinks.trim()) {
             areaGabungan.innerText = "Menunggu data ditempel...";
         } else {
             let fullText = rawReport.trimEnd();
-            
-            // Masukkan Total Nominal ke dalam kotak laporan gabungan
             if (totalSum > 0) {
                 fullText += "\n\nTOTAL NOMINAL : " + totalSum.toLocaleString('en-US');
             }
-            
             if (rawLinks.trim() !== "") {
                 fullText += "\n\nLampiran :\n" + rawLinks.trim();
             } else {
@@ -336,21 +371,16 @@
         container.appendChild(div);
     }
 
-    // 3. FUNGSI COPY KOLOM (Total dijamin tidak ikut tercopy)
     function copyColumn(id, isLampiran = false) {
-        // Hanya mengambil data dari item-row saja
         const rows = document.getElementById(id).getElementsByClassName('item-row');
         if (rows.length === 0) return;
-        
         let textToCopy = isLampiran ? "Lampiran :\n" : "";
         for (let i = 0; i < rows.length; i++) {
             textToCopy += rows[i].innerText + "\n";
         }
-        
         executeCopy(textToCopy.trim());
     }
 
-    // 4. FUNGSI COPY SEMUA (Total ikut tercopy dari kotak gabungan)
     function copyFullReport() {
         const text = document.getElementById('fullReportArea').innerText;
         if (text.includes("Menunggu")) return;
