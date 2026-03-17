@@ -136,8 +136,6 @@
         @keyframes blinkGold { from { text-shadow: 0 0 2px var(--gold-primary); opacity: 1; } to { text-shadow: 0 0 18px var(--gold-light); opacity: 0.7; } }
 
         .sidebar-menu { display: flex; flex-direction: column; gap: 10px; overflow-y: auto; padding-right: 5px; }
-        .clock-box { background: #000; border: 1px solid var(--gold-dark); border-radius: 8px; padding: 10px; text-align: center; }
-        #digital-clock { color: var(--gold-primary); font-size: 20px; display: block; font-family: monospace; }
         .result-input-card { background: #000; border: 2px solid var(--gold-dark); padding: 12px; border-radius: 8px; }
         
         .label-float { 
@@ -176,7 +174,7 @@
         ::-webkit-scrollbar-thumb { background: var(--gold-dark); border-radius: 10px; }
     </style>
 </head>
-<body>
+<body>  
 
     <div id="wukong-toast">WUKONG NOTIFICATION</div>
     <div class="title-container">
@@ -193,8 +191,8 @@
         <div class="official-links-toolbar">
             <button class="btn-link-quick merah" onclick="quickCopy('https://w6.ceriawlatogel88.net/wap', 'LINK MERAH')">LINK MERAH</button>
             <button class="btn-link-quick biru" onclick="quickCopy('https://www.vegastogel.net/wap', 'LINK BIRU')">LINK BIRU</button>
+            <button class="btn-nav" style="color:#ff4444; border-color:#550000;" onclick="resetAll()">RESET ALL</button>
         </div>
-        <button class="btn-nav" style="margin-left:auto; color:#ff4444; border-color:#550000;" onclick="resetAll()">RESET ALL</button>
     </div>
 
     <div class="main-container-grid">
@@ -208,11 +206,6 @@
         </div>
 
         <div class="sidebar-menu">
-            <div class="clock-box">
-                <span id="digital-clock">00:00:00 AM</span>
-                <span id="digital-date" style="font-size: 10px; color: #888; text-transform: uppercase;">...</span>
-            </div>
-
             <div class="result-input-card">
                 <div class="label-float">
                     <span class="label-text" id="label-hasil">HASIL RESULT :</span>
@@ -367,8 +360,6 @@
                 localStorage.setItem('lastHokiResetHour', h);
                 render();
             }
-            document.getElementById('digital-clock').innerText = now.toLocaleTimeString('id-ID');
-            document.getElementById('digital-date').innerText = now.toLocaleDateString('id-ID', {weekday:'long', day:'numeric', month:'long', year:'numeric'}).toUpperCase();
         }
 
         function autoProcess(val) {
@@ -419,7 +410,6 @@
         function wukongAlert(msg) { const t = document.getElementById('wukong-toast'); t.innerText = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2000); }
         function filterTab(tab, el) { activeTab = tab; document.querySelectorAll('.btn-nav').forEach(b => b.classList.remove('active')); el.classList.add('active'); render(); }
 
-        /* UPDATE: HAPUS POPUP CONFIRM */
         function resetAll() { 
             localStorage.clear(); 
             doneIDs = []; 
