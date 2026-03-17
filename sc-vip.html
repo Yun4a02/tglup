@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shortcut Selisih QRIS VIP - Pro Edition</title>
+    <title>Shortcut Selisih QRIS VIP </title>
     
     <!-- Library Eksternal -->
     <script src="https://cdn.sheetjs.com/xlsx-0.19.3/package/dist/xlsx.full.min.js"></script>
@@ -13,10 +13,14 @@
 
     <style>
         :root {
-            --bg-dark: #000c14;
-            --card-bg: #00121a;
-            --neon-cyan: #00fbff;
-            --border-glow: rgba(0, 251, 255, 0.15);
+            /* THEME GOLDEN LUXURY */
+            --bg-dark: #0a0a0a;
+            --card-bg: #141414;
+            --gold-primary: #d4af37;
+            --gold-light: #f9e29c;
+            --gold-dark: #aa8439;
+            --gold-glow: rgba(212, 175, 55, 0.4);
+            --border-glow: rgba(212, 175, 55, 0.2);
             --glass: rgba(255, 255, 255, 0.02);
         }
 
@@ -25,7 +29,24 @@
             color: #d1d5db;
             font-family: 'Rajdhani', sans-serif;
             padding: 20px;
-            background-image: radial-gradient(circle at 50% 0%, rgba(0, 251, 255, 0.05) 0%, transparent 50%);
+            background-image: radial-gradient(circle at 50% 0%, rgba(212, 175, 55, 0.05) 0%, transparent 50%);
+        }
+
+        /* --- NEON FLICKER ANIMATION --- */
+        .flicker-char {
+            display: inline-block;
+            animation: neonFlicker 3s linear infinite;
+        }
+
+        @keyframes neonFlicker {
+            0%, 19.999%, 22%, 62.999%, 64%, 64.999%, 70%, 100% {
+                opacity: 1;
+                text-shadow: 0 0 10px var(--gold-primary), 0 0 20px var(--gold-dark);
+            }
+            20%, 21.999%, 63%, 63.999%, 65%, 69.999% {
+                opacity: 0.3;
+                text-shadow: none;
+            }
         }
 
         .glass-card {
@@ -43,14 +64,14 @@
             display: flex;
             align-items: center;
             gap: 12px;
-            color: var(--neon-cyan);
+            color: var(--gold-primary);
             font-family: 'Orbitron', sans-serif;
             font-weight: 700;
             font-size: 13px;
             text-transform: uppercase;
             letter-spacing: 2px;
             margin-bottom: 20px;
-            text-shadow: 0 0 10px rgba(0, 251, 255, 0.5);
+            text-shadow: 0 0 10px var(--gold-glow);
         }
 
         textarea {
@@ -67,8 +88,8 @@
 
         .btn-cyan {
             background: transparent;
-            border: 1px solid var(--neon-cyan);
-            color: var(--neon-cyan);
+            border: 1px solid var(--gold-primary);
+            color: var(--gold-primary);
             padding: 12px 20px;
             border-radius: 10px;
             font-weight: 700;
@@ -83,14 +104,14 @@
         }
 
         .btn-cyan:hover {
-            background: var(--neon-cyan);
+            background: var(--gold-primary);
             color: #000;
-            box-shadow: 0 0 20px rgba(0, 251, 255, 0.4);
+            box-shadow: 0 0 20px var(--gold-glow);
             transform: translateY(-2px);
         }
 
         .stat-card {
-            background: linear-gradient(145deg, #00121a, #000c14);
+            background: linear-gradient(145deg, #1a1a1a, #0a0a0a);
             padding: 20px;
             border-radius: 16px;
             border: 1px solid var(--border-glow);
@@ -121,14 +142,14 @@
         }
 
         th {
-            background: #001a26;
-            color: var(--neon-cyan);
+            background: #0d0d0d;
+            color: var(--gold-primary);
             padding: 12px 8px;
             text-align: center;
             font-family: 'Orbitron', sans-serif;
             font-size: 10px;
             letter-spacing: 1px;
-            border-bottom: 2px solid var(--border-glow);
+            border-bottom: 2px solid var(--gold-dark);
             position: sticky;
             top: 0;
             z-index: 10;
@@ -149,12 +170,12 @@
         th:nth-child(5), td:nth-child(5) { width: 90px; }
         th:nth-child(10), td:nth-child(10) { width: 110px; }
 
-        tr:hover td { color: var(--neon-cyan); background: rgba(0, 251, 255, 0.03); }
+        tr:hover td { color: var(--gold-light); background: rgba(212, 175, 55, 0.03); }
 
         #toast {
-            position: fixed; top: 20px; right: 20px; background: var(--neon-cyan);
+            position: fixed; top: 20px; right: 20px; background: var(--gold-primary);
             color: #000; padding: 12px 25px; border-radius: 10px; font-weight: 700;
-            display: none; z-index: 9999; box-shadow: 0 0 30px rgba(0, 251, 255, 0.4);
+            display: none; z-index: 9999; box-shadow: 0 0 30px var(--gold-glow);
         }
 
         .selisih-item {
@@ -173,7 +194,7 @@
         }
 
         .result-card.minimized .table-wrapper, .result-card.minimized .footer-btns { display: none; }
-        .minimize-btn { color: var(--neon-cyan); cursor: pointer; font-size: 18px; }
+        .minimize-btn { color: var(--gold-primary); cursor: pointer; font-size: 18px; }
     </style>
 </head>
 <body>
@@ -182,9 +203,9 @@
 
     <div class="max-w-7xl mx-auto">
         <header class="text-center mb-10 mt-5">
-            <h1 class="text-3xl font-bold flex items-center justify-center gap-4 text-white">
-                <span style="font-family: 'Orbitron'; color: var(--neon-cyan); text-shadow: 0 0 15px var(--neon-cyan);">VIP</span> 
-                <span class="tracking-widest uppercase">Settlement Analysis</span>
+            <!-- JUDUL DENGAN EFEK FLICKER -->
+            <h1 id="main-title" class="text-3xl font-bold flex items-center justify-center gap-4 text-white uppercase tracking-widest">
+                VIP  Analysis DATA 
             </h1>
         </header>
 
@@ -196,29 +217,25 @@
                 <button id="convertBtn" class="btn-cyan"><i class="fas fa-bolt"></i> Process Data</button>
                 <button id="uploadExcelBtn" class="btn-cyan"><i class="fas fa-file-import"></i> Import Excel</button>
                 <input type="file" id="excelFileInput" class="hidden" accept=".xlsx, .xls, .csv">
-                
-                <!-- PERUBAHAN: Tombol Clear sekarang berwarna Cyan (Tanpa style abu-abu) -->
                 <button id="clearBtn" class="btn-cyan"><i class="fas fa-trash-alt"></i> Clear</button>
             </div>
         </div>
 
         <!-- STATS GRID -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <!-- PERUBAHAN: Kartu SUCCESS sekarang bergaris Cyan & angka berwarna Cyan -->
-            <div class="stat-card" style="border-color: var(--neon-cyan);">
+            <div class="stat-card" style="border-color: var(--gold-primary);">
                 <div class="section-title justify-center mb-2"><i class="fas fa-check-double"></i> Success</div>
-                <div id="successCount" class="stat-val" style="color: var(--neon-cyan);">0</div>
+                <div id="successCount" class="stat-val" style="color: var(--gold-primary);">0</div>
             </div>
 
-            <!-- PERUBAHAN: Kartu NOT PROCESS sekarang bergaris Cyan, label & angka berwarna Cyan -->
-            <div class="stat-card" style="border-color: var(--neon-cyan);">
-                <div class="section-title justify-center mb-2" style="color: var(--neon-cyan);"><i class="fas fa-exclamation-triangle"></i> Not Process</div>
-                <div id="notProcessCount" class="stat-val" style="color: var(--neon-cyan);">0</div>
+            <div class="stat-card" style="border-color: var(--gold-primary);">
+                <div class="section-title justify-center mb-2" style="color: var(--gold-primary);"><i class="fas fa-exclamation-triangle"></i> Not Process</div>
+                <div id="notProcessCount" class="stat-val" style="color: var(--gold-primary);">0</div>
             </div>
 
-            <div class="stat-card" style="border-color: var(--neon-cyan);">
+            <div class="stat-card" style="border-color: var(--gold-primary);">
                 <div class="section-title justify-center mb-2"><i class="fas fa-coins"></i> Total Amount</div>
-                <div id="totalAmount" class="stat-val" style="color: var(--neon-cyan);">0</div>
+                <div id="totalAmount" class="stat-val" style="color: var(--gold-primary);">0</div>
             </div>
         </div>
 
@@ -252,6 +269,26 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // --- FUNGSI NEON FLICKER ---
+            function applyNeonFlicker(elementId) {
+                const el = document.getElementById(elementId);
+                const text = el.innerText;
+                el.innerHTML = '';
+                text.split('').forEach(char => {
+                    const span = document.createElement('span');
+                    if (char === ' ') {
+                        span.innerHTML = '&nbsp;';
+                    } else {
+                        span.innerText = char;
+                    }
+                    span.className = 'flicker-char';
+                    span.style.animationDelay = (Math.random() * 5) + 's';
+                    el.appendChild(span);
+                });
+            }
+            applyNeonFlicker('main-title');
+
+            // --- ALGORITMA TETAP SAMA ---
             const rawDataTextarea = document.getElementById('rawData');
             const convertBtn = document.getElementById('convertBtn');
             const uploadExcelBtn = document.getElementById('uploadExcelBtn');
@@ -339,7 +376,7 @@
 
             function renderTable(dataToRender) {
                 if (dataToRender.length === 0) {
-                    tableContainer.innerHTML = '<div class="py-16 text-center text-cyan-400 font-bold">ALL TRANSACTIONS SUCCESS</div>';
+                    tableContainer.innerHTML = '<div class="py-16 text-center text-yellow-500 font-bold">ALL TRANSACTIONS SUCCESS</div>';
                     return;
                 }
 
@@ -372,7 +409,7 @@
                     html += `<div class="selisih-item">
                         <span>ID: ${item.terminalId}</span>
                         <span>RRN: ${item.rrn}</span>
-                        <span class="text-rose-400">Rp ${item.nominal.toLocaleString('id-ID')}</span>
+                        <span style="color: var(--gold-primary);">Rp ${item.nominal.toLocaleString('id-ID')}</span>
                     </div>`;
                 });
                 selisihList.innerHTML = html;
