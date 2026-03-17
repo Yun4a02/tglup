@@ -3,30 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VIP DATA SCANNER - JARVIS FINAL</title>
+    <title>VIP DATA SCANNER - GOLDEN LUXURY</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-main: #01080e;
-            --neon-aqua: #00fbff;
-            --neon-aqua-dim: rgba(0, 251, 255, 0.3);
+            /* THEME GOLDEN LUXURY */
+            --bg-main: #0a0a0a;
+            --gold-primary: #d4af37;
+            --gold-light: #f9e29c;
+            --gold-dark: #aa8439;
+            --gold-glow: rgba(212, 175, 55, 0.4);
+            --gold-dim: rgba(212, 175, 55, 0.2);
             --neon-green: #39ff14;
             --neon-red: #ff3131;
             --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        /* Custom Scrollbar Jarvis */
+        /* Custom Scrollbar Golden */
         ::-webkit-scrollbar { width: 5px; }
         ::-webkit-scrollbar-track { background: var(--bg-main); }
-        ::-webkit-scrollbar-thumb { background: var(--neon-aqua-dim); border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--neon-aqua); }
+        ::-webkit-scrollbar-thumb { background: var(--gold-dim); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--gold-primary); }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             background-color: var(--bg-main);
-            background-image: radial-gradient(circle at 50% 50%, #02121d 0%, #01080e 100%), 
-                              linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%);
+            background-image: radial-gradient(circle at 50% 50%, #1a1a1a 0%, #0a0a0a 100%), 
+                              linear-gradient(rgba(212, 175, 55, 0.05) 50%, rgba(0, 0, 0, 0.1) 50%);
             background-size: 100% 100%, 100% 4px;
             color: #d1d9e0;
             font-family: 'Rajdhani', sans-serif;
@@ -41,19 +45,35 @@
         .container { width: 100%; max-width: 880px; }
 
         .header-section { text-align: center; margin-bottom: 20px; }
+        
+        /* JUDUL DENGAN NEON FLICKER */
         .glitch-title {
             font-family: 'Orbitron', sans-serif; font-size: 26px; font-weight: 900;
-            color: #fff; text-transform: uppercase; letter-spacing: 8px;
-            text-shadow: 2px 2px 0px #ff00c1, -2px -2px 0px #00fff9;
-            animation: floating 4s ease-in-out infinite;
+            color: var(--gold-primary); text-transform: uppercase; letter-spacing: 8px;
+            display: inline-block;
         }
-        @keyframes floating { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+
+        .flicker-char {
+            display: inline-block;
+            animation: neonFlicker 3s linear infinite;
+        }
+
+        @keyframes neonFlicker {
+            0%, 19.999%, 22%, 62.999%, 64%, 64.999%, 70%, 100% {
+                opacity: 1;
+                text-shadow: 0 0 10px var(--gold-primary), 0 0 20px var(--gold-dark);
+            }
+            20%, 21.999%, 63%, 63.999%, 65%, 69.999% {
+                opacity: 0.3;
+                text-shadow: none;
+            }
+        }
 
         .scanner-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px; }
         
         .neon-panel {
-            background: rgba(0, 0, 0, 0.8);
-            border: 2px solid var(--neon-aqua-dim);
+            background: rgba(0, 0, 0, 0.9);
+            border: 2px solid var(--gold-dim);
             border-radius: 12px;
             overflow: hidden;
             transition: var(--transition);
@@ -63,16 +83,16 @@
         }
 
         .neon-panel:hover {
-            border-color: var(--neon-aqua);
-            box-shadow: 0 0 25px var(--neon-aqua-dim);
+            border-color: var(--gold-primary);
+            box-shadow: 0 0 25px var(--gold-glow);
         }
 
         .scan-line {
             display: none; 
             position: absolute; 
             top: 0; left: 0; width: 100%; height: 3px;
-            background: var(--neon-aqua); 
-            box-shadow: 0 0 15px 1px var(--neon-aqua), 0 0 5px #fff;
+            background: var(--gold-primary); 
+            box-shadow: 0 0 15px 1px var(--gold-primary), 0 0 5px #fff;
             z-index: 10; 
             animation: scanMove 1.5s linear infinite;
             pointer-events: none;
@@ -80,16 +100,16 @@
         @keyframes scanMove { 0% { top: -5%; } 100% { top: 105%; } }
 
         .panel-header {
-            background: rgba(0, 251, 255, 0.1);
+            background: rgba(212, 175, 55, 0.1);
             padding: 8px;
             text-align: center;
             font-family: 'Orbitron';
             font-weight: 900;
             font-size: 11px;
             letter-spacing: 2px;
-            color: #fff;
-            border-bottom: 1px solid var(--neon-aqua-dim);
-            text-shadow: 0 0 8px var(--neon-aqua);
+            color: var(--gold-light);
+            border-bottom: 1px solid var(--gold-dim);
+            text-shadow: 0 0 8px var(--gold-dark);
         }
 
         textarea { 
@@ -108,38 +128,38 @@
             border-radius: 8px;
         }
 
-        .btn-action { flex: 3; border: 2px solid var(--neon-aqua-dim); color: var(--neon-aqua); }
-        .btn-action:hover { background: var(--neon-aqua); color: #000; box-shadow: 0 0 30px var(--neon-aqua-dim); }
+        .btn-action { flex: 3; border: 2px solid var(--gold-dim); color: var(--gold-primary); }
+        .btn-action:hover { background: var(--gold-primary); color: #000; box-shadow: 0 0 30px var(--gold-glow); }
 
         .btn-reset { flex: 1; border: 2px solid rgba(255, 49, 49, 0.4); color: var(--neon-red); }
         .btn-reset:hover { background: var(--neon-red); color: #fff; box-shadow: 0 0 30px rgba(255, 49, 49, 0.3); }
 
         #statusBar {
             display: none; text-align: center; font-family: 'Orbitron'; font-size: 10px;
-            color: var(--neon-aqua); margin-bottom: 15px; letter-spacing: 2px; animation: blink 1s infinite;
+            color: var(--gold-primary); margin-bottom: 15px; letter-spacing: 2px; animation: blink 1s infinite;
         }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
 
         .report-card { 
             display: none; padding: 20px; border-radius: 20px; 
-            border: 2px solid var(--neon-aqua-dim); background: rgba(0,0,0,0.9);
+            border: 2px solid var(--gold-dim); background: rgba(0,0,0,0.95);
             margin-bottom: 20px;
         }
 
-        .report-label { text-align: center; color: #fff; font-family: 'Orbitron'; font-weight: 900; font-size: 11px; letter-spacing: 3px; margin-bottom: 5px; }
+        .report-label { text-align: center; color: var(--gold-light); font-family: 'Orbitron'; font-weight: 900; font-size: 11px; letter-spacing: 3px; margin-bottom: 5px; }
         
         .user-id-badge { 
             font-size: 36px; font-weight: 900; color: #fff; text-align: center; 
-            margin-bottom: 20px; text-shadow: 0 0 15px rgba(255, 255, 255, 0.5); 
+            margin-bottom: 20px; text-shadow: 0 0 15px var(--gold-glow); 
             font-style: italic; letter-spacing: 2px; 
         }
 
         .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
         .stat-card { 
             padding: 15px; text-align: center; font-style: italic; border-radius: 12px;
-            background: rgba(255,255,255,0.02); border: 2px solid var(--neon-aqua-dim);
+            background: rgba(255,255,255,0.02); border: 2px solid var(--gold-dim);
         }
-        .stat-title { font-size: 9px; font-weight: 900; color: var(--neon-aqua); letter-spacing: 1px; margin-bottom: 8px; text-transform: uppercase; }
+        .stat-title { font-size: 9px; font-weight: 900; color: var(--gold-primary); letter-spacing: 1px; margin-bottom: 8px; text-transform: uppercase; }
         .stat-value { font-family: 'Orbitron'; font-size: 22px; font-weight: 900; color: #fff; }
         .stat-sub { font-size: 12px; color: #ffffff !important; font-weight: 900; margin-top: 8px; text-transform: uppercase; }
 
@@ -152,16 +172,16 @@
 
         .footer {
             text-align: center; margin-top: 10px; font-family: 'Orbitron'; font-size: 10px;
-            letter-spacing: 4px; color: #444; text-transform: uppercase; padding-bottom: 20px;
+            letter-spacing: 4px; color: #666; text-transform: uppercase; padding-bottom: 20px;
         }
-        .footer span { color: var(--neon-aqua); font-weight: 900; }
+        .footer span { color: var(--gold-primary); font-weight: 900; }
     </style>
 </head>
 <body>
 
     <div class="container">
         <header class="header-section">
-            <h1 class="glitch-title">SC SELISIH VIP</h1>
+            <h1 class="glitch-title" id="main-title">SC SELISIH VIP</h1>
         </header>
 
         <section class="scanner-grid">
@@ -211,7 +231,29 @@
     </div>
 
     <script>
-        // Fungsi format angka ke ribuan dengan koma
+        // FUNGSI NEON FLICKER PER HURUF
+        function applyNeonFlicker(elementId) {
+            const el = document.getElementById(elementId);
+            const text = el.innerText;
+            el.innerHTML = '';
+            text.split('').forEach(char => {
+                const span = document.createElement('span');
+                if (char === ' ') {
+                    span.innerHTML = '&nbsp;';
+                } else {
+                    span.innerText = char;
+                }
+                span.className = 'flicker-char';
+                span.style.animationDelay = (Math.random() * 5) + 's';
+                el.appendChild(span);
+            });
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            applyNeonFlicker('main-title');
+        });
+
+        // --- ALGORITMA SCANNER TETAP SAMA (TIDAK BERUBAH) ---
         const formatKoma = (n) => n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 
         function resetAll() {
@@ -244,15 +286,11 @@
             const card = document.getElementById('reportCard');
             let user = "UNKNOWN", tV = 0, cV = 0, tI = 0, cI = 0;
 
-            // --- 1. SCAN USERNAME (VIP) ---
-            // Mencari kata setelah 'DYNAMIC [angka] [username]'
             const userMatch = rawV.match(/DYNAMIC\s+\S+\s+([a-zA-Z0-9_]+)/i);
             if (userMatch) {
                 user = userMatch[1].toUpperCase();
             }
 
-            // --- 2. SCAN NOMINAL VIP (RECURSIVE SCAN) ---
-            // Mencari pola "Total : 50,000" secara global (g)
             const vipRegex = /Total\s*:\s*([\d,]+)/gi;
             let vMatch;
             while ((vMatch = vipRegex.exec(rawV)) !== null) {
@@ -263,12 +301,9 @@
                 }
             }
 
-            // --- 3. SCAN NOMINAL IDN (RECURSIVE SCAN) ---
-            // Memecah baris IDN dan mencari baris yang mengandung "Deposit"
             const idnLines = rawI.split('\n');
             idnLines.forEach(line => {
                 if (line.toLowerCase().includes('deposit')) {
-                    // Cari pola angka ribuan (format 00,000)
                     const moneyMatch = line.match(/\d{1,3}(,\d{3})+/);
                     if (moneyMatch) {
                         tI += parseInt(moneyMatch[0].replace(/,/g, ''));
@@ -277,7 +312,6 @@
                 }
             });
 
-            // --- 4. UPDATE INTERFACE ---
             document.getElementById('resUserId').innerText = user;
             document.getElementById('resTotalVip').innerText = formatKoma(tV);
             document.getElementById('resCountVip').innerText = cV + " TRANSACTIONS";
