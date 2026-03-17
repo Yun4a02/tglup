@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard WUKONG - GOLDEN PREMIER</title>
+    <title>Dashboard WUKONG - MONKEYKING </title>
     <link rel="icon" type="image/png" href="https://i.imgur.com/pDQOisi.png">
     
     <!-- Google Fonts -->
@@ -17,12 +17,12 @@
             --neon-gold: #d4af37; 
             --gold-glow: rgba(212, 175, 55, 0.6);
             --neon-red: #ff3c00;
-            --red-glow: rgba(255, 60, 0, 0.6);
+            --red-glow: rgba(255, 60, 0, 0.5);
             --border-ui: rgba(212, 175, 55, 0.15);
             --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        /* --- CORE RESET --- */
+        /* --- CORE RESET & ANTI-LAG --- */
         * { 
             margin: 0; padding: 0; box-sizing: border-box; 
             font-weight: 900 !important; 
@@ -37,6 +37,10 @@
             font-family: 'Rajdhani', sans-serif;
             overflow: hidden; color: white;
         }
+
+        /* --- CUSTOM SCROLLBAR --- */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-thumb { background: var(--neon-gold); border-radius: 10px; }
 
         /* --- SIDEBAR --- */
         .sidebar {
@@ -66,7 +70,7 @@
         .realtime-clock { margin-top: 15px; font-size: 15px; color: #fff; letter-spacing: 1px; text-transform: uppercase; opacity: 0.8; }
 
         /* --- MENU SYSTEM --- */
-        .menu-container { list-style: none; padding: 15px; overflow-y: auto; flex-grow: 1; scrollbar-width: thin; scrollbar-color: var(--neon-gold) transparent; }
+        .menu-container { list-style: none; padding: 15px; overflow-y: auto; flex-grow: 1; }
         .menu-item { margin-bottom: 12px; }
         .menu-link {
             text-decoration: none; color: #fff; display: flex; align-items: center; padding: 16px 20px;
@@ -74,18 +78,14 @@
             background: rgba(255,255,255,0.03); border: 1px solid var(--border-ui); 
             transition: var(--transition); cursor: pointer; user-select: none;
         }
-        .menu-link:hover, .menu-link.active { 
-            color: #000; background: var(--neon-gold); border-color: #fff;
-            box-shadow: 0 0 25px var(--gold-glow); transform: translateX(10px);
-        }
+        .menu-link:hover, .menu-link.active { color: #000; background: var(--neon-gold); border-color: #fff; box-shadow: 0 0 25px var(--gold-glow); transform: translateX(10px); }
         .menu-link .icon { margin-right: 15px; font-size: 22px; }
-        .arrow { margin-left: auto; font-size: 12px; transition: 0.3s; }
+        .arrow { margin-left: auto; font-size: 12px; }
         .has-submenu.open .arrow { transform: rotate(180deg); }
-
         .submenu { list-style: none; max-height: 0; overflow: hidden; transition: max-height 0.4s ease; background: rgba(0, 0, 0, 0.4); border-left: 3px solid var(--neon-gold); margin-left: 25px; border-radius: 0 0 12px 12px; }
         .has-submenu.open .submenu { max-height: 1200px; padding: 10px 0; }
         .submenu-item a { text-decoration: none; color: #777; display: block; padding: 12px 25px; font-size: 14px; transition: 0.2s; text-transform: uppercase; }
-        .submenu-item a:hover, .submenu-item a.active-sub { color: var(--neon-gold); padding-left: 35px; background: rgba(212, 175, 55, 0.08); }
+        .submenu-item a:hover { color: var(--neon-gold); padding-left: 35px; background: rgba(212, 175, 55, 0.08); }
 
         /* --- FLOATING PANELS --- */
         .floating-panel {
@@ -102,6 +102,7 @@
         .close-btn { cursor: pointer; color: var(--neon-red); font-size: 25px; }
         .panel-body { padding: 20px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: var(--neon-gold) transparent; }
 
+        /* Inputs */
         .cyber-input { background: #000; border: 1px solid #333; border-radius: 12px; padding: 18px; color: var(--neon-gold); font-family: Orbitron; width: 100%; text-align: center; outline: none; margin-bottom: 15px; border-left: 6px solid var(--neon-gold); font-size: 14px; }
         .unit-box { width: 85px; height: 80px; background: #000; border: 2px solid #222; border-radius: 12px; color: var(--neon-gold); font-family: 'Orbitron'; font-size: 42px; text-align: center; outline: none; text-shadow: 0 0 10px var(--gold-glow); transition: 0.3s; }
         
@@ -113,19 +114,36 @@
         .day-bt.active { background: var(--neon-gold); color: #000; border-color: #fff; box-shadow: 0 0 15px var(--gold-glow); }
         .btn-neon-main { width: 100%; padding: 18px; border-radius: 10px; border: none; background: var(--neon-red); color: #fff; font-family: Orbitron; font-size: 14px; box-shadow: 0 0 25px var(--red-glow); cursor: pointer; margin-top: 10px; }
 
-        /* --- DATABASE REGISTRY NEON --- */
-        .btn-open-db { width: 100%; margin-top: 15px; background: transparent; border: none; color: var(--neon-gold); font-family: Orbitron; cursor: pointer; font-size: 11px; text-decoration: underline; letter-spacing: 2px; animation: charFlicker 4s infinite linear; }
-        .reg-card { display: flex; align-items: center; justify-content: space-between; padding: 15px; border-radius: 12px; background: rgba(0,0,0,0.3); margin-bottom: 12px; border: 1px solid rgba(212, 175, 55, 0.1); }
-        .reg-data { font-size: 18px; color: var(--neon-gold); font-family: 'Orbitron'; text-shadow: 0 0 12px var(--gold-glow); animation: charFlicker 5s infinite; flex-grow: 1; display: flex; align-items: center; gap: 15px; }
-        .reg-data span { color: #fff; font-size: 13px; text-shadow: none; border-left: 1px solid #444; padding-left: 15px; }
+        /* --- RAPID REGISTRY DATABASE --- */
+        .reg-card { 
+            display: flex; align-items: center; justify-content: space-between; 
+            padding: 15px; background: rgba(0,0,0,0.3); border: 1px solid rgba(212, 175, 55, 0.1); 
+            border-radius: 12px; margin-bottom: 12px; transition: 0.3s;
+        }
+        .reg-card:hover { border-color: var(--neon-gold); background: rgba(212, 175, 55, 0.05); }
+
+        .reg-name-group { flex: 1; min-width: 0; }
+        .reg-name { 
+            font-size: 14px; color: var(--neon-gold); font-family: 'Orbitron'; 
+            text-shadow: 0 0 10px var(--gold-glow); animation: charFlicker 4s infinite linear;
+            overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-bottom: 3px;
+        }
+        .reg-time { font-family: 'Orbitron'; font-size: 18px; color: #fff; text-shadow: 0 0 5px var(--gold-glow); }
+        
+        .reg-actions { display: flex; gap: 8px; margin-left: 15px; }
         .btn-act { padding: 8px 12px; font-size: 10px; border-radius: 6px; border: none; cursor: pointer; font-family: Orbitron; font-weight: bold; transition: 0.2s; }
+
+        .btn-open-db { width: 100%; margin-top: 15px; background: transparent; border: none; color: var(--neon-gold); font-family: Orbitron; cursor: pointer; font-size: 11px; text-decoration: underline; letter-spacing: 2px; animation: charFlicker 4s infinite linear; }
 
         /* --- NEON CALLING POPUP --- */
         .neon-popup-overlay { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 500px; background: rgba(15, 15, 15, 0.98); border: 3px solid var(--neon-gold); border-radius: 15px; z-index: 10000; display: none; flex-direction: column; box-shadow: 0 0 100px rgba(212, 175, 55, 0.4); animation: zoomInPopup 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); overflow: hidden; backdrop-filter: blur(30px); text-align: center; }
         @keyframes zoomInPopup { from { opacity: 0; scale: 0.5; transform: translate(-50%, -50%) rotate(-5deg); } to { opacity: 1; scale: 1; transform: translate(-50%, -50%) rotate(0deg); } }
+        
         .pop-head { padding: 30px; border-bottom: 2px solid var(--neon-gold); background: rgba(212, 175, 55, 0.05); }
         .pop-head h1 { font-family: 'Orbitron'; font-size: 26px; color: var(--neon-gold); letter-spacing: 6px; text-transform: uppercase; animation: charFlicker 3s infinite linear; }
-        .pop-act-text { font-family: 'Orbitron'; font-size: 48px; color: #fff; text-transform: uppercase; letter-spacing: 5px; text-shadow: 0 0 20px var(--gold-glow); animation: charFlicker 2s infinite; padding: 50px 20px; }
+        .pop-table { width: 100%; border-collapse: collapse; background: #000; }
+        .pop-table td { padding: 45px 20px; text-align: center; }
+        .pop-act-text { font-family: 'Orbitron'; font-size: 48px; color: #fff; text-transform: uppercase; letter-spacing: 5px; text-shadow: 0 0 20px var(--gold-glow); animation: charFlicker 2s infinite; }
         .pop-foot { display: flex; height: 90px; }
         .btn-pop { flex: 1; border: none; cursor: pointer; font-family: Orbitron; font-size: 16px; transition: 0.3s; font-weight: 900; }
 
@@ -146,14 +164,16 @@
     <!-- CALLING POPUP -->
     <div id="callingPopup" class="neon-popup-overlay">
         <div class="pop-head"><h1>ALARM CALLING WUKONG</h1></div>
-        <div id="callingActionName" class="pop-act-text">MANDIRI</div>
+        <table class="pop-table">
+            <tr><td><div id="callingActionName" class="pop-act-text">MANDIRI</div></td></tr>
+        </table>
         <div class="pop-foot">
             <button onclick="stopCurrentAlarm()" class="btn-pop" style="background:var(--neon-gold); color:#000;">OK - DISMISS</button>
             <button onclick="snoozeCurrentAlarm()" class="btn-pop" style="background:#000; color:var(--neon-gold); border-left:2px solid var(--neon-gold);">HOLD 5 MENIT</button>
         </div>
     </div>
 
-    <!-- ALARM HUB -->
+    <!-- ALARM SETUP -->
     <div id="setupPanel" class="floating-panel">
         <div class="panel-header"><h2>COMMAND CENTER</h2><span onclick="toggleSetup()" class="close-btn">×</span></div>
         <div class="panel-body">
@@ -198,7 +218,7 @@
         </div>
     </div>
 
-    <!-- REGISTRY PANEL -->
+    <!-- REGISTRY DATABASE -->
     <div id="registryPanel" class="floating-panel">
         <div class="panel-header"><h2>ALARM REGISTRY DATABASE</h2><span onclick="toggleRegistry()" class="close-btn">×</span></div>
         <div class="panel-body" id="regBody"></div>
@@ -216,17 +236,14 @@
         <ul class="menu-container">
             <li class="menu-item"><div class="menu-link" onclick="toggleSetup()"><span class="icon">⏰</span> ALARM WUKONG</div></li>
             <li class="menu-item"><a href="result.html" onclick="changePage('result.html', this)" target="mainFrame" class="menu-link"><span class="icon">🏆</span> DASHBOARD RESULT</a></li>
-            
             <li class="menu-item has-submenu">
                 <div class="menu-link" onclick="toggleSubmenu(this)"><span class="icon">📁</span> POSTINGAN <span class="arrow">▼</span></div>
                 <ul class="submenu">
                     <li class="submenu-item"><a href="prediksi.html" target="mainFrame" onclick="setActiveSub(this)">🔥 PREDIKSI UP</a></li>
                     <li class="submenu-item"><a href="katakata.html" target="mainFrame" onclick="setActiveSub(this)">💬 KATA KATA</a></li>
                     <li class="submenu-item"><a href="syair.html" target="mainFrame" onclick="setActiveSub(this)">📜 SYAIR</a></li>
-                    <li class="submenu-item"><a href="kemenangan.html" target="mainFrame" onclick="setActiveSub(this)">💰 KEMENANGAN</a></li>
                 </ul>
             </li>
-
             <li class="menu-item has-submenu">
                 <div class="menu-link" onclick="toggleSubmenu(this)"><span class="icon">📊</span> DATA REPORTAN <span class="arrow">▼</span></div>
                 <ul class="submenu">
@@ -236,7 +253,7 @@
                     <li class="submenu-item"><a href="sc_selisih_vip.html" target="mainFrame" onclick="setActiveSub(this)">📑 SC SELISIH VIP</a></li>
                     <li class="submenu-item"><a href="rate_usdt.html" target="mainFrame" onclick="setActiveSub(this)">💲 RATE USDT</a></li>
                     <li class="submenu-item"><a href="sc_peminjaman.html" target="mainFrame" onclick="setActiveSub(this)">📑 SC PEMINJAMAN</a></li>
-                    <li class="submenu-item"><a href="daily_report.html" target="mainFrame" onclick="setActiveSub(this)">🤖 DAILY REPORT HARIAN</a></li>
+                    <li class="submenu-item"><a href="cek_bot.html" target="mainFrame" onclick="setActiveSub(this)">🤖 DAILY REPORT HARIAN</a></li>
                     <li class="submenu-item"><a href="report_vip.html" target="mainFrame" onclick="setActiveSub(this)">📈 DAILY REPORT VIP</a></li>
                 </ul>
             </li>
@@ -301,10 +318,13 @@
             const container = document.getElementById('regBody'); container.innerHTML = "";
             alarmList.forEach(a => {
                 container.innerHTML += `<div class="reg-card">
-                    <div class="reg-data">${a.name}<span>${a.time}</span></div>
+                    <div class="reg-name-group">
+                        <div class="reg-name">${a.name}</div>
+                        <div class="reg-time">${a.time}</div>
+                    </div>
                     <div class="reg-actions">
-                        <button onclick="editAlarm(${a.id})" class="btn-act" style="background:var(--neon-gold); color:#000;">EDIT</button>
-                        <button onclick="deleteAlarm(${a.id})" class="btn-act" style="background:var(--neon-red); color:#fff; margin-left:8px;">DEL</button>
+                        <button onclick="editAlarm(${a.id})" class="btn-act btn-edit">EDIT</button>
+                        <button onclick="deleteAlarm(${a.id})" class="btn-act btn-del">DEL</button>
                     </div>
                 </div>`;
             });
@@ -345,8 +365,7 @@
             if (el.classList.contains('menu-link')) el.classList.add('active');
             else { el.classList.add('active-sub'); let p = el.closest('.has-submenu').querySelector('.menu-link'); if(p) p.classList.add('active'); }
         }
-
-        window.onload = function() { loadCustomSounds(); const l = localStorage.getItem('lastOpenedPage'); if (l) { document.getElementById('mainFrame').src = l; document.querySelectorAll('.menu-link, .submenu-item a').forEach(link => { if (link.getAttribute('href') === l) { updateActiveState(link); link.closest('.has-submenu')?.classList.add('open'); } }); } else { let f = document.querySelector('.menu-link'); if(f) f.classList.add('active'); } };
+        window.onload = function() { loadCustomSounds(); const l = localStorage.getItem('lastOpenedPage'); if (l) { document.getElementById('mainFrame').src = l; document.querySelectorAll('.menu-link, .submenu-item a').forEach(link => { if (link.getAttribute('href') === l) { updateActiveState(link); link.closest('.has-submenu')?.classList.add('open'); } }); } };
     </script>
 </body>
 </html>
