@@ -3,35 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reportan Slot Pro - Postingan UP</title>
+    <title>Reportan Slot Pro - GOLDEN EDITION</title>
     
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;800&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Rajdhani:wght@600;700;900&display=swap" rel="stylesheet">
     
     <!-- Library untuk membaca Excel & CSV -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
     <style>
         :root {
-            --bg-dark: #000c14;
-            --card-bg: #00121a;
-            --neon-aqua: #00fbff;
-            --neon-glow: rgba(0, 251, 255, 0.4);
-            --border: rgba(0, 251, 255, 0.2);
-            --glass: rgba(255, 255, 255, 0.05);
+            --bg-dark: #0f0f0f; /* Abu-abu Gelap */
+            --card-bg: #1a1a1a;
+            --neon-gold: #d4af37; /* Emas Metallic */
+            --gold-glow: rgba(212, 175, 55, 0.6);
+            --border-ui: rgba(212, 175, 55, 0.2);
             --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            --neon-red: #ff3131;
+            --neon-red: #ff3c00;
+            --red-glow: rgba(255, 60, 0, 0.5);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        /* --- CORE RESET & ANTI-LAG --- */
+        * { 
+            margin: 0; padding: 0; box-sizing: border-box; 
+            font-weight: 900 !important; 
+            -webkit-font-smoothing: antialiased;
+            transform: translateZ(0); 
+        }
 
         body {
             background-color: var(--bg-dark);
+            background-image: radial-gradient(circle at 50% 50%, #1e1e1e 0%, #0f0f0f 100%);
             color: white;
             font-family: 'Rajdhani', sans-serif;
             padding: 50px 20px;
             display: flex;
             justify-content: center;
+            overflow-x: hidden;
         }
 
         .container {
@@ -39,16 +47,39 @@
             max-width: 1200px;
         }
 
+        /* --- LETTER BY LETTER FLICKER ANIMATION --- */
+        @keyframes charFlicker {
+            0%, 19.999%, 22%, 62.999%, 64%, 64.999%, 70%, 100% {
+                opacity: 1; text-shadow: 0 0 10px var(--gold-glow), 0 0 20px var(--neon-gold);
+            }
+            20%, 21.999%, 63%, 63.999%, 65%, 69.999% {
+                opacity: 0.4; text-shadow: none;
+            }
+        }
+
         h2 {
             font-family: 'Orbitron', sans-serif;
-            color: var(--neon-aqua);
+            color: var(--neon-gold);
             text-align: center;
             text-transform: uppercase;
-            letter-spacing: 4px;
+            letter-spacing: 5px;
             margin-bottom: 70px;
             font-size: 28px;
-            text-shadow: 0 0 15px var(--neon-glow);
         }
+
+        h2 span {
+            display: inline-block;
+            animation: charFlicker 5s infinite;
+        }
+
+        /* Delay acak untuk efek kedap-kedip per huruf */
+        h2 span:nth-child(1) { animation-delay: 0.1s; }
+        h2 span:nth-child(3) { animation-delay: 0.5s; }
+        h2 span:nth-child(5) { animation-delay: 1.2s; }
+        h2 span:nth-child(7) { animation-delay: 0.8s; }
+        h2 span:nth-child(9) { animation-delay: 2.1s; }
+        h2 span:nth-child(11) { animation-delay: 0.3s; }
+        h2 span:nth-child(13) { animation-delay: 1.5s; }
 
         /* --- GRID LAYOUT --- */
         .report-grid {
@@ -59,7 +90,7 @@
 
         .card {
             background: var(--card-bg);
-            border: 1px solid var(--border);
+            border: 2px solid var(--border-ui);
             border-radius: 20px;
             padding: 35px 25px 25px 25px;
             display: flex;
@@ -68,18 +99,18 @@
             box-shadow: 0 10px 40px rgba(0,0,0,0.6);
             transition: var(--transition);
             position: relative;
+            backdrop-filter: blur(10px);
         }
 
         .card:hover {
-            border-color: var(--neon-aqua);
-            box-shadow: 0 0 20px rgba(0, 251, 255, 0.1);
+            border-color: var(--neon-gold);
+            box-shadow: 0 0 30px var(--gold-glow);
         }
 
-        /* --- ANIMASI JUDUL MELAMBAI --- */
+        /* --- ANIMASI JUDUL MELAMBAI GOLD --- */
         @keyframes floatWave {
-            0% { transform: translate(-50%, 0px); text-shadow: 0 0 10px var(--neon-glow); }
-            50% { transform: translate(-50%, -15px); text-shadow: 0 0 25px var(--neon-aqua); }
-            100% { transform: translate(-50%, 0px); text-shadow: 0 0 10px var(--neon-glow); }
+            0%, 100% { transform: translate(-50%, 0px); text-shadow: 0 0 10px var(--gold-glow); }
+            50% { transform: translate(-50%, -12px); text-shadow: 0 0 20px var(--neon-gold); }
         }
 
         .floating-title {
@@ -89,22 +120,23 @@
             transform: translateX(-50%);
             background: var(--bg-dark); 
             padding: 5px 25px;
-            color: var(--neon-aqua);
+            color: var(--neon-gold);
             font-family: 'Orbitron', sans-serif;
             font-size: 18px;
-            font-weight: 800;
+            font-weight: 900;
             text-transform: uppercase;
             white-space: nowrap;
             letter-spacing: 3px;
             animation: floatWave 3s ease-in-out infinite;
             z-index: 10;
+            border: 1px solid var(--neon-gold);
             border-radius: 8px;
         }
 
-        /* --- EXCEL/CSV UPLOAD SECTION --- */
+        /* --- EXCEL/CSV SECTION --- */
         .excel-section {
-            background: rgba(0, 251, 255, 0.08);
-            border: 2px solid var(--neon-aqua);
+            background: rgba(212, 175, 55, 0.08);
+            border: 2px solid var(--neon-gold);
             border-radius: 12px;
             padding: 15px;
             text-align: center;
@@ -112,14 +144,14 @@
         }
 
         .excel-btn {
-            background: var(--neon-aqua);
+            background: var(--neon-gold);
             color: #000;
             border: none;
-            padding: 10px 20px;
+            padding: 12px 20px;
             border-radius: 8px;
             font-family: 'Orbitron', sans-serif;
-            font-weight: 800;
-            font-size: 11px;
+            font-weight: 900;
+            font-size: 12px;
             cursor: pointer;
             transition: var(--transition);
             width: 100%;
@@ -128,13 +160,13 @@
 
         .excel-btn:hover {
             filter: brightness(1.2);
-            box-shadow: 0 0 15px var(--neon-aqua);
+            box-shadow: 0 0 20px var(--neon-gold);
         }
 
-        /* --- FOLDER NAME SECTION --- */
+        /* --- FOLDER SECTION --- */
         .folder-section {
-            background: rgba(0, 251, 255, 0.03);
-            border: 1px dashed var(--neon-aqua);
+            background: rgba(212, 175, 55, 0.03);
+            border: 1px dashed var(--neon-gold);
             border-radius: 12px;
             padding: 15px;
             display: flex;
@@ -145,33 +177,33 @@
         .folder-label {
             font-family: 'Orbitron', sans-serif;
             font-size: 10px;
-            color: var(--neon-aqua);
+            color: var(--neon-gold);
             letter-spacing: 1.5px;
-            opacity: 0.8;
-            font-weight: 700;
+            font-weight: 900;
         }
 
         .folder-display {
             font-size: 16px;
-            font-weight: 700;
+            font-weight: 900;
             color: #fff;
         }
 
         .btn-copy-folder {
             background: transparent;
-            border: 1px solid var(--neon-aqua);
-            color: var(--neon-aqua);
+            border: 1px solid var(--neon-gold);
+            color: var(--neon-gold);
             padding: 10px;
             border-radius: 8px;
             font-family: 'Orbitron', sans-serif;
             font-size: 11px;
-            font-weight: 700;
+            font-weight: 900;
             cursor: pointer;
             text-transform: uppercase;
+            transition: 0.3s;
         }
 
         .btn-copy-folder:hover {
-            background: var(--neon-aqua);
+            background: var(--neon-gold);
             color: #000;
         }
 
@@ -189,29 +221,35 @@
         }
 
         label {
-            font-size: 12px;
-            font-weight: 800;
-            color: #a0aec0;
+            font-size: 11px;
+            font-weight: 900;
+            color: var(--neon-gold);
             text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         input {
             width: 100%;
             padding: 12px;
-            background: rgba(0,0,0,0.4);
-            border: 1px solid var(--border);
+            background: #000;
+            border: 1px solid #333;
             border-radius: 10px;
             color: #fff;
             font-family: 'Rajdhani', sans-serif;
-            font-weight: 700;
             font-size: 16px;
             outline: none;
+            border-left: 4px solid var(--neon-gold);
+        }
+
+        input:focus {
+            border-color: var(--neon-gold);
+            box-shadow: 0 0 10px var(--gold-glow);
         }
 
         /* --- PREVIEW --- */
         .preview-box {
-            background: rgba(0,0,0,0.5);
-            border: 1px solid rgba(255,255,255,0.05);
+            background: #000;
+            border: 1px solid #222;
             border-radius: 12px;
             padding: 18px;
             font-family: 'Consolas', monospace;
@@ -220,22 +258,29 @@
             line-height: 1.6;
             white-space: pre-wrap;
             min-height: 140px;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
         }
 
         .btn-copy-report {
             width: 100%;
             padding: 16px;
-            background: var(--neon-aqua);
+            background: var(--neon-gold);
             color: #000;
             border: none;
             border-radius: 12px;
             font-family: 'Orbitron', sans-serif;
-            font-weight: 800;
+            font-weight: 900;
             font-size: 14px;
             cursor: pointer;
+            transition: 0.3s;
         }
 
-        /* --- RESET BUTTON SECTION --- */
+        .btn-copy-report:hover {
+            filter: brightness(1.2);
+            box-shadow: 0 0 20px var(--gold-glow);
+        }
+
+        /* --- RESET BUTTON --- */
         .reset-container {
             margin-top: 50px;
             display: flex;
@@ -249,19 +294,18 @@
             padding: 15px 40px;
             border-radius: 12px;
             font-family: 'Orbitron', sans-serif;
-            font-weight: 800;
+            font-weight: 900;
             font-size: 14px;
             cursor: pointer;
             text-transform: uppercase;
             letter-spacing: 2px;
             transition: var(--transition);
-            box-shadow: 0 0 10px rgba(255, 49, 49, 0.2);
         }
 
         .btn-reset:hover {
             background: var(--neon-red);
             color: #fff;
-            box-shadow: 0 0 25px rgba(255, 49, 49, 0.5);
+            box-shadow: 0 0 25px var(--red-glow);
         }
 
         .toast {
@@ -269,14 +313,20 @@
             bottom: 30px;
             left: 50%;
             transform: translateX(-50%);
-            background: var(--neon-aqua);
+            background: var(--neon-gold);
             color: #000;
             padding: 12px 35px;
             border-radius: 50px;
-            font-weight: 800;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 900;
             display: none;
             z-index: 10000;
+            box-shadow: 0 0 30px var(--gold-glow);
         }
+
+        /* SCROLLBAR STYLE */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-thumb { background: var(--neon-gold); border-radius: 10px; }
 
         @media (max-width: 850px) {
             .report-grid { grid-template-columns: 1fr; gap: 60px; }
@@ -286,7 +336,12 @@
 <body>
 
 <div class="container">
-    <h2>🎰 REPORTAN SLOT DASHBOARD</h2>
+    <h2>
+        <span>🎰</span> &nbsp;
+        <span>R</span><span>E</span><span>P</span><span>O</span><span>R</span><span>T</span><span>A</span><span>N</span> &nbsp;
+        <span>S</span><span>L</span><span>O</span><span>T</span> &nbsp;
+        <span>D</span><span>A</span><span>S</span><span>H</span><span>B</span><span>O</span><span>A</span><span>R</span><span>D</span>
+    </h2>
 
     <div class="report-grid">
         
@@ -295,9 +350,8 @@
             <div class="floating-title">Mahjong Ways 1 & 2</div>
 
             <div class="excel-section">
-                <!-- Accept CSV, XLSX, XLS -->
                 <input type="file" id="excelInput1" accept=".xlsx, .xls, .csv" style="display: none;" onchange="handleExcel(this, 1)">
-                <button class="excel-btn" onclick="document.getElementById('excelInput1').click()">📁 UPLOAD</button>
+                <button class="excel-btn" onclick="document.getElementById('excelInput1').click()">📁 UPLOAD FILE</button>
             </div>
 
             <div class="folder-section">
@@ -318,7 +372,7 @@
             </div>
 
             <div class="preview-box" id="preview1"></div>
-            <button class="btn-copy-report" onclick="copyText('preview1')">📋 COPY</button>
+            <button class="btn-copy-report" onclick="copyText('preview1')">📋 COPY REPORT</button>
         </div>
 
         <!-- MENU 2: FREESPIN & BUYSPIN -->
@@ -326,9 +380,8 @@
             <div class="floating-title">FreeSpin & Buyspin</div>
 
             <div class="excel-section">
-                <!-- Accept CSV, XLSX, XLS -->
                 <input type="file" id="excelInput2" accept=".xlsx, .xls, .csv" style="display: none;" onchange="handleExcel(this, 2)">
-                <button class="excel-btn" onclick="document.getElementById('excelInput2').click()">📁 UPLOAD</button>
+                <button class="excel-btn" onclick="document.getElementById('excelInput2').click()">📁 UPLOAD FILE</button>
             </div>
 
             <div class="folder-section">
@@ -349,14 +402,13 @@
             </div>
 
             <div class="preview-box" id="preview2"></div>
-            <button class="btn-copy-report" onclick="copyText('preview2')">📋 COPY</button>
+            <button class="btn-copy-report" onclick="copyText('preview2')">📋 COPY REPORT</button>
         </div>
 
     </div>
 
-    <!-- TOMBOL RESET DI POSISI YANG DITANDAI -->
     <div class="reset-container">
-        <button class="btn-reset" onclick="resetAllData()">🔄 RESET </button>
+        <button class="btn-reset" onclick="resetAllData()">🔄 RESET SYSTEM</button>
     </div>
 </div>
 
@@ -374,7 +426,6 @@
         return `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
     }
 
-    // Fungsi Handle Excel & CSV Universal
     function handleExcel(input, id) {
         const file = input.files[0];
         if (!file) return;
@@ -399,15 +450,12 @@
             let colUser = "";
             let colKoin = "";
 
-            // Deteksi kolom secara dinamis
             for (let key in firstRow) {
                 const k = key.toLowerCase();
                 if (k.includes("userid") || k.includes("user id") || k.includes("username")) colUser = key;
-                
                 if (id === 1) {
                     if (k.includes("total koin") || k.includes("koin") || k.includes("nominal")) colKoin = key;
                 } else {
-                    // Mencari "Total Hadiah" atau "Hadiah"
                     if (k.includes("hadiah") || k.includes("total hadiah") || k.includes("bonus")) colKoin = key;
                 }
             }
@@ -420,26 +468,19 @@
             json.forEach(row => {
                 if (row[colUser]) totalUser++;
                 if (row[colKoin]) {
-                    // Konversi ke string lalu hilangkan karakter non-angka kecuali titik/koma desimal
                     let valRaw = String(row[colKoin]).replace(/[^0-9.,]/g, "");
-                    
-                    // Normalisasi: ganti koma desimal menjadi titik agar bisa diproses JavaScript
                     valRaw = valRaw.replace(/,/g, ".");
-                    
                     let valNum = parseFloat(valRaw) || 0;
-
-                    // LOGIKA: Jika nominal desimal (misal 0.5), dihitung menjadi 1 (Math.ceil)
                     totalNominal += Math.ceil(valNum);
                 }
             });
 
-            // Update Input
             document.getElementById('total' + id).value = totalUser;
             const formattedNominal = String(totalNominal).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
             document.getElementById('nominal' + id).value = formattedNominal;
 
             updateUI(id);
-            alert(`File ${id === 1 ? 'Mahjong' : 'FreeSpin'} (CSV/Excel) Berhasil Diproses!`);
+            alert(`SISTEM: Data ${id === 1 ? 'Mahjong' : 'FreeSpin'} Berhasil Diproses!`);
             input.value = ""; 
         };
         reader.readAsArrayBuffer(file);
@@ -465,15 +506,9 @@
 
         let reportText = "";
         if(id === 1) {
-            reportText = `Bonus scatter mahjong ways 1 & 2\n`;
-            reportText += `Total All : ${total}\n`;
-            reportText += `Nominal  : Rp. ${nominal}\n\n`;
-            reportText += `Ket : Dilakukan Manual Deposit yang dimana Member mendapatkan Bonus scatter.`;
+            reportText = `Bonus scatter mahjong ways 1 & 2\nTotal All : ${total}\nNominal  : Rp. ${nominal}\n\nKet : Dilakukan Manual Deposit yang dimana Member mendapatkan Bonus scatter.`;
         } else {
-            reportText = `Bonus FreeSpin & Buyspin\n`;
-            reportText += `Total All : ${total}\n`;
-            reportText += `Nominal  : Rp. ${nominal}\n\n`;
-            reportText += `Ket :di lakukan manual deposit yang dimana member yang di atas mendapatkan bonus freespin/buyspin ya ko/ci.`;
+            reportText = `Bonus FreeSpin & Buyspin\nTotal All : ${total}\nNominal  : Rp. ${nominal}\n\nKet :di lakukan manual deposit yang dimana member yang di atas mendapatkan bonus freespin/buyspin ya ko/ci.`;
         }
         document.getElementById('preview' + id).innerText = reportText;
     }
@@ -486,28 +521,20 @@
         el.select();
         document.execCommand('copy');
         document.body.removeChild(el);
-
-        showToast("BERHASIL DISALIN!");
+        showToast("DATA BERHASIL DISALIN!");
     }
 
-    // FUNGSI RESET DATA
     function resetAllData() {
-        if (confirm("Apakah Anda yakin ingin mereset seluruh data?")) {
-            // Reset input fields
+        if (confirm("Reset seluruh sistem reportan?")) {
             document.getElementById('total1').value = "";
             document.getElementById('nominal1').value = "";
             document.getElementById('total2').value = "";
             document.getElementById('nominal2').value = "";
-
-            // Reset file inputs
             document.getElementById('excelInput1').value = "";
             document.getElementById('excelInput2').value = "";
-
-            // Refresh UI Previews
             updateUI(1);
             updateUI(2);
-
-            showToast("DATA TELAH DIRESET!");
+            showToast("SISTEM TELAH DIRESET!");
         }
     }
 
