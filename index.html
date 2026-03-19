@@ -67,7 +67,6 @@
 
         .header-title { padding: 30px 10px 20px; text-align: center; border-bottom: 1px solid var(--border-ui); }
 
-        /* Style Judul Dashboard */
         .dashboard-text { 
             font-family: 'Orbitron', sans-serif; 
             font-size: 24px; 
@@ -98,7 +97,7 @@
 
         .realtime-clock { margin-top: 10px; font-size: 14px; color: #fff; letter-spacing: 1px; font-family: Orbitron; opacity: 0.8; }
 
-        /* --- FLOATING POPUP COUNTDOWN (KECIL) --- */
+        /* --- FLOATING POPUP COUNTDOWN --- */
         .floating-countdown-container {
             position: fixed; top: 15px; right: 15px; z-index: 9998;
             display: flex; flex-direction: column; gap: 8px;
@@ -241,7 +240,7 @@
         <div class="panel-body" id="regBody" style="max-height: 400px; overflow-y: auto;"></div>
     </div>
 
-    <!-- DATE SETUP PANELS -->
+    <!-- DATE SETUP PANELS (FITUR DATA LENGKET) -->
     <div id="leavePanel" class="floating-panel date-setup-panel"><div class="panel-header"><h2>SET JADWAL CUTI</h2><span onclick="toggleDateSetup('leavePanel')" class="close-btn">×</span></div><div class="panel-body"><input type="date" id="leaveDateInput" class="cyber-input"><button onclick="saveSpecialDate('leave')" class="btn-neon-main">SAVE</button></div></div>
     <div id="wifePanel" class="floating-panel date-setup-panel"><div class="panel-header"><h2>SET ULTAH ISTRI</h2><span onclick="toggleDateSetup('wifePanel')" class="close-btn">×</span></div><div class="panel-body"><input type="date" id="wifeDateInput" class="cyber-input"><button onclick="saveSpecialDate('wife')" class="btn-neon-main">SAVE</button></div></div>
     <div id="childPanel" class="floating-panel date-setup-panel"><div class="panel-header"><h2>SET ULTAH ANAK</h2><span onclick="toggleDateSetup('childPanel')" class="close-btn">×</span></div><div class="panel-body"><input type="date" id="childDateInput" class="cyber-input"><button onclick="saveSpecialDate('child')" class="btn-neon-main">SAVE</button></div></div>
@@ -249,7 +248,6 @@
     <!-- SIDEBAR -->
     <nav class="sidebar">
         <div class="header-title">
-            <!-- Judul Dashboard dengan ID Baru untuk Flicker -->
             <div class="dashboard-text" id="mainDashboardTitle"></div>
             
             <div class="upcoming-alarm-info" onclick="toggleSetup()">
@@ -272,6 +270,8 @@
             <li class="menu-item has-submenu">
                 <div class="menu-link" onclick="toggleSubmenu(this)"><span class="icon">📊</span> DATA REPORTAN <span class="arrow">▼</span></div>
                 <ul class="submenu">
+                    <!-- MENU RATE USDT BERHASIL DIMASUKKAN KE DROP DOWN -->
+                    <li class="submenu-item"><a href="rate_usdt.html" target="mainFrame">💵 RATE USDT</a></li>
                     <li class="submenu-item"><a href="reportan_slot.html" target="mainFrame">🎰 REPORTAN SLOT</a></li>
                     <li class="submenu-item"><a href="daily_report.html" target="mainFrame">🤖 DAILY REPORT</a></li>
                     <li class="submenu-item"><a href="pencairan_vip.html" target="mainFrame">💰 PENCAIRAN VIP</a></li>
@@ -292,7 +292,6 @@
         let activeDays = []; 
         let selAMPM = 'AM';
 
-        // --- FUNGSI HURUF FLICKER (NEON STYLE) ---
         function flickerify(text) {
             return Array.from(text).map(char => {
                 let delay = (Math.random() * 2.5).toFixed(1);
@@ -324,11 +323,32 @@
         }
 
         function cancelEdit() { resetSetupForm(); toggleSetup(); }
-
         function toggleRegistry() { const r = document.getElementById('registryPanel'); r.style.display = r.style.display === 'flex' ? 'none' : 'flex'; if(r.style.display === 'flex') renderRegistry(); }
-        function toggleDateSetup(id) { document.querySelectorAll('.date-setup-panel').forEach(p => { if(p.id !== id) p.style.display = 'none'; }); const el = document.getElementById(id); el.style.display = el.style.display === 'flex' ? 'none' : 'flex'; }
         
-        function saveSpecialDate(type) { const input = document.getElementById(type + 'DateInput'); if(!input.value) return; localStorage.setItem('wukong_' + type, input.value); updateAllCountdowns(); toggleDateSetup(type + 'Panel'); showToast("INITIALIZED!"); }
+        // --- LOGIC DATA LENGKET (STICKY INPUT) ---
+        function toggleDateSetup(id) { 
+            document.querySelectorAll('.date-setup-panel').forEach(p => { if(p.id !== id) p.style.display = 'none'; }); 
+            const el = document.getElementById(id); 
+            const isOpening = el.style.display !== 'flex';
+            el.style.display = isOpening ? 'flex' : 'none'; 
+
+            if(isOpening) {
+                const type = id.replace('Panel', ''); 
+                const savedDate = localStorage.getItem('wukong_' + type);
+                if(savedDate) {
+                    document.getElementById(type + 'DateInput').value = savedDate;
+                }
+            }
+        }
+        
+        function saveSpecialDate(type) { 
+            const input = document.getElementById(type + 'DateInput'); 
+            if(!input.value) return; 
+            localStorage.setItem('wukong_' + type, input.value); 
+            updateAllCountdowns(); 
+            toggleDateSetup(type + 'Panel'); 
+            showToast("INITIALIZED!"); 
+        }
         
         function updateAllCountdowns() {
             const types = ['leave', 'wife', 'child'], labels = { leave: 'HARI LAGI CUTI 🏖️', wife: 'HARI ULTAH ISTRI ❤️', child: 'HARI ULTAH ANAK 👼' };
@@ -361,27 +381,12 @@
             const editId = document.getElementById('editId').value;
             let hVal = parseInt(document.getElementById('hh').value) || 0;
             let mVal = parseInt(document.getElementById('mm').value) || 0;
-            
             let hFinal = hVal;
             if(selAMPM === 'PM' && hFinal < 12) hFinal += 12;
             if(selAMPM === 'AM' && hFinal === 12) hFinal = 0;
-            
             const time24 = `${hFinal.toString().padStart(2,'0')}:${mVal.toString().padStart(2,'0')}`;
-            
-            const newAlarm = { 
-                id: editId ? parseInt(editId) : Date.now(), 
-                name: document.getElementById('inpName').value.toUpperCase() || "TASK", 
-                time: time24, 
-                sound: document.getElementById('inpSound').value, 
-                days: activeDays.length ? [...activeDays] : [0,1,2,3,4,5,6] 
-            };
-
-            if(editId) {
-                alarmList = alarmList.map(a => a.id == editId ? newAlarm : a);
-            } else {
-                alarmList.push(newAlarm);
-            }
-            
+            const newAlarm = { id: editId ? parseInt(editId) : Date.now(), name: document.getElementById('inpName').value.toUpperCase() || "TASK", time: time24, sound: document.getElementById('inpSound').value, days: activeDays.length ? [...activeDays] : [0,1,2,3,4,5,6] };
+            if(editId) { alarmList = alarmList.map(a => a.id == editId ? newAlarm : a); } else { alarmList.push(newAlarm); }
             localStorage.setItem('wukongAlarms', JSON.stringify(alarmList)); 
             showToast(editId ? "ALARM UPDATED" : "ALARM SYNCED"); 
             resetSetupForm();
@@ -391,66 +396,35 @@
         function renderRegistry() {
             const container = document.getElementById('regBody'); container.innerHTML = "";
             if(alarmList.length === 0) { container.innerHTML = "<p style='text-align:center; opacity:0.5; font-size:12px;'>DATABASE EMPTY</p>"; return; }
-            
             alarmList.forEach(a => { 
-                container.innerHTML += `
-                <div style="border-bottom:1px solid #222; padding:12px 0;">
-                    <div style="font-size:12px; color:var(--luxury-gold); letter-spacing:1px;">${a.name}</div>
-                    <div style="font-size:18px; font-family:Orbitron;">${a.time}</div>
-                    <div style="display:flex; gap:8px; margin-top:8px;">
-                        <button onclick="editAlarm(${a.id})" style="background:var(--luxury-gold); color:black; border:none; padding:6px 15px; cursor:pointer; font-size:10px; border-radius:4px;">EDIT</button>
-                        <button onclick="deleteAlarm(${a.id})" style="background:#330000; color:red; border:1px solid red; padding:6px 15px; cursor:pointer; font-size:10px; border-radius:4px;">HAPUS</button>
-                    </div>
-                </div>`; 
+                container.innerHTML += `<div style="border-bottom:1px solid #222; padding:12px 0;"><div style="font-size:12px; color:var(--luxury-gold); letter-spacing:1px;">${a.name}</div><div style="font-size:18px; font-family:Orbitron;">${a.time}</div><div style="display:flex; gap:8px; margin-top:8px;"><button onclick="editAlarm(${a.id})" style="background:var(--luxury-gold); color:black; border:none; padding:6px 15px; cursor:pointer; font-size:10px; border-radius:4px;">EDIT</button><button onclick="deleteAlarm(${a.id})" style="background:#330000; color:red; border:1px solid red; padding:6px 15px; cursor:pointer; font-size:10px; border-radius:4px;">HAPUS</button></div></div>`; 
             });
         }
 
         function editAlarm(id) {
             const a = alarmList.find(x => x.id == id);
             if(!a) return;
-            
             resetSetupForm(); 
             document.getElementById('editId').value = a.id;
             document.getElementById('inpName').value = a.name;
             document.getElementById('inpSound').value = a.sound;
-            
             let [h, m] = a.time.split(':');
             let hour24 = parseInt(h);
             let displayHour = hour24;
-            
-            if(hour24 >= 12) {
-                setAMPM('PM');
-                if(hour24 > 12) displayHour = hour24 - 12;
-            } else {
-                setAMPM('AM');
-                if(hour24 === 0) displayHour = 12;
-            }
-            
+            if(hour24 >= 12) { setAMPM('PM'); if(hour24 > 12) displayHour = hour24 - 12; } else { setAMPM('AM'); if(hour24 === 0) displayHour = 12; }
             document.getElementById('hh').value = displayHour.toString().padStart(2, '0');
             document.getElementById('mm').value = m;
-            
             activeDays = [...a.days];
-            document.querySelectorAll('.day-bt').forEach(b => {
-                if(activeDays.includes(parseInt(b.dataset.day))) b.classList.add('active');
-            });
+            document.querySelectorAll('.day-bt').forEach(b => { if(activeDays.includes(parseInt(b.dataset.day))) b.classList.add('active'); });
             if(activeDays.length === 7) document.getElementById('btnAllDay').classList.add('active');
-
             document.getElementById('btnMainSave').innerText = "UPDATE COMMAND";
             document.getElementById('setupPanelTitle').innerText = "EDIT ALARM";
             document.getElementById('btnCancelEdit').style.display = "block";
-            
             document.getElementById('registryPanel').style.display = 'none';
             document.getElementById('setupPanel').style.display = 'flex';
         }
 
-        function deleteAlarm(id) { 
-            if(confirm("DELETE THIS COMMAND?")) {
-                alarmList = alarmList.filter(x => x.id !== id); 
-                localStorage.setItem('wukongAlarms', JSON.stringify(alarmList)); 
-                renderRegistry(); 
-            }
-        }
-        
+        function deleteAlarm(id) { if(confirm("DELETE THIS COMMAND?")) { alarmList = alarmList.filter(x => x.id !== id); localStorage.setItem('wukongAlarms', JSON.stringify(alarmList)); renderRegistry(); } }
         function handleSoundSelect() { if(document.getElementById('inpSound').value === 'ADD_CUSTOM') document.getElementById('audioExplorer').click(); }
         document.getElementById('audioExplorer').onchange = function(e) {
             const file = e.target.files[0];
@@ -467,37 +441,26 @@
             const ct = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
             alarmList.forEach(a => {
                 if(a.time === ct && a.days.includes(now.getDay())) {
-                    if(window.lastTrig !== ct + a.id) {
-                        triggerPop(a.name, a.sound); 
-                        window.lastTrig = ct + a.id;
-                    }
+                    if(window.lastTrig !== ct + a.id) { triggerPop(a.name, a.sound); window.lastTrig = ct + a.id; }
                 }
             });
         }
 
         function triggerPop(n, s) { 
             const audio = document.getElementById('audioAlarm'); 
-            audio.src = s; audio.loop = true; 
-            audio.volume = 0.4; 
+            audio.src = s; audio.loop = true; audio.volume = 0.4; 
             audio.play().catch(() => {});
             document.getElementById('callingActionName').innerText = n; 
             document.getElementById('callingPopup').style.display = 'flex'; 
         }
 
-        function stopCurrentAlarm() { 
-            document.getElementById('audioAlarm').pause(); 
-            document.getElementById('callingPopup').style.display = 'none'; 
-        }
+        function stopCurrentAlarm() { document.getElementById('audioAlarm').pause(); document.getElementById('callingPopup').style.display = 'none'; }
 
         document.querySelectorAll('.day-bt').forEach(b => {
             b.onclick = function() {
                 this.classList.toggle('active');
                 const d = parseInt(this.dataset.day);
-                if(this.classList.contains('active')) {
-                    if(!activeDays.includes(d)) activeDays.push(d);
-                } else {
-                    activeDays = activeDays.filter(x => x !== d);
-                }
+                if(this.classList.contains('active')) { if(!activeDays.includes(d)) activeDays.push(d); } else { activeDays = activeDays.filter(x => x !== d); }
                 if(activeDays.length === 7) document.getElementById('btnAllDay').classList.add('active');
                 else document.getElementById('btnAllDay').classList.remove('active');
             }
@@ -515,9 +478,7 @@
         }
 
         window.onload = () => { 
-            // Inisialisasi Judul Dashboard dengan Flicker
             document.getElementById('mainDashboardTitle').innerHTML = flickerify("DASHBOARD") + "<br>" + flickerify("WUKONG");
-            
             updateAllCountdowns(); 
             setInterval(updateClock, 1000); 
             setInterval(updateAllCountdowns, 30000); 
