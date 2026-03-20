@@ -278,6 +278,9 @@
 
         function updateRekapan() {
             const content = document.getElementById('in_rekapan').value;
+            // Simpan ke localStorage agar tidak hilang saat refresh atau pindah menu
+            localStorage.setItem('saved_rekapan_wukong', content);
+            
             const rekapan = `Info : Togelup\nPerihal : Rekapan Daily Report Tanggal ${getIndoDate()}\n\n${content}`;
             document.getElementById('rekapanResult').innerText = rekapan;
         }
@@ -301,12 +304,21 @@
         function resetRekapan() {
             if(confirm("Hapus semua rekapan?")) {
                 document.getElementById('in_rekapan').value = "";
+                // Hapus data dari localStorage
+                localStorage.removeItem('saved_rekapan_wukong');
                 updateRekapan();
             }
         }
 
         window.onload = function() {
             setShift(autoDetectShift());
+            
+            // Cek apakah ada data rekapan yang tersimpan sebelumnya
+            const savedData = localStorage.getItem('saved_rekapan_wukong');
+            if (savedData) {
+                document.getElementById('in_rekapan').value = savedData;
+            }
+            
             updateRekapan();
         };
     </script>
