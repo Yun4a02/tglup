@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard WUKONG - Professional System</title>
+    <title>Dashboard WUKONG </title>
     <link rel="icon" type="image/png" href="https://i.imgur.com/4DSIJr3.png">
     
     <!-- Google Fonts -->
@@ -160,6 +160,7 @@
         .day-bt { padding: 10px 0; background: #000; border: 1px solid #222; color: #555; font-family: Orbitron; font-size: 9px; text-align: center; border-radius: 6px; cursor: pointer; }
         .day-bt.active { background: #111; color: var(--luxury-gold); border-color: var(--luxury-gold); box-shadow: 0 0 10px var(--gold-glow); }
         
+        /* ... CSS SAMA ... */
         .btn-allday { width: 100%; padding: 8px; background: transparent; border: 1px solid var(--luxury-gold); color: var(--luxury-gold); font-family: Orbitron; font-size: 10px; border-radius: 5px; cursor: pointer; margin-bottom: 10px; transition: 0.3s; }
         .btn-allday.active { background: var(--luxury-gold); color: #000; }
 
@@ -216,7 +217,7 @@
             </div>
             <select id="inpSound" onchange="handleSoundSelect()" style="background:#000; color:#fff; padding:15px; border:1px solid #333; border-radius:8px; width:100%; font-family:Rajdhani; margin-bottom:15px; outline:none; cursor:pointer;">
                 <option value="https://actions.google.com/sounds/v1/alarms/digital_watch_alarm_long.ogg">Classic Gold Tone</option>
-                <optgroup label="Registry" id="customSoundsGroup"></optgroup>
+                <optgroup label="Registry (Saved)" id="customSoundsGroup"></optgroup>
                 <option value="ADD_CUSTOM">[ + ] UPLOAD AUDIO FILE</option>
             </select>
             
@@ -240,7 +241,7 @@
         <div class="panel-body" id="regBody" style="max-height: 400px; overflow-y: auto;"></div>
     </div>
 
-    <!-- DATE SETUP PANELS (FITUR DATA LENGKET) -->
+    <!-- DATE SETUP PANELS -->
     <div id="leavePanel" class="floating-panel date-setup-panel"><div class="panel-header"><h2>SET JADWAL CUTI</h2><span onclick="toggleDateSetup('leavePanel')" class="close-btn">×</span></div><div class="panel-body"><input type="date" id="leaveDateInput" class="cyber-input"><button onclick="saveSpecialDate('leave')" class="btn-neon-main">SAVE</button></div></div>
     <div id="wifePanel" class="floating-panel date-setup-panel"><div class="panel-header"><h2>SET ULTAH ISTRI</h2><span onclick="toggleDateSetup('wifePanel')" class="close-btn">×</span></div><div class="panel-body"><input type="date" id="wifeDateInput" class="cyber-input"><button onclick="saveSpecialDate('wife')" class="btn-neon-main">SAVE</button></div></div>
     <div id="childPanel" class="floating-panel date-setup-panel"><div class="panel-header"><h2>SET ULTAH ANAK</h2><span onclick="toggleDateSetup('childPanel')" class="close-btn">×</span></div><div class="panel-body"><input type="date" id="childDateInput" class="cyber-input"><button onclick="saveSpecialDate('child')" class="btn-neon-main">SAVE</button></div></div>
@@ -249,7 +250,6 @@
     <nav class="sidebar">
         <div class="header-title">
             <div class="dashboard-text" id="mainDashboardTitle"></div>
-            
             <div class="upcoming-alarm-info" onclick="toggleSetup()">
                 <div class="upcoming-label">WUKONG SYSTEM</div>
                 <div id="nextAlarmDisplay" class="upcoming-time">ALARM</div>
@@ -271,7 +271,6 @@
             <li class="menu-item has-submenu">
                 <div class="menu-link" onclick="toggleSubmenu(this)"><span class="icon">📊</span> DATA REPORTAN <span class="arrow">▼</span></div>
                 <ul class="submenu">
-                    <!-- MENU RATE USDT BERHASIL DIMASUKKAN KE DROP DOWN -->
                     <li class="submenu-item"><a href="rate_usdt.html" target="mainFrame">💵 RATE USDT</a></li>
                     <li class="submenu-item"><a href="reportan_slot.html" target="mainFrame">🎰 REPORTAN SLOT</a></li>
                     <li class="submenu-item"><a href="daily_report.html" target="mainFrame">🤖 DAILY REPORT</a></li>
@@ -294,6 +293,61 @@
         let activeDays = []; 
         let selAMPM = 'AM';
 
+        // --- DATABASE PERSISTENCE FOR AUDIO (IndexedDB) ---
+        const dbName = "WukongAudioDB";
+        function initDB() {
+            return new Promise((resolve, reject) => {
+                const request = indexedDB.open(dbName, 1);
+                request.onupgradeneeded = (e) => {
+                    const db = e.target.result;
+                    if (!db.objectStoreNames.contains("sounds")) db.createObjectStore("sounds");
+                };
+                request.onsuccess = (e) => resolve(e.target.result);
+                request.onerror = (e) => reject(e.target.error);
+            });
+        }
+
+        async function saveAudioToDB(file) {
+            const db = await initDB();
+            return new Promise((resolve, reject) => {
+                const transaction = db.transaction("sounds", "readwrite");
+                const store = transaction.objectStore("sounds");
+                const key = "custom_" + file.name;
+                store.put(file, key);
+                transaction.oncomplete = () => resolve(key);
+                transaction.onerror = () => reject(transaction.error);
+            });
+        }
+
+        async function getAudioFromDB(key) {
+            const db = await initDB();
+            return new Promise((resolve) => {
+                const transaction = db.transaction("sounds", "readonly");
+                const store = transaction.objectStore("sounds");
+                const request = store.get(key);
+                request.onsuccess = () => resolve(request.result);
+                request.onerror = () => resolve(null);
+            });
+        }
+
+        async function loadCustomSoundsList() {
+            const db = await initDB();
+            const transaction = db.transaction("sounds", "readonly");
+            const store = transaction.objectStore("sounds");
+            const request = store.getAllKeys();
+            request.onsuccess = () => {
+                const group = document.getElementById('customSoundsGroup');
+                group.innerHTML = "";
+                request.result.forEach(key => {
+                    const opt = document.createElement('option');
+                    opt.value = "DB:" + key;
+                    opt.innerText = key.replace("custom_", "").substring(0, 20).toUpperCase();
+                    group.appendChild(opt);
+                });
+            };
+        }
+
+        // --- CORE LOGIC ---
         function flickerify(text) {
             return Array.from(text).map(char => {
                 let delay = (Math.random() * 2.5).toFixed(1);
@@ -327,19 +381,15 @@
         function cancelEdit() { resetSetupForm(); toggleSetup(); }
         function toggleRegistry() { const r = document.getElementById('registryPanel'); r.style.display = r.style.display === 'flex' ? 'none' : 'flex'; if(r.style.display === 'flex') renderRegistry(); }
         
-        // --- LOGIC DATA LENGKET (STICKY INPUT) ---
         function toggleDateSetup(id) { 
             document.querySelectorAll('.date-setup-panel').forEach(p => { if(p.id !== id) p.style.display = 'none'; }); 
             const el = document.getElementById(id); 
             const isOpening = el.style.display !== 'flex';
             el.style.display = isOpening ? 'flex' : 'none'; 
-
             if(isOpening) {
                 const type = id.replace('Panel', ''); 
                 const savedDate = localStorage.getItem('wukong_' + type);
-                if(savedDate) {
-                    document.getElementById(type + 'DateInput').value = savedDate;
-                }
+                if(savedDate) document.getElementById(type + 'DateInput').value = savedDate;
             }
         }
         
@@ -427,14 +477,16 @@
         }
 
         function deleteAlarm(id) { if(confirm("DELETE THIS COMMAND?")) { alarmList = alarmList.filter(x => x.id !== id); localStorage.setItem('wukongAlarms', JSON.stringify(alarmList)); renderRegistry(); } }
+        
         function handleSoundSelect() { if(document.getElementById('inpSound').value === 'ADD_CUSTOM') document.getElementById('audioExplorer').click(); }
-        document.getElementById('audioExplorer').onchange = function(e) {
+        
+        document.getElementById('audioExplorer').onchange = async function(e) {
             const file = e.target.files[0];
             if(file) {
-                const url = URL.createObjectURL(file);
-                const opt = document.createElement('option'); opt.value = url; opt.innerText = file.name.substring(0,15).toUpperCase();
-                document.getElementById('customSoundsGroup').appendChild(opt); 
-                document.getElementById('inpSound').value = url;
+                const key = await saveAudioToDB(file);
+                await loadCustomSoundsList();
+                document.getElementById('inpSound').value = "DB:" + key;
+                showToast("SOUND SAVED PERMANENTLY");
             }
         };
 
@@ -448,9 +500,18 @@
             });
         }
 
-        function triggerPop(n, s) { 
+        async function triggerPop(n, s) { 
             const audio = document.getElementById('audioAlarm'); 
-            audio.src = s; audio.loop = true; audio.volume = 0.4; 
+            let finalSrc = s;
+            
+            // Jika suara berasal dari Database (DB:)
+            if(s.startsWith("DB:")) {
+                const key = s.replace("DB:", "");
+                const blob = await getAudioFromDB(key);
+                if(blob) finalSrc = URL.createObjectURL(blob);
+            }
+
+            audio.src = finalSrc; audio.loop = true; audio.volume = 0.4; 
             audio.play().catch(() => {});
             document.getElementById('callingActionName').innerText = n; 
             document.getElementById('callingPopup').style.display = 'flex'; 
@@ -479,8 +540,9 @@
             checkAlarms();
         }
 
-        window.onload = () => { 
+        window.onload = async () => { 
             document.getElementById('mainDashboardTitle').innerHTML = flickerify("DASHBOARD") + "<br>" + flickerify("WUKONG");
+            await loadCustomSoundsList(); // Load daftar suara dari database
             updateAllCountdowns(); 
             setInterval(updateClock, 1000); 
             setInterval(updateAllCountdowns, 30000); 
