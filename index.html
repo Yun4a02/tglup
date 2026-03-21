@@ -23,6 +23,28 @@
             --luxury-gold: #d4af37;
         }
 
+        /* --- CUSTOM SCROLLBAR (UPDATE) --- */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0a0a0a; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--luxury-gold);
+            border-radius: 10px;
+            border: 2px solid #0a0a0a;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #fff;
+            box-shadow: 0 0 10px var(--gold-glow);
+        }
+        /* Firefox Support */
+        * {
+            scrollbar-width: thin;
+            scrollbar-color: var(--luxury-gold) #0a0a0a;
+        }
+
         /* --- CORE RESET --- */
         * { margin: 0; padding: 0; box-sizing: border-box; font-weight: 900 !important; -webkit-font-smoothing: antialiased; }
 
@@ -160,7 +182,6 @@
         .day-bt { padding: 10px 0; background: #000; border: 1px solid #222; color: #555; font-family: Orbitron; font-size: 9px; text-align: center; border-radius: 6px; cursor: pointer; }
         .day-bt.active { background: #111; color: var(--luxury-gold); border-color: var(--luxury-gold); box-shadow: 0 0 10px var(--gold-glow); }
         
-        /* ... CSS SAMA ... */
         .btn-allday { width: 100%; padding: 8px; background: transparent; border: 1px solid var(--luxury-gold); color: var(--luxury-gold); font-family: Orbitron; font-size: 10px; border-radius: 5px; cursor: pointer; margin-bottom: 10px; transition: 0.3s; }
         .btn-allday.active { background: var(--luxury-gold); color: #000; }
 
