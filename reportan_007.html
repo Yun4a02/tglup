@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>REPORT 007 - WUKONG SYSTEM</title>
+    
+    <!-- Premium Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Chakra+Petch:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-dark: #1a1a1a; 
+            --card-bg: #0f0f0f;
+            --luxury-gold: #d4af37;
+            --gold-glow: rgba(212, 175, 55, 0.6);
+            --border-ui: rgba(212, 175, 55, 0.2);
+            --neon-red: #ff3c00;
+            --font-main: 'Syncopate', sans-serif;
+            --font-ui: 'Chakra Petch', sans-serif;
+        }
+
+        /* --- CORE RESET --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-weight: 900 !important; -webkit-font-smoothing: antialiased; }
+
+        body {
+            background-color: var(--bg-dark);
+            background-image: radial-gradient(circle at 50% 50%, #2c2c2c 0%, #121212 100%);
+            color: white;
+            font-family: var(--font-ui);
+            min-height: 100vh;
+            padding: 40px;
+            overflow-x: hidden;
+        }
+
+        /* --- ANIMASI KELAP-KELIP JUDUL UTAMA --- */
+        @keyframes letterFlicker {
+            0%, 18%, 22%, 25%, 53%, 57%, 100% {
+                text-shadow: 0 0 10px var(--gold-glow), 0 0 20px var(--luxury-gold), 0 0 40px var(--luxury-gold);
+                color: var(--luxury-gold); opacity: 1;
+            }
+            20%, 24%, 55% { text-shadow: none; color: #444; opacity: 0.3; }
+        }
+
+        /* --- ANIMASI MELAMBAI JUDUL KARTU --- */
+        @keyframes wavingTitle {
+            0%, 100% { transform: skewX(-2deg) translateY(0); }
+            50% { transform: skewX(2deg) translateY(-3px); }
+        }
+
+        /* --- HEADER --- */
+        .header {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0 0 60px;
+        }
+
+        .header h1 {
+            font-family: var(--font-main);
+            font-size: 32px;
+            letter-spacing: 12px;
+            text-transform: uppercase;
+        }
+
+        .header h1 span { display: inline-block; animation: letterFlicker 4s infinite; }
+
+        .btn-add-folder {
+            position: absolute;
+            right: 0;
+            background: var(--luxury-gold);
+            color: #000;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            font-size: 28px;
+            cursor: pointer;
+            transition: 0.4s;
+            box-shadow: 0 0 20px var(--gold-glow);
+            display: flex; align-items: center; justify-content: center;
+            z-index: 100;
+        }
+        .btn-add-folder:hover { transform: scale(1.1) rotate(90deg); background: #fff; }
+
+        /* --- MODAL POPUP TRANSPARAN (MELAYANG TENGAH) --- */
+        .modal-overlay { 
+            position: fixed; 
+            top: 0; left: 0; 
+            width: 100%; height: 100%; 
+            background: rgba(0, 0, 0, 0.8); 
+            backdrop-filter: blur(15px); 
+            display: none; 
+            justify-content: center; 
+            align-items: center; 
+            z-index: 10000; 
+        }
+
+        .modal-box { 
+            background: rgba(255, 255, 255, 0.03); 
+            border: 2px solid var(--luxury-gold); 
+            border-radius: 30px; 
+            padding: 50px; 
+            width: 500px; 
+            text-align: center; 
+            box-shadow: 0 0 50px var(--gold-glow), inset 0 0 20px var(--gold-glow); 
+            animation: modalPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+            backdrop-filter: blur(10px);
+        }
+
+        @keyframes modalPop { from { transform: scale(0.7); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+        .modal-box h2 { font-family: var(--font-main); color: var(--luxury-gold); font-size: 14px; margin-bottom: 30px; letter-spacing: 4px; text-shadow: 0 0 10px var(--gold-glow); }
+        .modal-input { width: 100%; background: rgba(0, 0, 0, 0.6); border: 1px solid var(--border-ui); border-left: 6px solid var(--luxury-gold); padding: 18px; color: white; font-family: var(--font-ui); font-size: 15px; text-align: center; outline: none; margin-bottom: 25px; border-radius: 10px; }
+        .modal-textarea { width: 100%; background: rgba(0, 0, 0, 0.6); border: 1px solid var(--border-ui); border-left: 6px solid var(--luxury-gold); padding: 18px; color: #ccc; font-family: var(--font-ui); font-size: 15px; min-height: 180px; outline: none; margin-bottom: 30px; border-radius: 10px; resize: none; }
+        .modal-btns { display: flex; gap: 20px; }
+        .btn-m { flex: 1; padding: 18px; font-family: var(--font-main); font-size: 11px; border-radius: 10px; cursor: pointer; text-transform: uppercase; transition: 0.3s; }
+        .btn-m-ok { background: var(--luxury-gold); color: #000; border: none; }
+        .btn-m-cancel { background: transparent; border: 1px solid var(--neon-red); color: var(--neon-red); }
+
+        /* --- FOLDER TABS --- */
+        .folder-tabs-container { display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 40px; padding: 15px; border-bottom: 1px solid var(--border-ui); background: rgba(255,255,255,0.03); border-radius: 15px; }
+        .tab-item { background: #0a0a0a; border: 1px solid var(--border-ui); padding: 14px 25px; border-radius: 10px; cursor: pointer; display: flex; align-items: center; gap: 12px; transition: 0.3s; min-width: 180px; }
+        .tab-item.active { background: var(--luxury-gold); border-color: #fff; color: #000; box-shadow: 0 0 25px var(--gold-glow); }
+
+        /* --- CONTENT AREA --- */
+        .content-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; background: rgba(212, 175, 55, 0.08); padding: 20px 30px; border-radius: 15px; border-left: 6px solid var(--luxury-gold); box-shadow: inset 0 0 20px rgba(0,0,0,0.3); }
+        .active-folder-name { font-family: var(--font-main); font-size: 16px; color: var(--luxury-gold); text-transform: uppercase; letter-spacing: 3px; }
+
+        /* --- REPORT GRID & CARD --- */
+        .report-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 25px; }
+        .report-card { background: var(--card-bg); border: 1px solid var(--border-ui); border-radius: 20px; padding: 25px; transition: 0.3s; box-shadow: 0 10px 30px rgba(0,0,0,0.5); position: relative; }
+        .report-card:hover { border-color: var(--luxury-gold); transform: translateY(-5px); box-shadow: 0 15px 35px var(--gold-glow); }
+
+        .card-title { font-family: var(--font-ui); font-size: 16px; color: var(--luxury-gold); margin-bottom: 20px; width: 100%; background: transparent; border: none; outline: none; text-transform: uppercase; text-align: center; display: block; animation: wavingTitle 4s ease-in-out infinite; text-shadow: 0 0 10px var(--gold-glow); }
+        .card-content { background: #151515; border: 1px solid #252525; border-radius: 12px; padding: 15px; width: 100%; min-height: 140px; color: #eee; font-family: var(--font-ui); font-size: 15px; resize: none; outline: none; margin-bottom: 20px; line-height: 1.6; }
+
+        .card-footer { display: flex; gap: 8px; }
+        .btn-card { padding: 12px 5px; font-family: var(--font-ui); font-size: 10px; cursor: pointer; border-radius: 8px; text-transform: uppercase; transition: 0.2s; border: none; }
+        .btn-copy { flex: 1.2; background: var(--luxury-gold); color: #000; }
+        .btn-report { flex: 1.2; background: #fff; color: #000; }
+        .btn-edit { flex: 1; background: transparent; border: 1px solid var(--luxury-gold) !important; color: var(--luxury-gold); }
+        .btn-edit.active { background: #00ff00; color: #000; border-color: #00ff00 !important; }
+        .btn-del-card { flex: 0.5; background: transparent; border: 1px solid var(--neon-red) !important; color: var(--neon-red); font-size: 18px; display: flex; align-items: center; justify-content: center; }
+
+        #toast { position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%); background: var(--luxury-gold); color: #000; padding: 15px 50px; border-radius: 50px; font-family: var(--font-main); font-size: 11px; display: none; z-index: 10001; box-shadow: 0 0 40px var(--gold-glow); }
+    </style>
+</head>
+<body>
+
+    <!-- MODAL OVERLAY -->
+    <div id="modalOverlay" class="modal-overlay">
+        <div class="modal-box">
+            <h2 id="modalTitle">INITIALIZE COMMAND</h2>
+            <input type="text" id="modalInput" class="modal-input" placeholder="ENTER TITLE...">
+            <textarea id="modalTextarea" class="modal-textarea" placeholder="ENTER REPORT DATA..."></textarea>
+            <div class="modal-btns">
+                <button class="btn-m btn-m-ok" onclick="confirmModal()">OK / CONFIRM</button>
+                <button class="btn-m btn-m-cancel" onclick="closeModal()">BATALKAN</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="header">
+        <h1 id="mainTitle"></h1>
+        <button class="btn-add-folder" onclick="openFolderModal()">+</button>
+    </div>
+
+    <div id="folderTabs" class="folder-tabs-container"></div>
+
+    <div id="contentSection" class="content-section" style="display:none;">
+        <div class="content-header">
+            <div id="activeFolderName" class="active-folder-name">DIRECTORY</div>
+            <div style="display:flex; gap:15px; align-items:center;">
+                <button class="btn-small-add" style="background:var(--luxury-gold); color:#000; border:none; padding:12px 25px; border-radius:8px; font-family:var(--font-main); font-size:10px; cursor:pointer;" onclick="openReportModal()">+ NEW REPORT</button>
+                <button onclick="deleteFolder()" style="background:transparent; border:none; color:var(--neon-red); cursor:pointer; font-size:26px;">🗑</button>
+            </div>
+        </div>
+        <div id="reportGrid" class="report-grid"></div>
+    </div>
+
+    <div id="toast">SYSTEM NOTIFIED</div>
+
+    <script>
+        // MEMUAT DATA DARI LOCAL STORAGE SAAT PERTAMA KALI DIBUKA
+        let dataStore = JSON.parse(localStorage.getItem('wukong_mega_report')) || [];
+        let activeIndex = null;
+        let currentMode = '';
+
+        function flickerify(text) {
+            return Array.from(text).map(char => {
+                let delay = (Math.random() * 2.5).toFixed(1);
+                return `<span style="animation-delay: ${delay}s;">${char === ' ' ? '&nbsp;' : char}</span>`;
+            }).join('');
+        }
+
+        // FUNGSI UTAMA PENYIMPANAN KE LOCAL STORAGE
+        function saveData() {
+            localStorage.setItem('wukong_mega_report', JSON.stringify(dataStore));
+        }
+
+        function saveAndRender() {
+            saveData();
+            renderTabs();
+            renderContent();
+        }
+
+        function renderTabs() {
+            const container = document.getElementById('folderTabs');
+            container.innerHTML = '';
+            dataStore.forEach((folder, index) => {
+                const tab = document.createElement('div');
+                tab.className = `tab-item ${activeIndex === index ? 'active' : ''}`;
+                tab.onclick = () => selectFolder(index);
+                tab.innerHTML = `<span style="font-size:22px;">📁</span><span class="tab-text">${folder.folderName}</span>`;
+                container.appendChild(tab);
+            });
+        }
+
+        function renderContent() {
+            const section = document.getElementById('contentSection');
+            const grid = document.getElementById('reportGrid');
+            const folderNameDisplay = document.getElementById('activeFolderName');
+            if (activeIndex === null || !dataStore[activeIndex]) { section.style.display = 'none'; return; }
+            section.style.display = 'block';
+            folderNameDisplay.innerText = dataStore[activeIndex].folderName;
+            grid.innerHTML = '';
+            dataStore[activeIndex].reports.forEach((repo, rIndex) => {
+                const card = document.createElement('div');
+                card.className = 'report-card';
+                card.innerHTML = `
+                    <input type="text" class="card-title" id="title-${rIndex}" value="${repo.title}" readonly>
+                    <textarea class="card-content" id="content-${rIndex}" readonly>${repo.content}</textarea>
+                    <div class="card-footer">
+                        <button class="btn-card btn-copy" onclick="copyCard(${rIndex})">COPY</button>
+                        <button class="btn-card btn-report" onclick="smartReport(${rIndex})">REPORT</button>
+                        <button class="btn-card btn-edit" id="btn-edit-${rIndex}" onclick="toggleEditCard(${rIndex})">EDIT</button>
+                        <button class="btn-card btn-del-card" onclick="deleteCard(${rIndex})">🗑</button>
+                    </div>`;
+                grid.appendChild(card);
+            });
+        }
+
+        function selectFolder(index) { activeIndex = index; renderTabs(); renderContent(); }
+
+        function smartReport(rIndex) {
+            const title = dataStore[activeIndex].reports[rIndex].title.toUpperCase();
+            let resultText = "";
+            if (title.includes("OFFLINE")) {
+                let cleanTitle = title.replace("OFFLINE", "").trim();
+                resultText = `untuk saat ini ${cleanTitle} ONLINE ya ko,ci`;
+            } else if (title.includes("GANGGUAN")) {
+                let cleanTitle = title.replace("GANGGUAN", "").trim();
+                resultText = `saat ini ${cleanTitle} sudah kembali normal ya ko,ci`;
+            } else {
+                resultText = `saat ini ${title} sudah kembali normal ya ko,ci`;
+            }
+            const dummy = document.createElement("textarea"); document.body.appendChild(dummy); dummy.value = resultText; dummy.select(); document.execCommand("copy"); document.body.removeChild(dummy);
+            showToast("SMART REPORT COPIED!");
+        }
+
+        function openFolderModal() {
+            currentMode = 'folder';
+            document.getElementById('modalTitle').innerText = "CREATE NEW DIRECTORY";
+            document.getElementById('modalTextarea').style.display = 'none';
+            document.getElementById('modalInput').value = "";
+            document.getElementById('modalOverlay').style.display = 'flex';
+        }
+
+        function openReportModal() {
+            currentMode = 'report';
+            document.getElementById('modalTitle').innerText = "INITIALIZE NEW REPORT";
+            document.getElementById('modalTextarea').style.display = 'block';
+            document.getElementById('modalInput').value = "";
+            document.getElementById('modalTextarea').value = "";
+            document.getElementById('modalOverlay').style.display = 'flex';
+        }
+
+        function closeModal() { document.getElementById('modalOverlay').style.display = 'none'; }
+
+        function confirmModal() {
+            const t = document.getElementById('modalInput').value;
+            const c = document.getElementById('modalTextarea').value;
+            if(!t) return;
+            if(currentMode === 'folder') { dataStore.unshift({ folderName: t.toUpperCase(), reports: [] }); activeIndex = 0; }
+            else { dataStore[activeIndex].reports.unshift({ title: t.toUpperCase(), content: c }); }
+            saveAndRender(); closeModal();
+        }
+
+        function toggleEditCard(rIndex) {
+            const tInp = document.getElementById(`title-${rIndex}`);
+            const cInp = document.getElementById(`content-${rIndex}`);
+            const btn = document.getElementById(`btn-edit-${rIndex}`);
+            
+            if (tInp.readOnly) {
+                // MASUK MODE EDIT
+                tInp.readOnly = false; cInp.readOnly = false;
+                tInp.style.borderBottom = "2px solid var(--luxury-gold)";
+                btn.innerText = "SAVE"; btn.classList.add('active');
+                tInp.focus();
+            } else {
+                // SIMPAN PERUBAHAN KE ARRAY DAN LOCAL STORAGE
+                dataStore[activeIndex].reports[rIndex].title = tInp.value.toUpperCase();
+                dataStore[activeIndex].reports[rIndex].content = cInp.value;
+                tInp.readOnly = true; cInp.readOnly = true;
+                tInp.style.borderBottom = "none";
+                btn.innerText = "EDIT"; btn.classList.remove('active');
+                
+                saveData(); // <--- KUNCI AGAR DATA TERSIMPAN PERMANEN
+                showToast("DATA SAVED TO STORAGE");
+            }
+        }
+
+        function copyCard(rIndex) {
+            const content = document.getElementById(`content-${rIndex}`);
+            content.select(); document.execCommand('copy');
+            showToast("DATA COPIED!");
+        }
+
+        function deleteCard(rIndex) { if (confirm("DELETE THIS DATA?")) { dataStore[activeIndex].reports.splice(rIndex, 1); saveAndRender(); } }
+        function deleteFolder() { if (confirm("DELETE ENTIRE DIRECTORY?")) { dataStore.splice(activeIndex, 1); activeIndex = null; saveAndRender(); } }
+        
+        function showToast(m) { const t = document.getElementById('toast'); t.innerText = m; t.style.display = 'block'; setTimeout(() => t.style.display = 'none', 2000); }
+
+        window.onload = () => { 
+            document.getElementById('mainTitle').innerHTML = flickerify("REPORT 007"); 
+            renderTabs(); 
+            renderContent(); 
+        };
+    </script>
+</body>
+</html>
