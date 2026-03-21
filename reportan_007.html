@@ -54,7 +54,9 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 0 0 60px;
+            padding: 10px 0 80px; 
+            border-bottom: 1px solid var(--border-ui);
+            margin-bottom: 30px;
         }
 
         .header h1 {
@@ -66,9 +68,11 @@
 
         .header h1 span { display: inline-block; animation: letterFlicker 4s infinite; }
 
+        /* TOMBOL TAMBAH FOLDER (SEKARANG DI KIRI ATAS) */
         .btn-add-folder {
             position: absolute;
-            right: 0;
+            top: 0;
+            left: 0; /* PINDAH KE KIRI */
             background: var(--luxury-gold);
             color: #000;
             border: none;
@@ -84,12 +88,12 @@
         }
         .btn-add-folder:hover { transform: scale(1.1) rotate(90deg); background: #fff; }
 
-        /* --- MODAL POPUP TRANSPARAN (MELAYANG TENGAH) --- */
+        /* --- MODAL POPUP TRANSPARAN --- */
         .modal-overlay { 
             position: fixed; 
             top: 0; left: 0; 
             width: 100%; height: 100%; 
-            background: rgba(0, 0, 0, 0.8); 
+            background: rgba(0, 0, 0, 0.7); 
             backdrop-filter: blur(15px); 
             display: none; 
             justify-content: center; 
@@ -106,7 +110,7 @@
             text-align: center; 
             box-shadow: 0 0 50px var(--gold-glow), inset 0 0 20px var(--gold-glow); 
             animation: modalPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(5px);
         }
 
         @keyframes modalPop { from { transform: scale(0.7); opacity: 0; } to { transform: scale(1); opacity: 1; } }
@@ -120,7 +124,7 @@
         .btn-m-cancel { background: transparent; border: 1px solid var(--neon-red); color: var(--neon-red); }
 
         /* --- FOLDER TABS --- */
-        .folder-tabs-container { display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 40px; padding: 15px; border-bottom: 1px solid var(--border-ui); background: rgba(255,255,255,0.03); border-radius: 15px; }
+        .folder-tabs-container { display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 40px; padding: 15px; background: rgba(255,255,255,0.03); border-radius: 15px; }
         .tab-item { background: #0a0a0a; border: 1px solid var(--border-ui); padding: 14px 25px; border-radius: 10px; cursor: pointer; display: flex; align-items: center; gap: 12px; transition: 0.3s; min-width: 180px; }
         .tab-item.active { background: var(--luxury-gold); border-color: #fff; color: #000; box-shadow: 0 0 25px var(--gold-glow); }
 
@@ -149,7 +153,6 @@
 </head>
 <body>
 
-    <!-- MODAL OVERLAY -->
     <div id="modalOverlay" class="modal-overlay">
         <div class="modal-box">
             <h2 id="modalTitle">INITIALIZE COMMAND</h2>
@@ -162,9 +165,10 @@
         </div>
     </div>
 
+    <!-- HEADER (TOMBOL + DI KIRI ATAS) -->
     <div class="header">
-        <h1 id="mainTitle"></h1>
         <button class="btn-add-folder" onclick="openFolderModal()">+</button>
+        <h1 id="mainTitle"></h1>
     </div>
 
     <div id="folderTabs" class="folder-tabs-container"></div>
@@ -183,7 +187,6 @@
     <div id="toast">SYSTEM NOTIFIED</div>
 
     <script>
-        // MEMUAT DATA DARI LOCAL STORAGE SAAT PERTAMA KALI DIBUKA
         let dataStore = JSON.parse(localStorage.getItem('wukong_mega_report')) || [];
         let activeIndex = null;
         let currentMode = '';
@@ -195,16 +198,8 @@
             }).join('');
         }
 
-        // FUNGSI UTAMA PENYIMPANAN KE LOCAL STORAGE
-        function saveData() {
-            localStorage.setItem('wukong_mega_report', JSON.stringify(dataStore));
-        }
-
-        function saveAndRender() {
-            saveData();
-            renderTabs();
-            renderContent();
-        }
+        function saveData() { localStorage.setItem('wukong_mega_report', JSON.stringify(dataStore)); }
+        function saveAndRender() { saveData(); renderTabs(); renderContent(); }
 
         function renderTabs() {
             const container = document.getElementById('folderTabs');
@@ -292,23 +287,17 @@
             const tInp = document.getElementById(`title-${rIndex}`);
             const cInp = document.getElementById(`content-${rIndex}`);
             const btn = document.getElementById(`btn-edit-${rIndex}`);
-            
             if (tInp.readOnly) {
-                // MASUK MODE EDIT
                 tInp.readOnly = false; cInp.readOnly = false;
                 tInp.style.borderBottom = "2px solid var(--luxury-gold)";
                 btn.innerText = "SAVE"; btn.classList.add('active');
-                tInp.focus();
             } else {
-                // SIMPAN PERUBAHAN KE ARRAY DAN LOCAL STORAGE
                 dataStore[activeIndex].reports[rIndex].title = tInp.value.toUpperCase();
                 dataStore[activeIndex].reports[rIndex].content = cInp.value;
                 tInp.readOnly = true; cInp.readOnly = true;
                 tInp.style.borderBottom = "none";
                 btn.innerText = "EDIT"; btn.classList.remove('active');
-                
-                saveData(); // <--- KUNCI AGAR DATA TERSIMPAN PERMANEN
-                showToast("DATA SAVED TO STORAGE");
+                saveData(); showToast("DATA SAVED");
             }
         }
 
@@ -320,14 +309,9 @@
 
         function deleteCard(rIndex) { if (confirm("DELETE THIS DATA?")) { dataStore[activeIndex].reports.splice(rIndex, 1); saveAndRender(); } }
         function deleteFolder() { if (confirm("DELETE ENTIRE DIRECTORY?")) { dataStore.splice(activeIndex, 1); activeIndex = null; saveAndRender(); } }
-        
         function showToast(m) { const t = document.getElementById('toast'); t.innerText = m; t.style.display = 'block'; setTimeout(() => t.style.display = 'none', 2000); }
 
-        window.onload = () => { 
-            document.getElementById('mainTitle').innerHTML = flickerify("REPORT 007"); 
-            renderTabs(); 
-            renderContent(); 
-        };
+        window.onload = () => { document.getElementById('mainTitle').innerHTML = flickerify("REPORT 007"); renderTabs(); renderContent(); };
     </script>
 </body>
 </html>
