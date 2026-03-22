@@ -213,6 +213,7 @@
     <div id="toast">SYSTEM NOTIFIED</div>
 
     <script>
+        // Load data awal
         let dataStore = JSON.parse(localStorage.getItem('wukong_mega_report')) || [];
         let liveChatData = JSON.parse(localStorage.getItem('wukong_live_chat')) || { incText: "", incLink: "", tawkText: "", tawkLink: "" };
         let activeIndex = null;
@@ -242,23 +243,11 @@
         }
 
         function renderLiveChat() {
-            const grid = document.getElementById('lcGrid');
-            const types = ['inc', 'tawk'];
-            grid.innerHTML = types.map(t => `
-                <div class="lc-table-container">
-                    <div style="text-align:center; color:var(--luxury-gold); font-size:11px; margin-bottom:15px; font-family:Syncopate; text-transform:uppercase;">LIVE CHAT ${t}</div>
-                    <textarea id="lc-${t}-text" class="card-content" style="min-height:220px;" readonly>${liveChatData[t+'Text']}</textarea>
-                    <div class="lc-row-link">
-                        <span class="lc-label">LINK :</span>
-                        <input type="text" id="lc-${t}-link" value="${liveChatData[t+'Link']}" class="lc-input-link" readonly>
-                        <button onclick="copySpecific('lc-${t}-link')" class="btn-card" style="background:var(--luxury-gold); border:none; padding:4px 8px; border-radius:4px; font-size:8px; color:#000;">COPY</button>
-                    </div>
-                    <div class="card-footer">
-                        <button class="btn-card btn-copy-main" style="flex:1" onclick="copySpecific('lc-${t}-text')">COPY TEXT</button>
-                        <button class="btn-card btn-edit-main" style="flex:1;" id="btn-edit-${t}" onclick="editLC('${t}')">EDIT DATA</button>
-                    </div>
-                </div>
-            `).join('');
+            // Memasukkan data dari variabel ke dalam textarea dan input di modal
+            document.getElementById('lc-inc-text').value = liveChatData.incText;
+            document.getElementById('lc-inc-link').value = liveChatData.incLink;
+            document.getElementById('lc-tawk-text').value = liveChatData.tawkText;
+            document.getElementById('lc-tawk-link').value = liveChatData.tawkLink;
         }
 
         function editLC(t) {
@@ -268,7 +257,8 @@
             } else {
                 liveChatData[t+'Text'] = txt.value; liveChatData[t+'Link'] = lnk.value;
                 txt.readOnly = true; lnk.readOnly = true; btn.innerText = "EDIT DATA"; btn.classList.remove('active');
-                localStorage.setItem('wukong_live_chat', JSON.stringify(liveChatData)); showToast("SAVED");
+                localStorage.setItem('wukong_live_chat', JSON.stringify(liveChatData)); 
+                showToast("SAVED");
             }
         }
 
@@ -300,7 +290,7 @@
                 const card = document.createElement('div');
                 card.className = 'report-card';
                 card.innerHTML = `
-                    <div class="card-title-display" style="animation: wavingTitle 3s infinite;">${repo.title}</div>
+                    <div class="card-title-display">${repo.title}</div>
                     <textarea class="card-content" id="content-${rIndex}" readonly>${repo.content}</textarea>
                     <div class="card-footer">
                         <button class="btn-card btn-copy-main" onclick="copyCard(${rIndex})">COPY</button>
@@ -319,42 +309,69 @@
         function confirmModal() {
             const t = document.getElementById('modalInput').value, c = document.getElementById('modalTextarea').value;
             if(!t) return;
-            if(currentMode === 'folder') { dataStore.unshift({ folderName: t.toUpperCase(), reports: [] }); selectFolder(0); }
-            else { dataStore[activeIndex].reports.unshift({ title: t.toUpperCase(), content: c }); }
-            saveData(); renderTabs(); renderContent(); closeModal();
+            if(currentMode === 'folder') { 
+                dataStore.unshift({ folderName: t.toUpperCase(), reports: [] }); 
+                saveData(); // Pastikan data baru langsung tersimpan
+                selectFolder(0); 
+            }
+            else { 
+                dataStore[activeIndex].reports.unshift({ title: t.toUpperCase(), content: c }); 
+                saveData(); // Pastikan report baru langsung tersimpan
+            }
+            renderTabs(); renderContent(); closeModal();
         }
 
         function reqDeleteCard(idx) { deleteTarget = { type: 'card', index: idx }; document.getElementById('deleteMsg').innerText = "HAPUS REPORT INI?"; document.getElementById('deleteModalOverlay').style.display = 'flex'; setTimeout(() => document.getElementById('btnConfirmDelete').focus(), 10); }
         function reqDeleteFolder() { deleteTarget = { type: 'folder', index: activeIndex }; document.getElementById('deleteMsg').innerText = "HAPUS SELURUH FOLDER?"; document.getElementById('deleteModalOverlay').style.display = 'flex'; setTimeout(() => document.getElementById('btnConfirmDelete').focus(), 10); }
         function closeDeleteModal() { document.getElementById('deleteModalOverlay').style.display = 'none'; }
+        
         function executeDelete() {
             if (deleteTarget.type === 'card') dataStore[activeIndex].reports.splice(deleteTarget.index, 1);
-            else { dataStore.splice(deleteTarget.index, 1); activeIndex = null; localStorage.removeItem('wukong_last_active_index'); }
-            saveData(); renderTabs(); renderContent(); closeDeleteModal(); showToast("PURGED");
+            else { 
+                dataStore.splice(deleteTarget.index, 1); 
+                activeIndex = null; 
+                localStorage.removeItem('wukong_last_active_index'); 
+            }
+            saveData(); 
+            renderTabs(); 
+            renderContent(); 
+            closeDeleteModal(); 
+            showToast("PURGED");
         }
 
         function toggleEditCard(rIndex) {
             const cInp = document.getElementById(`content-${rIndex}`), btn = document.getElementById(`btn-edit-${rIndex}`);
             if (cInp.readOnly) { cInp.readOnly = false; btn.innerText = "SAVE"; btn.classList.add('active'); } 
-            else { dataStore[activeIndex].reports[rIndex].content = cInp.value; cInp.readOnly = true; btn.innerText = "EDIT"; btn.classList.remove('active'); saveData(); showToast("SAVED"); }
+            else { 
+                dataStore[activeIndex].reports[rIndex].content = cInp.value; 
+                cInp.readOnly = true; btn.innerText = "EDIT"; btn.classList.remove('active'); 
+                saveData(); // Simpan hasil edit
+                showToast("SAVED"); 
+            }
         }
 
         async function copyCard(rIndex) { navigator.clipboard.writeText(dataStore[activeIndex].reports[rIndex].content); showToast("COPIED"); }
         async function copySpecific(id) { navigator.clipboard.writeText(document.getElementById(id).value); showToast("COPIED"); }
+        
         async function smartReport(rIndex) {
             const title = dataStore[activeIndex].reports[rIndex].title.toUpperCase();
             let res = title.includes("OFFLINE") ? `saat ini ${title.replace("OFFLINE","").trim()} ONLINE` : title.includes("GANGGUAN") ? `saat ini ${title.replace("GANGGUAN","").trim()} NORMAL` : `saat ini ${title} NORMAL`;
             navigator.clipboard.writeText(res); showToast("REPORT COPIED");
         }
 
-        function saveData() { localStorage.setItem('wukong_mega_report', JSON.stringify(dataStore)); }
+        // FUNGSI KRUSIAL: Menyimpan ke localStorage
+        function saveData() { 
+            localStorage.setItem('wukong_mega_report', JSON.stringify(dataStore)); 
+        }
+
         function showToast(m) { const t = document.getElementById('toast'); t.innerText = m; t.style.display = 'block'; setTimeout(() => t.style.display = 'none', 2000); }
 
         window.onload = () => { 
             document.getElementById('mainTitle').innerHTML = flickerify("REPORT 007"); 
             const lastIdx = localStorage.getItem('wukong_last_active_index');
             if(lastIdx !== null && dataStore[lastIdx]) activeIndex = parseInt(lastIdx);
-            renderTabs(); renderContent();
+            renderTabs(); 
+            renderContent();
         };
     </script>
 </body>
