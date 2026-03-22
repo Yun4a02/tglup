@@ -355,7 +355,7 @@
         
         async function smartReport(rIndex) {
             const title = dataStore[activeIndex].reports[rIndex].title.toUpperCase();
-            let res = title.includes("OFFLINE") ? `saat ini ${title.replace("OFFLINE","").trim()} ONLINE` : title.includes("GANGGUAN") ? `saat ini ${title.replace("GANGGUAN","").trim()} NORMAL` : `saat ini ${title} NORMAL`;
+            let res = title.includes("OFFLINE") ? `untuk saat ini ${title.replace("OFFLINE","").trim()} ONLINE ya ko,ci` : title.includes("GANGGUAN") ? `untuk saat ini ${title.replace("GANGGUAN","").trim()} NORMAL ya ko,ci ` : `saat ini ${title} NORMAL `;
             navigator.clipboard.writeText(res); showToast("REPORT COPIED");
         }
 
