@@ -23,7 +23,7 @@
             --luxury-gold: #d4af37;
         }
 
-        /* --- CUSTOM SCROLLBAR (UPDATE) --- */
+        /* --- CUSTOM SCROLLBAR --- */
         ::-webkit-scrollbar {
             width: 8px;
         }
@@ -39,7 +39,6 @@
             background: #fff;
             box-shadow: 0 0 10px var(--gold-glow);
         }
-        /* Firefox Support */
         * {
             scrollbar-width: thin;
             scrollbar-color: var(--luxury-gold) #0a0a0a;
@@ -463,6 +462,7 @@
             localStorage.setItem('wukongAlarms', JSON.stringify(alarmList)); 
             showToast(editId ? "ALARM UPDATED" : "ALARM SYNCED"); 
             resetSetupForm();
+            updateNextAlarmDisplay();
             document.getElementById('setupPanel').style.display = 'none';
         }
 
@@ -497,7 +497,7 @@
             document.getElementById('setupPanel').style.display = 'flex';
         }
 
-        function deleteAlarm(id) { if(confirm("DELETE THIS COMMAND?")) { alarmList = alarmList.filter(x => x.id !== id); localStorage.setItem('wukongAlarms', JSON.stringify(alarmList)); renderRegistry(); } }
+        function deleteAlarm(id) { if(confirm("DELETE THIS COMMAND?")) { alarmList = alarmList.filter(x => x.id !== id); localStorage.setItem('wukongAlarms', JSON.stringify(alarmList)); updateNextAlarmDisplay(); renderRegistry(); } }
         
         function handleSoundSelect() { if(document.getElementById('inpSound').value === 'ADD_CUSTOM') document.getElementById('audioExplorer').click(); }
         
@@ -521,11 +521,20 @@
             });
         }
 
+        function updateNextAlarmDisplay() {
+            if (alarmList.length === 0) {
+                document.getElementById('nextAlarmDisplay').innerText = "NO ALARM";
+                return;
+            }
+            // Sort by time
+            const sorted = [...alarmList].sort((a, b) => a.time.localeCompare(b.time));
+            document.getElementById('nextAlarmDisplay').innerText = sorted[0].time + " - " + sorted[0].name;
+        }
+
         async function triggerPop(n, s) { 
             const audio = document.getElementById('audioAlarm'); 
             let finalSrc = s;
             
-            // Jika suara berasal dari Database (DB:)
             if(s.startsWith("DB:")) {
                 const key = s.replace("DB:", "");
                 const blob = await getAudioFromDB(key);
@@ -563,8 +572,12 @@
 
         window.onload = async () => { 
             document.getElementById('mainDashboardTitle').innerHTML = flickerify("DASHBOARD") + "<br>" + flickerify("WUKONG");
-            await loadCustomSoundsList(); // Load daftar suara dari database
+            
+            // Re-load semua data dari penyimpanan permanen
+            await loadCustomSoundsList(); 
             updateAllCountdowns(); 
+            updateNextAlarmDisplay();
+
             setInterval(updateClock, 1000); 
             setInterval(updateAllCountdowns, 30000); 
             showToast("WUKONG SYSTEM ONLINE"); 
