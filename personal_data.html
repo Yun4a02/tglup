@@ -63,9 +63,10 @@
         }
         .flicker-main-title span { display: inline-block; animation: flicker 4s infinite; }
 
+        /* PERUBAHAN: Controls ke sebelah kiri (flex-start) */
         .controls-wrapper {
             display: flex;
-            justify-content: flex-end;
+            justify-content: flex-start; /* Mengubah dari flex-end ke flex-start */
             align-items: center;
             gap: 15px;
             padding-bottom: 15px;
@@ -267,7 +268,6 @@
     </div>
 
     <script>
-        // Key tetap agar data tidak hilang meskipun kode diupdate
         const storageKey = "WUKONG_VAULT_PRO_V1";
         let vaultData = JSON.parse(localStorage.getItem(storageKey)) || [];
         let deleteIdx = null;
