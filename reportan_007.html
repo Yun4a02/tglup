@@ -331,8 +331,22 @@
         
         async function smartReport(rIndex) {
             const title = dataStore[activeIndex].reports[rIndex].title.toUpperCase();
-            let res = title.includes("OFFLINE") ? `untuk saat ini ${title.replace("OFFLINE","").trim()} ONLINE ya ko,ci` : title.includes("GANGGUAN") ? `untuk saat ini ${title.replace("GANGGUAN","").trim()} NORMAL ya ko,ci ` : `saat ini ${title} NORMAL ` ;
-            navigator.clipboard.writeText(res); showToast("REPORT COPIED");
+            let res = "";
+
+            if (title.includes("ALIHKAN KE QRIS")) {
+                // Mendeteksi nama bank/ewallet dengan menghapus bagian "ALIHKAN KE QRIS"
+                let bankPart = title.replace("ALIHKAN KE QRIS", "").trim();
+                res = `Untuk Saat ini ${bankPart.toLowerCase()} sudah tidak dialihkan ke qris ya ko,ci`;
+            } else if (title.includes("OFFLINE")) {
+                res = `untuk saat ini ${title.replace("OFFLINE","").trim()} ONLINE ya ko,ci`;
+            } else if (title.includes("GANGGUAN")) {
+                res = `untuk saat ini ${title.replace("GANGGUAN","").trim()} NORMAL ya ko,ci `;
+            } else {
+                res = `saat ini ${title} NORMAL `;
+            }
+
+            navigator.clipboard.writeText(res); 
+            showToast("REPORT COPIED");
         }
 
         function showToast(m) { const t = document.getElementById('toast'); t.innerText = m; t.style.display = 'block'; setTimeout(() => t.style.display = 'none', 2000); }
