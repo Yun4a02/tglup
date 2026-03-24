@@ -116,7 +116,7 @@
         .btn-clear { background: transparent; border: 1px solid #ff4b2b; color: #ff4b2b; width: 100%; }
         .btn-clear:hover { background: rgba(255, 75, 43, 0.1); }
 
-        /* --- TABLE AREA (LOGIKA PECAH) --- */
+        /* --- TABLE AREA --- */
         .result-container {
             display: grid;
             grid-template-columns: repeat(6, 1fr);
@@ -291,60 +291,80 @@
         let totalSum = 0;
         let totalFee = 0;
 
-        // PARSING UNTUK TABEL VISUAL (Logika Pecah)
         const lines = rawReport.split('\n');
         let currentBank = "-", currentName = "-", currentNumber = "-", currentAmountStr = "-";
         let hasBank = false, hasName = false, hasNumber = false, hasAmount = false;
 
+        // DAFTAR BANK DIURUTKAN DARI YANG TERPANJANG (Agar Danamon terbaca sebelum Dana)
+        const bankList = ["DANAMON", "MANDIRI", "PERMATA", "MAYBANK", "LINKAJA", "SHOPEEPAY", "SEABANK", "DANA", "BCA", "BNI", "BRI", "CIMB", "PANIN", "OCBC", "BSI", "OVO", "GOPAY", "NEO"];
+        bankList.sort((a, b) => b.length - a.length);
+
         lines.forEach((line) => {
             const clean = line.trim();
-            if (clean.toLowerCase().includes("bank")) {
-                const bMatch = clean.match(/(BCA|MANDIRI|BNI|BRI|CIMB|DANAMON|PERMATA|PANIN|OCBC|BSI|MAYBANK|DANA|OVO|GOPAY)/i);
-                if (bMatch) currentBank = bMatch[0].toUpperCase();
-                else {
-                    const parts = clean.split(/[:>-]/);
-                    if (parts.length > 1) currentBank = parts.pop().trim().toUpperCase();
+            if (!clean) return;
+
+            // 1. DETEKSI BANK (Pengecekan spesifik agar tidak salah ambil DANA vs DANAMON)
+            for (let b of bankList) {
+                if (clean.toUpperCase().includes(b)) {
+                    currentBank = b;
+                    hasBank = true;
+                    break; 
                 }
-                hasBank = true;
             }
-            if (clean.toLowerCase().includes("nama rekening") || clean.toLowerCase().includes("a/n")) {
+
+            // 2. DETEKSI NAMA
+            if (clean.toLowerCase().includes("nama") || clean.toLowerCase().includes("a/n")) {
                 currentName = clean.split(/[:>-]/).pop().trim().toUpperCase();
                 hasName = true;
             }
-            if (clean.toLowerCase().includes("nomor rekening") || clean.toLowerCase().includes("no rek")) {
+
+            // 3. DETEKSI NO REK
+            if (clean.match(/(no|nomor|rek)/i) || clean.match(/^\d+$/)) {
                 const nMatch = clean.match(/\d{7,25}/);
-                if (nMatch) currentNumber = nMatch[0];
-                hasNumber = true;
-            }
-            if (clean.toLowerCase().includes("nominal") || clean.toLowerCase().includes("jumlah")) {
-                const aMatch = clean.match(/[\d.,]{4,}/);
-                if (aMatch) currentAmountStr = aMatch[0].replace(/[.,]$/, "");
-                hasAmount = true;
+                if (nMatch) {
+                    currentNumber = nMatch[0];
+                    hasNumber = true;
+                }
             }
 
+            // 4. DETEKSI NOMINAL (Fix: Hapus titik/koma agar angka utuh tetap terbaca)
+            if (clean.toLowerCase().includes("nominal") || clean.toLowerCase().includes("jumlah") || clean.toLowerCase().includes("rp")) {
+                const aMatch = clean.match(/[\d.,]{2,}/);
+                if (aMatch) {
+                    // MENGHAPUS SEMUA NON-ANGKA (Titik dan Koma dibuang untuk hitungan)
+                    currentAmountStr = aMatch[0].replace(/[^0-9]/g, '');
+                    hasAmount = true;
+                }
+            }
+
+            // PROSES JIKA SUDAH LENGKAP
             if (hasName && hasNumber && hasAmount) {
-                let numValue = parseInt(currentAmountStr.replace(/,/g, ''));
+                let numValue = parseInt(currentAmountStr);
                 if (isNaN(numValue)) numValue = 0;
                 totalSum += numValue;
 
-                let blocks = Math.floor(numValue / 50000000);
-                let remainder = numValue % 50000000;
-
-                for (let i = 0; i < blocks; i++) {
-                    addEntryToTable(currentBank, currentName, currentNumber, 39000000, 3500);
-                    addEntryToTable(currentBank, currentName, currentNumber, 11000000, 3500);
-                    totalFee += 7000;
-                }
-                if (remainder > 0) {
-                    addEntryToTable(currentBank, currentName, currentNumber, remainder, 3500);
+                // Logika Pecah (tetap 50jt)
+                if (numValue > 50000000) {
+                     let tempVal = numValue;
+                     while (tempVal > 50000000) {
+                        addEntryToTable(currentBank, currentName, currentNumber, 50000000, 3500);
+                        totalFee += 3500;
+                        tempVal -= 50000000;
+                     }
+                     if (tempVal > 0) {
+                        addEntryToTable(currentBank, currentName, currentNumber, tempVal, 3500);
+                        totalFee += 3500;
+                     }
+                } else {
+                    addEntryToTable(currentBank, currentName, currentNumber, numValue, 3500);
                     totalFee += 3500;
                 }
+
                 currentBank = "-"; currentName = "-"; currentNumber = "-"; currentAmountStr = "-";
                 hasBank = false; hasName = false; hasNumber = false; hasAmount = false;
             }
         });
 
-        // UPDATE TABEL VISUAL TOTAL
         const totalBox = document.getElementById('visualTotalNominal');
         const feeBox = document.getElementById('visualTotalFee');
         if (totalSum > 0) {
@@ -357,7 +377,6 @@
             feeBox.style.display = "none";
         }
 
-        // UPDATE HASIL LAPORAN GABUNGAN
         const areaGabungan = document.getElementById('fullReportArea');
         if (!rawReport.trim() && !rawLinks.trim()) {
             areaGabungan.innerText = "Menunggu data ditempel...";
@@ -366,19 +385,10 @@
             if (totalSum > 0) {
                 finalOutput += "\n\nTOTAL NOMINAL : " + totalSum.toLocaleString('en-US');
             }
-            
-            // Tambahkan Lampiran dari kotak Lampiran Link
-            finalOutput += "\n\nLampiran :\n";
-            if (rawLinks.trim() !== "") {
-                finalOutput += rawLinks.trim();
-            } else {
-                finalOutput += "-";
-            }
-            
+            finalOutput += "\n\nLampiran :\n" + (rawLinks.trim() ? rawLinks.trim() : "-");
             areaGabungan.innerText = finalOutput;
         }
 
-        // Update Kolom Link Visual
         const linkArray = rawLinks.split('\n').filter(l => l.trim() !== "");
         linkArray.forEach(link => appendToColumn('colLink', link.trim()));
     }
