@@ -90,18 +90,9 @@
 
         /* Titik Tiga di dalam Tombol Report */
         .btn-dots-option { 
-            position: absolute; 
-            top: 50%; 
-            right: 5px; 
-            transform: translateY(-50%);
-            background: transparent; 
-            border: none; 
-            color: rgba(212, 175, 55, 0.6); 
-            cursor: pointer; 
-            font-size: 14px; 
-            z-index: 5; 
-            padding: 5px;
-            transition: 0.2s;
+            position: absolute; top: 50%; right: 5px; transform: translateY(-50%);
+            background: transparent; border: none; color: rgba(212, 175, 55, 0.6); 
+            cursor: pointer; font-size: 14px; z-index: 5; padding: 5px; transition: 0.2s;
         }
         .btn-dots-option:hover { color: #fff; transform: translateY(-50%) scale(1.3); }
 
@@ -118,11 +109,19 @@
             display: none; justify-content: center; align-items: center; z-index: 10000; 
         }
         .modal-box { 
-            background: rgba(20, 20, 20, 0.8); border: 1px solid var(--luxury-gold); border-radius: 20px; 
+            background: rgba(20, 20, 20, 0.85); border: 1px solid var(--luxury-gold); border-radius: 20px; 
             padding: 30px; width: 450px; text-align: center; box-shadow: 0 0 50px rgba(0,0,0,0.8); 
             animation: modalPop 0.2s ease-out; 
         }
+        .lc-modal-box { width: 1100px; max-width: 95vw; padding: 35px; }
         .modal-input { width: 100%; background: rgba(0, 0, 0, 0.6); border: 1px solid var(--border-ui); border-left: 4px solid var(--luxury-gold); padding: 12px; color: white; font-family: var(--font-ui); font-size: 14px; outline: none; border-radius: 8px; margin-bottom: 20px; text-align: center; }
+
+        /* Row Live Chat */
+        .lc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
+        .lc-table-container { background: rgba(0,0,0,0.5); border: 1px solid var(--border-ui); border-radius: 12px; padding: 20px; text-align: center; }
+        .lc-row-link { display: flex; align-items: center; gap: 10px; background: #000; border: 1px solid var(--border-ui); border-left: 4px solid var(--luxury-gold); padding: 10px 15px; border-radius: 8px; margin-bottom: 15px; }
+        .lc-label { color: var(--luxury-gold); font-size: 10px; font-family: var(--font-main); width: 100px; text-align: left; }
+        .lc-input-link { background: transparent !important; border: none; color: #fff; width: 100%; font-size: 12px; outline: none; }
         
         #toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: var(--luxury-gold); color: #000; padding: 10px 40px; border-radius: 50px; font-family: var(--font-main); font-size: 10px; display: none; z-index: 10001; box-shadow: 0 0 30px var(--gold-glow); }
     </style>
@@ -146,13 +145,10 @@
     <div id="btnLabelModal" class="modal-overlay">
         <div class="modal-box" style="width: 420px;">
             <h2 style="color:var(--luxury-gold); font-family:Syncopate; margin-bottom:20px; font-size:10px; letter-spacing:2px;">CUSTOM REPORT BUTTON</h2>
-            
             <label style="color:var(--luxury-gold); font-size:9px; display:block; text-align:left; margin-bottom:5px; font-family:Syncopate;">NAMA PADA TOMBOL :</label>
             <input type="text" id="newBtnLabel" class="modal-input" placeholder="Contoh: ONLINE / NORMAL">
-            
             <label style="color:var(--luxury-gold); font-size:9px; display:block; text-align:left; margin-bottom:5px; font-family:Syncopate;">TEKS SAAT DI COPY :</label>
             <textarea id="newCustomReportText" class="modal-input" style="min-height:80px; text-align:left;" placeholder="Kosongkan jika ingin deteksi otomatis..."></textarea>
-
             <div style="display:flex; gap:15px;">
                 <button onclick="saveBtnSettings()" class="btn-card" style="flex:1; background:var(--luxury-gold); color:#000; height:40px; font-family:Syncopate;">SAVE COMMAND</button>
                 <button onclick="closeBtnLabelModal()" class="btn-card" style="flex:1; background:transparent; border:1px solid #444!important; color:#888; height:40px; font-family:Syncopate;">BATAL</button>
@@ -172,11 +168,49 @@
         </div>
     </div>
 
+    <!-- MODAL LIVE CHAT -->
+    <div id="liveChatModal" class="modal-overlay">
+        <div class="modal-box lc-modal-box">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:25px;">
+                <h2 style="color:var(--luxury-gold); font-family:Syncopate; font-size:13px; letter-spacing:3px;">LIVE CHAT DATA CENTER</h2>
+                <button onclick="toggleLiveChat()" style="background:transparent; border:none; color:#555; font-size:32px; cursor:pointer;">&times;</button>
+            </div>
+            <div class="lc-grid">
+                <div class="lc-table-container">
+                    <div style="color:var(--luxury-gold); font-family:Syncopate; font-size:11px; margin-bottom:15px;">LIVE CHAT INC</div>
+                    <textarea id="lc-inc-text" class="card-content" style="min-height:220px;" readonly></textarea>
+                    <div class="lc-row-link">
+                        <span class="lc-label">LINK INC :</span>
+                        <input type="text" id="lc-inc-link" class="lc-input-link" readonly>
+                        <button onclick="copySpecific('lc-inc-link')" style="background:var(--luxury-gold); border:none; padding:5px 10px; border-radius:4px; font-size:9px; cursor:pointer; color:#000;">COPY</button>
+                    </div>
+                    <div style="display:flex; gap:10px;">
+                        <button class="btn-card btn-copy-main" style="flex:1; height:40px;" onclick="copySpecific('lc-inc-text')">COPY TEXT</button>
+                        <button class="btn-card btn-edit-main" id="btn-edit-inc" style="flex:1; height:40px;" onclick="editLC('inc')">EDIT DATA</button>
+                    </div>
+                </div>
+                <div class="lc-table-container">
+                    <div style="color:var(--luxury-gold); font-family:Syncopate; font-size:11px; margin-bottom:15px;">LIVE CHAT TAWKTO</div>
+                    <textarea id="lc-tawk-text" class="card-content" style="min-height:220px;" readonly></textarea>
+                    <div class="lc-row-link">
+                        <span class="lc-label">LINK TAWKTO :</span>
+                        <input type="text" id="lc-tawk-link" class="lc-input-link" readonly>
+                        <button onclick="copySpecific('lc-tawk-link')" style="background:var(--luxury-gold); border:none; padding:5px 10px; border-radius:4px; font-size:9px; cursor:pointer; color:#000;">COPY</button>
+                    </div>
+                    <div style="display:flex; gap:10px;">
+                        <button class="btn-card btn-copy-main" style="flex:1; height:40px;" onclick="copySpecific('lc-tawk-text')">COPY TEXT</button>
+                        <button class="btn-card btn-edit-main" id="btn-edit-tawk" style="flex:1; height:40px;" onclick="editLC('tawk')">EDIT DATA</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- HEADER -->
     <div class="header">
         <div class="header-left-btns">
             <button class="btn-add-folder" onclick="openFolderModal()">+</button>
-            <button class="btn-live-chat-toggle">LIVE CHAT</button>
+            <button class="btn-live-chat-toggle" onclick="toggleLiveChat()">LIVE CHAT</button>
         </div>
         <h1 id="mainTitle"></h1>
     </div>
@@ -196,7 +230,9 @@
     <div id="toast">SYSTEM NOTIFIED</div>
 
     <script>
+        // SINKRONISASI STORAGE PERMANEN
         let dataStore = JSON.parse(localStorage.getItem('wukong_mega_report')) || [];
+        let liveChatData = JSON.parse(localStorage.getItem('wukong_live_chat')) || { incText: "", incLink: "", tawkText: "", tawkLink: "" };
         let activeIndex = null;
         let currentMode = '';
         let deleteTarget = { type: '', index: null };
@@ -213,6 +249,33 @@
             localStorage.setItem('wukong_mega_report', JSON.stringify(dataStore));
         }
 
+        // --- LIVE CHAT FUNCTIONS ---
+        function toggleLiveChat() {
+            const m = document.getElementById('liveChatModal');
+            m.style.display = (m.style.display === 'flex') ? 'none' : 'flex';
+            if (m.style.display === 'flex') renderLiveChat();
+        }
+
+        function renderLiveChat() {
+            document.getElementById('lc-inc-text').value = liveChatData.incText;
+            document.getElementById('lc-inc-link').value = liveChatData.incLink;
+            document.getElementById('lc-tawk-text').value = liveChatData.tawkText;
+            document.getElementById('lc-tawk-link').value = liveChatData.tawkLink;
+        }
+
+        function editLC(t) {
+            const txt = document.getElementById(`lc-${t}-text`), lnk = document.getElementById(`lc-${t}-link`), btn = document.getElementById(`btn-edit-${t}`);
+            if (txt.readOnly) {
+                txt.readOnly = false; lnk.readOnly = false; btn.innerText = "SAVE DATA"; btn.classList.add('active'); txt.focus();
+            } else {
+                liveChatData[t+'Text'] = txt.value; liveChatData[t+'Link'] = lnk.value;
+                txt.readOnly = true; lnk.readOnly = true; btn.innerText = "EDIT DATA"; btn.classList.remove('active');
+                localStorage.setItem('wukong_live_chat', JSON.stringify(liveChatData)); 
+                showToast("LIVE CHAT SAVED");
+            }
+        }
+
+        // --- DIRECTORY FUNCTIONS ---
         function selectFolder(index) {
             activeIndex = index;
             localStorage.setItem('wukong_last_active_index', index);
@@ -260,7 +323,6 @@
             });
         }
 
-        // --- FUNGSI SETTING REPORT (TITIK 3) ---
         function openBtnSettings(idx) {
             currentEditBtnIdx = idx;
             const repo = dataStore[activeIndex].reports[idx];
@@ -269,33 +331,22 @@
             document.getElementById('btnLabelModal').style.display = 'flex';
         }
 
-        function closeBtnLabelModal() {
-            document.getElementById('btnLabelModal').style.display = 'none';
-        }
+        function closeBtnLabelModal() { document.getElementById('btnLabelModal').style.display = 'none'; }
 
         function saveBtnSettings() {
             const label = document.getElementById('newBtnLabel').value.toUpperCase();
             const customText = document.getElementById('newCustomReportText').value;
-            
             dataStore[activeIndex].reports[currentEditBtnIdx].btnLabel = label || "REPORT";
             dataStore[activeIndex].reports[currentEditBtnIdx].customReportText = customText;
-            
-            saveData();
-            renderContent();
-            closeBtnLabelModal();
-            showToast("SETTINGS UPDATED");
+            saveData(); renderContent(); closeBtnLabelModal(); showToast("SETTINGS UPDATED");
         }
 
         async function smartReport(rIndex) {
             const repo = dataStore[activeIndex].reports[rIndex];
             let res = "";
-
-            // PRIORITAS 1: Jika ada teks kustom yang diset lewat titik 3
             if (repo.customReportText && repo.customReportText.trim() !== "") {
                 res = repo.customReportText;
-            } 
-            // PRIORITAS 2: Logika Deteksi Otomatis (Default)
-            else {
+            } else {
                 const title = repo.title.toUpperCase();
                 if (title.includes("ALIHKAN KE QRIS")) {
                     let bankPart = title.replace("ALIHKAN KE QRIS", "").trim();
@@ -308,7 +359,6 @@
                     res = `saat ini ${title} NORMAL `;
                 }
             }
-
             navigator.clipboard.writeText(res); 
             showToast("REPORT COPIED");
         }
@@ -322,14 +372,12 @@
             if(!t) return;
             if(currentMode === 'folder') { 
                 dataStore.unshift({ folderName: t.toUpperCase(), reports: [] }); 
-                saveData();
-                selectFolder(0); 
+                saveData(); selectFolder(0); 
             } else { 
                 dataStore[activeIndex].reports.unshift({ title: t.toUpperCase(), content: c, btnLabel: "REPORT", customReportText: "" }); 
                 saveData();
             }
-            renderTabs(); renderContent(); closeModal();
-            showToast("DATA INITIALIZED");
+            renderTabs(); renderContent(); closeModal(); showToast("DATA INITIALIZED");
         }
 
         function reqDeleteCard(idx) { deleteTarget = { type: 'card', index: idx }; document.getElementById('deleteMsg').innerText = "HAPUS REPORT INI?"; document.getElementById('deleteModalOverlay').style.display = 'flex'; }
@@ -348,12 +396,12 @@
             else { 
                 dataStore[activeIndex].reports[rIndex].content = cInp.value; 
                 cInp.readOnly = true; btn.innerText = "EDIT"; btn.classList.remove('active'); 
-                saveData();
-                showToast("SAVED"); 
+                saveData(); showToast("SAVED"); 
             }
         }
 
-        async function copyCard(rIndex) { navigator.clipboard.writeText(dataStore[activeIndex].reports[rIndex].content); showToast("COPIED"); }
+        function copyCard(idx) { navigator.clipboard.writeText(dataStore[activeIndex].reports[idx].content); showToast("CONTENT COPIED"); }
+        function copySpecific(id) { navigator.clipboard.writeText(document.getElementById(id).value); showToast("COPIED"); }
         function showToast(m) { const t = document.getElementById('toast'); t.innerText = m; t.style.display = 'block'; setTimeout(() => t.style.display = 'none', 2000); }
 
         window.onload = () => { 
